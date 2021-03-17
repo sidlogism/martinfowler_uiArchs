@@ -1,0 +1,43 @@
+// Solution using built-in Gradle support for Jmods (JPMS) instead of  javafx-gradle-plugin (org.openjfx.javafxplugin). See https://stackoverflow.com/questions/63997525/task-run-causes-org-joor-reflectexception-java-lang-nosuchfieldexception-ja
+
+
+plugins {
+    id 'application'
+}
+
+def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem;
+def platform
+if (currentOS.isWindows()) {
+     platform = 'win'
+} else if (currentOS.isLinux()) {
+     platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+     platform = 'mac'
+}
+
+java {
+    modularity.inferModulePath = true
+}
+
+
+
+sourceCompatibility=1.11
+targetCompatibility=1.11
+
+
+repositories
+{
+	mavenCentral();
+}
+
+dependencies {
+    implementation "org.openjfx:javafx-base:17-ea+2:${platform}"
+    implementation "org.openjfx:javafx-controls:17-ea+2:${platform}"
+    implementation "org.openjfx:javafx-graphics:17-ea+2:${platform}"
+    implementation "org.openjfx:javafx-fxml:17-ea+2:${platform}"
+}
+
+application {
+	mainModule = 'imperfectsilentart.martinfowler.uiArchs.formsandcontrols'
+	mainClass = "imperfectsilentart.martinfowler.uiArchs.formsandcontrols.IcecreamAssessmentForm"
+}
