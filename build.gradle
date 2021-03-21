@@ -1,4 +1,7 @@
-// Solution using built-in Gradle support for Jmods (JPMS) instead of  javafx-gradle-plugin (org.openjfx.javafxplugin). See https://stackoverflow.com/questions/63997525/task-run-causes-org-joor-reflectexception-java-lang-nosuchfieldexception-ja
+/*
+ * Using built-in Gradle support for Jmods (JPMS) instead of  javafx-gradle-plugin (org.openjfx.javafxplugin).
+ * See https://stackoverflow.com/questions/63997525/task-run-causes-org-joor-reflectexception-java-lang-nosuchfieldexception-ja
+ */
 
 
 plugins {
