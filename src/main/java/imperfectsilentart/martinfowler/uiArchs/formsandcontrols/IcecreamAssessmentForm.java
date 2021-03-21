@@ -34,7 +34,7 @@ public class IcecreamAssessmentForm extends Application
 		rootPane.setAlignment(Pos.BASELINE_LEFT);
 		
 		/*
-		 * Scrollable list of monitoring station.
+		 * Scrollable list of monitoring stations.
 		 * On change of selected station in list, the value of the text field "Station ID" is updated.
 		 * On change of the text field "Station ID", the selected station in the list is updated as well.
 		 */

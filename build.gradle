@@ -2,21 +2,21 @@
 
 
 plugins {
-    id 'application'
+	id 'application'
 }
 
 def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem;
 def platform
 if (currentOS.isWindows()) {
-     platform = 'win'
+	 platform = 'win'
 } else if (currentOS.isLinux()) {
-     platform = 'linux'
+	 platform = 'linux'
 } else if (currentOS.isMacOsX()) {
-     platform = 'mac'
+	 platform = 'mac'
 }
 
 java {
-    modularity.inferModulePath = true
+	modularity.inferModulePath = true
 }
 
 
@@ -25,19 +25,25 @@ sourceCompatibility=1.11
 targetCompatibility=1.11
 
 
-repositories
-{
+repositories {
 	mavenCentral();
 }
 
 dependencies {
-    implementation "org.openjfx:javafx-base:17-ea+2:${platform}"
-    implementation "org.openjfx:javafx-controls:17-ea+2:${platform}"
-    implementation "org.openjfx:javafx-graphics:17-ea+2:${platform}"
-    implementation "org.openjfx:javafx-fxml:17-ea+2:${platform}"
+	// Get the 19.8.0.0 Oracle JDBC driver along with other companion jars
+	implementation("com.oracle.database.jdbc:ojdbc8-production:19.8.0.0")
+	testImplementation("com.oracle.database.jdbc:ojdbc8-production:19.8.0.0")
+	implementation "org.openjfx:javafx-base:17-ea+2:${platform}"
+	implementation "org.openjfx:javafx-controls:17-ea+2:${platform}"
+	implementation "org.openjfx:javafx-graphics:17-ea+2:${platform}"
+	implementation "org.openjfx:javafx-fxml:17-ea+2:${platform}"
+	testImplementation 'junit:junit:4.13.2'
+	compile files('/usr/share/java/mysql-connector-java.jar')
+	runtime files('/usr/share/java/mysql-connector-java.jar')
 }
 
 application {
 	mainModule = 'imperfectsilentart.martinfowler.uiArchs.formsandcontrols'
 	mainClass = "imperfectsilentart.martinfowler.uiArchs.formsandcontrols.IcecreamAssessmentForm"
 }
+
