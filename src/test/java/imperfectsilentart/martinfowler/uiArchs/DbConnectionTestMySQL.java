@@ -1,5 +1,17 @@
 /*
- * TODO copyright
+ * Copyright 2021 Imperfect Silent Art
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package imperfectsilentart.martinfowler.uiArchs;
 
@@ -23,15 +35,15 @@ import org.junit.Test;
  */
 public class DbConnectionTestMySQL {
 	private final String driverName = "com.mysql.jdbc.Driver";
-	private final String connUrl = "jdbc:mysql://localhost:3306/martinfowler_uiArchs?useUnicode=true&characterEncoding=UTF8";
-	private Connection conn = null;
+	private final String connectionUrl = "jdbc:mysql://localhost:3306/martinfowler_uiArchs?useUnicode=true&characterEncoding=UTF8";
+	private Connection connection = null;
 
 	/**
 	 * @throws java.sql.SQLException
 	 */
 	@After
 	public void tearDown() throws SQLException {
-		this.conn.close();
+		this.connection.close();
 	}
 
 	/**
@@ -46,18 +58,18 @@ public class DbConnectionTestMySQL {
 			fail("Could not load the driver "+this.driverName+".\n"+e.getCause()+"\n"+e.getStackTrace());
 		}
 
-		System.out.println ("Connecting to database: "+connUrl);
+		System.out.println ("Connecting to database: "+connectionUrl);
 		try {
-			this.conn = DriverManager.getConnection(connUrl, "XXX", "XXX");
-			final Statement stmt = this.conn.createStatement();
-			final String query = "select station_name from monitoring_station";
+			this.connection = DriverManager.getConnection(connectionUrl, "XXX", "XXX");
+			final Statement stmt = this.connection.createStatement();
+			final String queryText = "select station_name from monitoring_station";
 			
-			final ResultSet rset = stmt.executeQuery(query);
-			while (rset.next()) {
-				System.out.println(rset.getString(1));
+			final ResultSet result = stmt.executeQuery(queryText);
+			while (result.next()) {
+				System.out.println(result.getString(1));
 			}
 		} catch (SQLException e) {
-			fail("Error while accessing database: "+connUrl+".\n"+e.getCause()+"\n"+e.getStackTrace());
+			fail("Error while accessing database: "+connectionUrl+".\n"+e.getCause()+"\n"+e.getStackTrace());
 		}
 
 	}
