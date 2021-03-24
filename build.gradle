@@ -34,19 +34,41 @@ repositories {
 
 dependencies {
 	// Get the 19.8.0.0 Oracle JDBC driver along with other companion jars
+	implementation "org.openjfx:javafx-base:17-ea+3:${platform}"
+	implementation "org.openjfx:javafx-controls:17-ea+3:${platform}"
+	implementation "org.openjfx:javafx-graphics:17-ea+3:${platform}"
+	implementation "org.openjfx:javafx-fxml:17-ea+3:${platform}"
+	implementation group: 'org.json', name: 'json', version: '20210307'
 	implementation("com.oracle.database.jdbc:ojdbc8-production:19.8.0.0")
+	testImplementation group: 'org.json', name: 'json', version: '20210307'
 	testImplementation("com.oracle.database.jdbc:ojdbc8-production:19.8.0.0")
-	implementation "org.openjfx:javafx-base:17-ea+2:${platform}"
-	implementation "org.openjfx:javafx-controls:17-ea+2:${platform}"
-	implementation "org.openjfx:javafx-graphics:17-ea+2:${platform}"
-	implementation "org.openjfx:javafx-fxml:17-ea+2:${platform}"
-	testImplementation 'junit:junit:4.13.2'
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.8.0-M1'
+	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.0-M1'
 	compile files('/usr/share/java/mysql-connector-java.jar')
 	runtime files('/usr/share/java/mysql-connector-java.jar')
 }
 
+sourceSets {
+	test {
+		resources {
+			srcDir 'src/test/resources'
+			include 'src/main/resources/config.json'
+		}
+	}
+}
+
+test {
+	// Activate JUnit native support. Otherwise some JUnit 5(Jupiter) annotations may not be recognized.
+	useJUnitPlatform()
+	// Explicitly list every executed test in console.
+	beforeTest { descriptor ->
+		 logger.lifecycle("Running test: ${descriptor}")
+	}
+}
+
+
 application {
 	mainModule = 'imperfectsilentart.martinfowler.uiArchs.formsandcontrols'
-	mainClass = "imperfectsilentart.martinfowler.uiArchs.formsandcontrols.IcecreamAssessmentForm"
+	mainClass = "imperfectsilentart.martinfowler.uiArchs.formsandcontrols.IceCreamAssessmentForm"
 }
 

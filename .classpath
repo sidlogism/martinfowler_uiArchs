@@ -15,5 +15,19 @@
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/usr/share/java/mysql-connector-java.jar"/>
+	<classpathentry kind="lib" path="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/javafx-swt.jar" sourcepath="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/src.zip"/>
+	<classpathentry kind="lib" path="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/javafx.web.jar" sourcepath="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/src.zip"/>
+	<classpathentry kind="lib" path="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/javafx.swing.jar" sourcepath="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/src.zip"/>
+	<classpathentry kind="lib" path="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/javafx.media.jar" sourcepath="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/src.zip"/>
+	<classpathentry kind="lib" path="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/javafx.graphics.jar" sourcepath="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/src.zip"/>
+	<classpathentry kind="lib" path="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/javafx.fxml.jar" sourcepath="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/src.zip"/>
+	<classpathentry kind="lib" path="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/javafx.controls.jar" sourcepath="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/src.zip"/>
+	<classpathentry kind="lib" path="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/javafx.base.jar" sourcepath="/home/MYUSER/nobackup/java/javafx/javafx-sdk-17/lib/src.zip"/>
+	<classpathentry kind="lib" path="/home/MYUSER/.gradle/caches/modules-2/files-2.1/org.json/json/20210307/528c8df3757e8bcf151817b1d7b9b434f6aa08d5/json-20210307.jar"/>
+	<classpathentry kind="lib" path="/home/MYUSER/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter/5.8.0-M1/93a2ac05e5d1503e5276f97aa92093c3411180d6/junit-jupiter-5.8.0-M1.jar"/>
+	<classpathentry kind="lib" path="/home/MYUSER/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.8.0-M1/6d6a0e5ee7373eaebba6a7357c36a468e490b47b/junit-jupiter-api-5.8.0-M1.jar"/>
+	<classpathentry kind="lib" path="/home/MYUSER/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.8.0-M1/7c9a3128baf19144a4dceb1d02e697384db8b2b4/junit-jupiter-engine-5.8.0-M1.jar"/>
+	<classpathentry kind="lib" path="/home/MYUSER/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-params/5.8.0-M1/a0fbbbce7fc2989a31d4be5a3db08e5530932e18/junit-jupiter-params-5.8.0-M1.jar"/>
+	<classpathentry kind="lib" path="/home/MYUSER/.gradle/caches/modules-2/files-2.1/com.oracle.database.jdbc/ucp/19.8.0.0/f3ffaed1b8aa011e6a136af1c5ad2ce7be439cd3/ucp-19.8.0.0.jar"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

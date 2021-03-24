@@ -4,6 +4,7 @@ module imperfectsilentart.martinfowler.uiArchs.formsandcontrols {
     requires javafx.controls;
     requires javafx.graphics;
     requires javafx.fxml;
+    requires org.json;
 
     
     opens imperfectsilentart.martinfowler.uiArchs.formsandcontrols to javafx.graphics;
