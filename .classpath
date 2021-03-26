@@ -29,5 +29,10 @@
 	<classpathentry kind="lib" path="/home/MYUSER/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.8.0-M1/7c9a3128baf19144a4dceb1d02e697384db8b2b4/junit-jupiter-engine-5.8.0-M1.jar"/>
 	<classpathentry kind="lib" path="/home/MYUSER/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-params/5.8.0-M1/a0fbbbce7fc2989a31d4be5a3db08e5530932e18/junit-jupiter-params-5.8.0-M1.jar"/>
 	<classpathentry kind="lib" path="/home/MYUSER/.gradle/caches/modules-2/files-2.1/com.oracle.database.jdbc/ucp/19.8.0.0/f3ffaed1b8aa011e6a136af1c5ad2ce7be439cd3/ucp-19.8.0.0.jar"/>
+	<classpathentry kind="lib" path="/home/MYUSER/nobackup/java/HikariCP/HikariCP-4.0.3.jar" sourcepath="/home/MYUSER/nobackup/java/HikariCP/HikariCP-4.0.3-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/MYUSER/nobackup/java/HikariCP/HikariCP-4.0.3-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

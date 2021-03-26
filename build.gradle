@@ -33,17 +33,19 @@ repositories {
 }
 
 dependencies {
-	// Get the 19.8.0.0 Oracle JDBC driver along with other companion jars
 	implementation "org.openjfx:javafx-base:17-ea+3:${platform}"
 	implementation "org.openjfx:javafx-controls:17-ea+3:${platform}"
 	implementation "org.openjfx:javafx-graphics:17-ea+3:${platform}"
 	implementation "org.openjfx:javafx-fxml:17-ea+3:${platform}"
 	implementation group: 'org.json', name: 'json', version: '20210307'
+	implementation "com.zaxxer:HikariCP:4.0.3"
 	implementation("com.oracle.database.jdbc:ojdbc8-production:19.8.0.0")
 	testImplementation group: 'org.json', name: 'json', version: '20210307'
+	testImplementation "com.zaxxer:HikariCP:4.0.3"
 	testImplementation("com.oracle.database.jdbc:ojdbc8-production:19.8.0.0")
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.8.0-M1'
 	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.0-M1'
+	// TODO get mysql-connector from central repo
 	compile files('/usr/share/java/mysql-connector-java.jar')
 	runtime files('/usr/share/java/mysql-connector-java.jar')
 }

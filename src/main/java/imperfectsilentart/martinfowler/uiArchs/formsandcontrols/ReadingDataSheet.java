@@ -24,10 +24,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 
 /**
- * This class encapsulates a pane used as an interface for showing, searching and modifying ice cream reading records.
+ * This wrapper class encapsulates a pane used as an interface for showing, searching and modifying ice cream reading records.
  * The pane contains all data fields (read only) and record entries of one ice cream reading record.
  * Each field or entry has a label with corresponding text field.
  * 

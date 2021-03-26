@@ -1,4 +1,5 @@
 {
+    "activeDbs": "mysql",
     "testQueries": {
         "mysql": [
             "select station_name from monitoring_station"

@@ -22,16 +22,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import imperfectsilentart.martinfowler.uiArchs.dbAccess.MonitoringStationDao;
 import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
-
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
  * Simple tests for DB connectivity via connection pool.
  */
-public class DbConnectionPoolTest {
+public class GenericConnectionPoolTest {
+	private static final Logger logger = Logger.getLogger(GenericConnectionPoolTest.class.getName());
 	/**
 	 * @throws org.json.JSONException
 	 */
@@ -39,7 +41,6 @@ public class DbConnectionPoolTest {
 	public static void setup() throws IOException, URISyntaxException{
 		ConfigParser.getInstance().parseConfig();
 	}
-
 	
 	/**
 	 * Test connecting to DB instance via connection pool, run test query and print result.
@@ -48,7 +49,7 @@ public class DbConnectionPoolTest {
 	 */
 	@ParameterizedTest
 	@ValueSource(strings = { "oracleXE" })
-	public final void testQueryExecution(final String dbsName) {
+	public void testQueryExecution(final String dbsName) {
 		JSONObject dbParameters = null;
 		JSONArray testQueries = null;
 		String queryText = null;
@@ -99,14 +100,13 @@ public class DbConnectionPoolTest {
 		
 		if(null == conn) fail("Failed initializing connection to database: "+dbParameters.getString("connectionUrl"));
 		// execute test query
-		try {
-			executeQuery(conn, queryText);
-			conn.close();
-		} catch (SQLException e) {
-			fail("Error while accessing database: "+dbParameters.getString("connectionUrl")+".\n"+e.getCause()+"\n"+e.getStackTrace());
+		executeQuery(conn, queryText);
+		
+		if(null != conn) {
+			try {
+				conn.close();
+			} catch (SQLException e) {}
 		}
-		
-		
 		// just for better separation of tests outputs
 		System.out.println("\n\n\n\n");
 	}
@@ -124,7 +124,7 @@ public class DbConnectionPoolTest {
 			connection.setAutoCommit(false);
 			
 			
-			System.out.println ("Executing query: "+queryText);
+			System.out.println("Executing query: "+queryText);
 			final ResultSet result = stmt.executeQuery(queryText);
 			
 			
@@ -132,7 +132,6 @@ public class DbConnectionPoolTest {
 				System.out.println(result.getString(1));
 			}
 			result.close();
-			connection.close();
 		} catch (SQLException e) {
 			fail("Error while creating, executing or evaluating query: \""+queryText+"\".\n"+e.getCause()+"\n"+e.getStackTrace());
 		}

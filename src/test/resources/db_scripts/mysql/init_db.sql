@@ -3,17 +3,15 @@ USE martinfowler_uiArchs;
 
 CREATE TABLE IF NOT EXISTS monitoring_station (
 	id SERIAl PRIMARY KEY,
-	station_external_id VARCHAR(256) NOT NULL,
+	station_external_id VARCHAR(255) NOT NULL UNIQUE,
 	INDEX monitoring_station__idx__station_external_id (station_external_id ASC),
 	INDEX monitoring_station__combined_idx (
 		id ASC,
 		station_external_id ASC
 	),
-	station_name VARCHAR(4092) DEFAULT NULL,
+	station_name VARCHAR(4095) DEFAULT NULL,
 	target_concentration SMALLINT NOT NULL
-)
-	-- AUTO_INCREMENT = id
-;
+);
 
 
 CREATE TABLE IF NOT EXISTS concentration_reading (
@@ -24,9 +22,7 @@ CREATE TABLE IF NOT EXISTS concentration_reading (
 		REFERENCES monitoring_station(id)
 		ON DELETE SET DEFAULT
 		ON UPDATE CASCADE,
-	reading_timestamp TIMESTAMP NOT NULL,
+	reading_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	INDEX concentration_reading__idx__reading_timestamp (reading_timestamp ASC),
 	actual_concentration SMALLINT NOT NULL
-)
-	-- AUTO_INCREMENT = id
-;
+);

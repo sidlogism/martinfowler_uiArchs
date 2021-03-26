@@ -1,5 +1,8 @@
 package imperfectsilentart.martinfowler.uiArchs.formsandcontrols;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,7 +19,7 @@ import javafx.stage.Stage;
  * @note    For simplicity DB table locking is done pessimistic.
  */
 public class IceCreamAssessmentForm extends Application{
-
+	private static final Logger logger = Logger.getLogger(IceCreamAssessmentForm.class.getName());
 
 	@Override
 	public void start(final Stage stage)
@@ -31,6 +34,8 @@ public class IceCreamAssessmentForm extends Application{
 		 * On change of selected station in list, the value of the text field "Station ID" is updated.
 		 * On change of the text field "Station ID", the selected station in the list is updated as well.
 		 * IMPORTANT: avoid circular listener update notifications by only changing "Station ID" text or list selection if the new value is different from the currently present value.
+		 * 
+		 * NOTE: elegant binding (e. g. bindBidirectional()) not easily possible, because SelectionModel.selectedItemProperty() returns ReadOnlyObjectProperty, which cannot be bound directly.
 		 */
 		MonitoringStationList.getInstance().registerStationChangeListener(
 				new ChangeListener<String>() {
@@ -68,6 +73,7 @@ public class IceCreamAssessmentForm extends Application{
 		stage.setResizable(true);  
 		stage.centerOnScreen();
 		// make stage visible
+		logger.log(Level.INFO, "bla");
 		stage.show();
 	}
 

@@ -53,7 +53,7 @@ public class DbConnectionTest {
 	 */
 	@ParameterizedTest
 	@ValueSource(strings = { "mysql", "oracleXE" })
-	public final void testLoadingDbDriver(final String dbsName) {
+	public void testLoadingDbDriver(final String dbsName) {
 		JSONObject dbParameters = null;
 		try {
 			dbParameters = ConfigParser.getInstance().getRootNode().getJSONObject("dbParameters").getJSONObject(dbsName);
@@ -74,7 +74,7 @@ public class DbConnectionTest {
 	 */
 	@ParameterizedTest
 	@ValueSource(strings = { "mysql", "oracleXE" })
-	public final void testQueryExecution(final String dbsName) {
+	public void testQueryExecution(final String dbsName) {
 		JSONObject dbParameters = null;
 		JSONArray testQueries = null;
 		try {
@@ -126,14 +126,15 @@ public class DbConnectionTest {
 			
 			
 			System.out.println ("Executing query: "+queryText);
-			final ResultSet result = stmt.executeQuery(queryText);
-			
-			
-			while (result.next()) {
-				System.out.println(result.getString(1));
+			try(
+				final ResultSet result = stmt.executeQuery(queryText);
+			){
+				while (result.next()) {
+					System.out.println(result.getString(1));
+				}
+			} catch (SQLException e2) {
+				fail("Error while accessing database: "+dbParameters.getString("connectionUrl")+".\n"+e2.getCause()+"\n"+e2.getStackTrace());
 			}
-			result.close();
-			connection.close();
 		} catch (SQLException e) {
 			fail("Error while accessing database: "+dbParameters.getString("connectionUrl")+".\n"+e.getCause()+"\n"+e.getStackTrace());
 		}

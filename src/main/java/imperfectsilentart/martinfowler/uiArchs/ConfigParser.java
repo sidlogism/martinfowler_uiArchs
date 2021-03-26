@@ -24,10 +24,7 @@ import java.nio.file.Paths;
 
 import org.json.JSONObject;
 /**
- * Beschreibung
- *
- * @author Imperfect Silent Art
- *
+ * Parser of JSON config file for read-only access.
  */
 
 public class ConfigParser {
@@ -48,6 +45,11 @@ public class ConfigParser {
 	public JSONObject getRootNode() {
 		return this.rootNode;
 	}
+	/**
+	 * Parses the default JSON config file.
+	 * 
+	 * @return    unmarshalled content of the default JSON config file
+	 */
 	public JSONObject parseConfig() throws IOException, URISyntaxException {
 		final URI configAbsolutePath = this.getClass().getResource(configRelativePath).toURI();
 		final String configContent = Files.readString(Paths.get(configAbsolutePath), StandardCharsets.UTF_8);
