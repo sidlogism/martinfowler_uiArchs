@@ -43,7 +43,6 @@ public class MonitoringStationList{
 	/*
 	 * dynamic members
 	 */
-	final  VBox listContextNode = new VBox(2);
 	final ListView<String> stationList = new ListView<String>();
 
 	private MonitoringStationList() {
@@ -62,19 +61,13 @@ public class MonitoringStationList{
 			logger.log(Level.SEVERE, "Failed to load data from DB.", e);
 		}
 		this.stationList.setItems(stationListData);
-		
-		/*
-		 * Fill context node holding the GUI-section for the list.
-		 */
-		final Text columnNames = new Text("id | station_external_id | station_name | target_concentration");
-		listContextNode.getChildren().addAll(columnNames, this.stationList);
 	}
 	
 	public void registerStationChangeListener(final ChangeListener<String> changeListener) {
 		this.stationList.getSelectionModel().selectedItemProperty().addListener(changeListener);
 	}
 	public void integrateIntoPane(final Pane parentPane) {
-		parentPane.getChildren().add(this.listContextNode);
+		parentPane.getChildren().add(this.stationList);
 	}
 	
 	/**

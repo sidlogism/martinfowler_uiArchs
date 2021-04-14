@@ -41,14 +41,12 @@ public class MonitoringStationDao {
 	    	connection.setAutoCommit(false);
 	    	final ResultSet resultSet = stmt.executeQuery();
 	    	
-	    	// TODO beautify output with format().
+	    	/*
+	    	 * Only use column station_external_id .
+	    	 * There currently is no out-of-the-box list for multiple columns in JavaFX.
+	    	 */
 	    	while( resultSet.next() ) {
-	    		result.add(
-	    				resultSet.getString(1)+" | "+
-	    				resultSet.getString(2)+" | "+
-	    				resultSet.getString(3)+" | "+
-	    				resultSet.getString(4)
-		    		);
+	    		result.add( resultSet.getString(2) );
 	    	}
     	} catch (SQLException e) {
 			throw new DbAccessException("Error while opening new database connection or while executing query.", e);
