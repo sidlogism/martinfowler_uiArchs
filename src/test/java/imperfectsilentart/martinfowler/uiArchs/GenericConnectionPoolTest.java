@@ -22,23 +22,19 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import imperfectsilentart.martinfowler.uiArchs.dbAccess.MonitoringStationDao;
 import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 /**
  * Simple tests for DB connectivity via connection pool.
  */
 public class GenericConnectionPoolTest {
-	private static final Logger logger = Logger.getLogger(GenericConnectionPoolTest.class.getName());
 	/**
+	 * @throws FileSystemAccessException 
 	 * @throws org.json.JSONException
 	 */
 	@BeforeAll
-	public static void setup() throws IOException, URISyntaxException{
+	public static void setup() throws IOException, URISyntaxException, FileSystemAccessException{
 		ConfigParser.getInstance().parseConfig();
 	}
 	

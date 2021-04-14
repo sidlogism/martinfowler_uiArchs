@@ -16,18 +16,18 @@
 package imperfectsilentart.martinfowler.uiArchs;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 /**
  * Parser of JSON config file for read-only access.
  */
 
 public class ConfigParser {
+	/**
+	 * Relative path to default config file in classpath.
+	 */
 	final static String configRelativePath = "/config.json";
 	/*
 	 * static members for singleton pattern
@@ -49,10 +49,11 @@ public class ConfigParser {
 	 * Parses the default JSON config file.
 	 * 
 	 * @return    unmarshalled content of the default JSON config file
+	 * @throws FileSystemAccessException 
 	 */
-	public JSONObject parseConfig() throws IOException, URISyntaxException {
-		final URI configAbsolutePath = this.getClass().getResource(configRelativePath).toURI();
-		final String configContent = Files.readString(Paths.get(configAbsolutePath), StandardCharsets.UTF_8);
+	public JSONObject parseConfig() throws IOException, JSONException, URISyntaxException, FileSystemAccessException {
+		final String configContent = FileTools.getFileContent(configRelativePath);
+		
 		this.rootNode = new JSONObject(configContent);
 		return getRootNode();
 	}

@@ -23,35 +23,42 @@ import org.json.JSONObject;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import javax.sql.DataSource;
 
 import imperfectsilentart.martinfowler.uiArchs.ConfigParser;
+import imperfectsilentart.martinfowler.uiArchs.FileSystemAccessException;
 /**
- * Beschreibung
- *
- * @author Imperfect Silent Art
- *
+ * Simple wrapper for accessing database connection pool.
  */
 public class DbConnector {
 	private DbConnector(){}
 	
+	/**
+	 * HikariDataSource    global connection pool initialized once using {@link #getConnectionPool()}
+	 * 
+	 * @note    pool is not closed at application shutdown (TODO strategy for closing statically. finalize() is deprecated)
+	 */
     private static HikariDataSource connectionPool;
+    
     /**
      * Provides connection pool initialized with default parameters
      * 
-     * @return HikariDataSource    connection pool initialized with default parameters
-     * @note    Returning HikariDataSource instead of javax.sql.DataSource because the latter cannot be closed and shutdown explicitly while a HikariDataSource can. 
+     * @return HikariDataSource    connection pool initialized with default parameters.
+     * @note    HikariDataSource instead of javax.sql.DataSource to allow closing the pool externally. 
+     * 
      * @throws DbAccessException
+     * @throws FileSystemAccessException 
      */
-    public static HikariDataSource getConnectionPool() throws DbAccessException{
+    public static synchronized HikariDataSource getConnectionPool() throws DbAccessException{
     	JSONObject dbParameters = null;
 		try {
 			ConfigParser.getInstance().parseConfig();
 			final String activeDbs = ConfigParser.getInstance().getRootNode().getString("activeDbs");
 			dbParameters = ConfigParser.getInstance().getRootNode().getJSONObject("dbParameters").getJSONObject(activeDbs);
-		}catch(JSONException | IOException | URISyntaxException e) {
+		}catch(IOException | JSONException | URISyntaxException | FileSystemAccessException e) {
 			throw new DbAccessException("Failed reading configuration: Could not get connection parameters.", e);
 		}
-        if(null == connectionPool){
+        if(null == connectionPool || connectionPool.isClosed()){
             HikariConfig config = new HikariConfig();
                  
             config.setJdbcUrl(dbParameters.getString("connectionUrl"));

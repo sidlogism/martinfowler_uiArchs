@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 package imperfectsilentart.martinfowler.uiArchs.formsandcontrols;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import imperfectsilentart.martinfowler.uiArchs.dbAccess.DbAccessException;
+import imperfectsilentart.martinfowler.uiArchs.dbAccess.MonitoringStationDao;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 /**
  * Wrapper class for scrollable list of monitoring stations.
  */
 public class MonitoringStationList{
+	private static final Logger logger = Logger.getLogger(MonitoringStationList.class.getName());
 	/*
 	 * static members for singleton pattern
 	 */
@@ -33,26 +40,41 @@ public class MonitoringStationList{
 	public static MonitoringStationList getInstance() {
 		return MonitoringStationList.instance;
 	}
-	
 	/*
 	 * dynamic members
 	 */
+	final  VBox listContextNode = new VBox(2);
 	final ListView<String> stationList = new ListView<String>();
 
 	private MonitoringStationList() {
-		// TODO sample data
-		final ObservableList<String> stationListData = FXCollections.observableArrayList(
-				"chocolate", "salmon", "gold", "coral", "darkorchid",
-				"darkgoldenrod", "lightsalmon", "black", "rosybrown", "blue",
-				"blueviolet", "brown");
-		stationList.setItems(stationListData);
+		/*
+		 * Load data for scrollable list of monitoring stations.
+		 */
+		final MonitoringStationDao dao = new MonitoringStationDao();
+		
+		ObservableList<String> stationListData = null;
+		try {
+			stationListData = FXCollections.observableArrayList( dao.findAll() );
+		} catch (DbAccessException e) {
+			final ArrayList<String> data = new ArrayList<String>();
+			data.add("- data access error -");
+			stationListData = FXCollections.observableArrayList( data );
+			logger.log(Level.SEVERE, "Failed to load data from DB.", e);
+		}
+		this.stationList.setItems(stationListData);
+		
+		/*
+		 * Fill context node holding the GUI-section for the list.
+		 */
+		final Text columnNames = new Text("id | station_external_id | station_name | target_concentration");
+		listContextNode.getChildren().addAll(columnNames, this.stationList);
 	}
 	
 	public void registerStationChangeListener(final ChangeListener<String> changeListener) {
 		this.stationList.getSelectionModel().selectedItemProperty().addListener(changeListener);
 	}
 	public void integrateIntoPane(final Pane parentPane) {
-		parentPane.getChildren().add(this.stationList);
+		parentPane.getChildren().add(this.listContextNode);
 	}
 	
 	/**

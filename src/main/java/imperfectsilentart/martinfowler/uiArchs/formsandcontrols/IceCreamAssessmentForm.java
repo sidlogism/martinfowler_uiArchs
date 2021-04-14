@@ -67,7 +67,7 @@ public class IceCreamAssessmentForm extends Application{
 		MonitoringStationList.getInstance().integrateIntoPane(rootPane);
 		ReadingDataSheet.getInstance().integrateIntoPane(rootPane);
 		HBox.setHgrow(ReadingDataSheet.getInstance().getDataSheetPane(), Priority.ALWAYS);
-		stage.setScene(new Scene(rootPane, 470, 200));
+		stage.setScene(new Scene(rootPane, 650, 200));
 		// set stage attributes
 		stage.setTitle("Assessment Record (\"Forms and Controls\" version)");
 		stage.setResizable(true);  

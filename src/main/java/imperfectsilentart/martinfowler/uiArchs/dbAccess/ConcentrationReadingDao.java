@@ -18,10 +18,9 @@ package imperfectsilentart.martinfowler.uiArchs.dbAccess;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
- * Beschreibung
+ * DAO for accessing concentration_reading table.
  *
- * @author Imperfect Silent Art
- *
+ * Using no OR-mapper on purpose.
  */
 public class ConcentrationReadingDao {
 

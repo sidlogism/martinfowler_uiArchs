@@ -38,8 +38,7 @@ public class HikariConnectionPoolTest {
 	 */
 	@Test
 	public void testCreatingConnectionPool() {
-		try (final HikariDataSource pool = DbConnector.getConnectionPool();
-		){
+		try (final HikariDataSource pool = DbConnector.getConnectionPool();){
 			// nothing to do
 		} catch (DbAccessException e) {
 			fail("Error while creating connection pool.\n"+e.getCause()+"\n"+e.getStackTrace());

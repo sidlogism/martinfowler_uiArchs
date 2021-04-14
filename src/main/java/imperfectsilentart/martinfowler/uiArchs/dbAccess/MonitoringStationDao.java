@@ -16,27 +16,43 @@
 package imperfectsilentart.martinfowler.uiArchs.dbAccess;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
- * Beschreibung
+ * DAO for accessing monitoring_station table.
  *
- * @author Imperfect Silent Art
- *
+ * Using no OR-mapper on purpose.
  */
 public class MonitoringStationDao {
-	private static final Logger logger = Logger.getLogger(MonitoringStationDao.class.getName());
-	
-	public ArrayList<String> finaAll() throws DbAccessException {
+	/**
+	 * @return Container holding the String representation of every monitoring station record.
+	 * 
+	 * @throws DbAccessException
+	 */
+	public ArrayList<String> findAll() throws DbAccessException {
+		final String query = "SELECT id, station_external_id, station_name, target_concentration from monitoring_station order by id asc";
+		ArrayList<String> result = new ArrayList<String>();
     	try(
 			final Connection connection = DbConnector.getConnectionPool().getConnection();
+    		final PreparedStatement stmt = connection.prepareStatement(query); 
     	){
+	    	connection.setAutoCommit(false);
+	    	final ResultSet resultSet = stmt.executeQuery();
 	    	
+	    	// TODO beautify output with format().
+	    	while( resultSet.next() ) {
+	    		result.add(
+	    				resultSet.getString(1)+" | "+
+	    				resultSet.getString(2)+" | "+
+	    				resultSet.getString(3)+" | "+
+	    				resultSet.getString(4)
+		    		);
+	    	}
     	} catch (SQLException e) {
 			throw new DbAccessException("Error while opening new database connection or while executing query.", e);
 		}
-    	return new ArrayList<String>();
+    	return result;
 	}
 }

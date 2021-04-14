@@ -39,10 +39,11 @@ import org.junit.jupiter.params.provider.ValueSource;
  */
 public class DbConnectionTest {
 	/**
+	 * @throws FileSystemAccessException 
 	 * @throws org.json.JSONException
 	 */
 	@BeforeAll
-	public static void setup() throws IOException, URISyntaxException{
+	public static void setup() throws IOException, URISyntaxException, FileSystemAccessException{
 		ConfigParser.getInstance().parseConfig();
 	}
 
