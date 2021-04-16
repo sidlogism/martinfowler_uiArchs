@@ -25,8 +25,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 /**
  * Wrapper class for scrollable list of monitoring stations.
@@ -51,6 +49,10 @@ public class MonitoringStationList{
 		 */
 		final MonitoringStationDao dao = new MonitoringStationDao();
 		
+		/*
+		 * Currently the list contains only one string representing column monitoring_station.station_external_id.
+		 * There currently is no out-of-the-box list for multiple columns in JavaFX.
+		 */
 		ObservableList<String> stationListData = null;
 		try {
 			stationListData = FXCollections.observableArrayList( dao.findAll() );
@@ -73,13 +75,13 @@ public class MonitoringStationList{
 	/**
 	 * Set new selection for monitoring station list.
 	 * 
-	 * @param newStationName    new selection for monitoring station list. Null is ignored. Use empty string instead.
+	 * @param newExternalId    new selection for monitoring station list. Null is ignored. Use empty string instead.
 	 */
-	public void changeSelection(final String newStationName) {
-		if(null == newStationName) {
+	public void changeSelection(final String newExternalId) {
+		if(null == newExternalId) {
 			return;
 		}
-		this.stationList.getSelectionModel().select(newStationName);
+		this.stationList.getSelectionModel().select(newExternalId);
 		//FIXME handle incomplete partial names or missing hits
 	}
 

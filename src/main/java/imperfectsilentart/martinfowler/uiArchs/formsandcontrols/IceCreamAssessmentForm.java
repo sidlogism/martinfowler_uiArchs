@@ -73,7 +73,7 @@ public class IceCreamAssessmentForm extends Application{
 		stage.setResizable(true);  
 		stage.centerOnScreen();
 		// make stage visible
-		logger.log(Level.INFO, "bla");
+		logger.log(Level.INFO, "Displaying and starting application "+this.getClass().getName() );
 		stage.show();
 	}
 

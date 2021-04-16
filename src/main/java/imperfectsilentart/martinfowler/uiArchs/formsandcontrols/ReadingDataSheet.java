@@ -15,8 +15,14 @@
  */
 package imperfectsilentart.martinfowler.uiArchs.formsandcontrols;
 
-import java.time.OffsetDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import imperfectsilentart.martinfowler.uiArchs.dbAccess.ConcentrationReading;
+import imperfectsilentart.martinfowler.uiArchs.dbAccess.ConcentrationReadingDao;
+import imperfectsilentart.martinfowler.uiArchs.dbAccess.DbAccessException;
+import imperfectsilentart.martinfowler.uiArchs.dbAccess.MonitoringStation;
+import imperfectsilentart.martinfowler.uiArchs.dbAccess.MonitoringStationDao;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -24,8 +30,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 
@@ -39,6 +43,7 @@ import java.util.logging.Logger;
  * All other entries and data fields are calculated from external sources and thus the corresponding text fields are read only.
  */
 public class ReadingDataSheet {
+	private static final Logger logger = Logger.getLogger(ReadingDataSheet.class.getName());
 	/*
 	 * static members for singleton pattern
 	 */
@@ -52,20 +57,24 @@ public class ReadingDataSheet {
 	 */
 	private GridPane dataSheetPane = null;
 
+	// data depending on current monitoring station
 	private Label lblStationExternalId = null;
-	private Label lblDate = null;
 	private Label lblTargetConcentration = null;
+	// data depending on current reading record
+	private Label lblDate = null;
 	private Label lblActualConcentration = null;
 	private Label lblVariance = null;
 	
+	// data depending on current monitoring station
 	private TextField tfStationExternalId = null;
-	private TextField tfDate = null;
 	private TextField tfTargetConcentration = null;
+	// data depending on current reading record
+	private TextField tfDate = null;
 	private TextField tfActualConcentration = null;
 	private TextField tfVariance = null;
 	
 	
-	/*
+	/**
 	 * private default ctor for singleton pattern
 	 * 
 	 * Initializes the internal pane used as an interface for showing, searching and modifying ice cream reading records.
@@ -76,62 +85,157 @@ public class ReadingDataSheet {
 		this.dataSheetPane.setHgap(7);
 		this.dataSheetPane.setVgap(7);
 		
+		// data depending on current monitoring station
 		this.lblStationExternalId = new Label("Station ID");
 		this.dataSheetPane.add(this.lblStationExternalId, 0, 0);
-		this.dataSheetPane.setHalignment(lblStationExternalId, HPos.LEFT);
+		GridPane.setHalignment(lblStationExternalId, HPos.LEFT);
 		this.tfStationExternalId = new TextField();
 		this.dataSheetPane.add(this.tfStationExternalId, 1, 0);
 		
-		this.lblDate = new Label("Date");
-		this.dataSheetPane.add(this.lblDate, 0, 1);
-		this.dataSheetPane.setHalignment(lblDate, HPos.LEFT);
-		this.tfDate = new TextField();
-		this.dataSheetPane.add(this.tfDate, 1, 1);
-		
 		this.lblTargetConcentration = new Label("Target");
-		this.dataSheetPane.add(this.lblTargetConcentration, 0, 2);
-		this.dataSheetPane.setHalignment(lblTargetConcentration, HPos.LEFT);
+		this.dataSheetPane.add(this.lblTargetConcentration, 0, 1);
+		GridPane.setHalignment(lblTargetConcentration, HPos.LEFT);
 		this.tfTargetConcentration = new TextField();
-		this.dataSheetPane.add(this.tfTargetConcentration, 1, 2);
+		this.tfTargetConcentration.setEditable(false);
+		this.tfTargetConcentration.setDisable(true);
+		this.dataSheetPane.add(this.tfTargetConcentration, 1, 1);
 		
+		// data depending on current reading record
+		this.lblDate = new Label("Date");
+		this.dataSheetPane.add(this.lblDate, 0, 2);
+		GridPane.setHalignment(lblDate, HPos.LEFT);
+		this.tfDate = new TextField();
+		this.tfDate.setEditable(false);
+		this.tfDate.setDisable(true);
+		this.dataSheetPane.add(this.tfDate, 1, 2);
+
 		this.lblActualConcentration = new Label("Actual");
 		this.dataSheetPane.add(this.lblActualConcentration, 0, 3);
-		this.dataSheetPane.setHalignment(lblActualConcentration, HPos.LEFT);
+		GridPane.setHalignment(lblActualConcentration, HPos.LEFT);
 		this.tfActualConcentration = new TextField();
 		this.dataSheetPane.add(this.tfActualConcentration, 1, 3);
 		
 		this.lblVariance = new Label("Variance");
 		this.dataSheetPane.add(this.lblVariance, 0, 4);
-		this.dataSheetPane.setHalignment(lblVariance, HPos.LEFT);
+		GridPane.setHalignment(lblVariance, HPos.LEFT);
 		this.tfVariance = new TextField();
+		this.tfVariance.setEditable(false);
+		this.tfVariance.setDisable(true);
 		this.dataSheetPane.add(this.tfVariance, 1, 4);
-	}
-	
-	
-	public GridPane getDataSheetPane() {
-		return this.dataSheetPane;
 	}
 
 	/**
 	 * Set new value for "Station ID" text field.
 	 * 
-	 * @param newStationName    new value for "Station ID" text field. Null is ignored. Use empty string instead.
+	 * @param newExternalId    new value for "Station ID" text field. Null is ignored. Use empty string instead.
+	 * @throws DbAccessException 
 	 */
-	public synchronized void changeReadingRecord(final String newStationName) {
-		if(null == newStationName) {
+	public synchronized void changeReadingRecord(final String newExternalId) {
+		if(null == newExternalId) {
 			return;
 		}
-		this.tfStationExternalId.setText(newStationName);
-		//FIXME handle incomplete partial names or missing hits
-	}
-	private synchronized void changeReadingRecord(final String stationName, final OffsetDateTime readingTimestamp) {
-		// FIXME impl
+		
+		/*
+		 * load and display data depending on current monitoring station
+		 */
+		final MonitoringStationDao stationDao = new MonitoringStationDao();
+		MonitoringStation station = null;
+		try {
+			station = stationDao.getInternalStationId(newExternalId);
+			if( null == station ) {
+				throw new DbAccessException("There is no station with given external station ID \""+newExternalId+"\".");
+			}
+		} catch (DbAccessException e) {
+			logger.log(Level.WARNING, "Failed to lookup station with given external station ID \""+newExternalId+"\".", e);
+			// wipe text fields to indicate error
+			wipeAllDependentTextFields();
+			return;
+		}
+		this.tfStationExternalId.setText(newExternalId);
+		this.tfTargetConcentration.setText( Integer.toString(station.getTargetConcentration()) );
+		
+		/*
+		 * load and display data depending on current reading record
+		 */
+		final ConcentrationReadingDao readingDao = new ConcentrationReadingDao();
+		ConcentrationReading newRecord = null;
+		try {
+			newRecord = readingDao.getLatestConcentrationReading( station.getId() );
+			if( null == newRecord ) {
+				throw new DbAccessException("There doesn't exist any concentration reading for given station yet. Station: "+station);
+			}
+		} catch (DbAccessException e) {
+			logger.log(Level.WARNING, "Failed to lookup concentration readings for given station. Station: "+station, e);
+			// wipe text fields to indicate error
+			wipeReadingDependentTextFields();
+			return;
+		}
+		// FIXME replace separator T in DateTimeFormatter.ISO_OFFSET_DATE_TIME
+		this.tfDate.setText( newRecord.getReadingTimestamp().format( ConcentrationReadingDao.getReadingTimestampFormat() ) );
+		this.tfActualConcentration.setText( Integer.toString(newRecord.getActualConcentration()) );
+		final double variance = newRecord.getActualConcentration() - station.getTargetConcentration();
+		this.tfVariance.setText( Double.toString(variance) );
+		
+		/*
+		 * Apply color code to variance text field.
+		 * 
+		 * I. e. calculate necessity of changing font color of text field. First set font color back to normal.
+		 */
+		this.tfVariance.setStyle("-fx-text-inner-color: black");
+		// Important: use double to avoid integer arithmetics (rounding down decimal digits)
+		double variancePercentage = ( variance / station.getTargetConcentration() )*100;
+		// remove sign from percentage, since not needed
+		if( variancePercentage < 0) { variancePercentage = (variancePercentage*-1); }
+		
+		if( variance < 0 && variancePercentage >= 10) {
+			this.tfVariance.setStyle("-fx-text-inner-color: red");
+		}else if( variance > 0 && variancePercentage >= 5) {
+			this.tfVariance.setStyle("-fx-text-inner-color: green");
+		}
 	}
 	
+	/**
+	 * Registers the given listener to the text fiel for the external stadion ID.
+	 * 
+	 * @param changeListener
+	 */
 	public void registerStationChangeListener(final ChangeListener<String> changeListener) {
 		this.tfStationExternalId.textProperty().addListener(changeListener);
 	}
+	
+	/**
+	 * Integrates the node of this pane into the given parent node.
+	 * 
+	 * @param parentPane    given parent node
+	 */
 	public void integrateIntoPane(final Pane parentPane) {
 		parentPane.getChildren().add(this.dataSheetPane);
 	}
+	
+	/**
+	 * @return node created by this class
+	 */
+	public GridPane getDataSheetPane() {
+		return this.dataSheetPane;
+	}
+	
+	/**
+	 * Wipes all text fields which depend on external station ID.
+	 * The current concentration reading record indirectly depends on the current monitoring station record.
+	 */
+	private void wipeAllDependentTextFields() {
+		this.tfTargetConcentration.setText("");
+		wipeReadingDependentTextFields();
+	}
+	
+	/**
+	 * Wipes all text field which depend on the current concentration reading record.
+	 */
+	private void wipeReadingDependentTextFields() {
+		this.tfDate.setText("");
+		this.tfActualConcentration.setText("");
+		this.tfVariance.setText("");
+	}
+
+
 }

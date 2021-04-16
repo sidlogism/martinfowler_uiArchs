@@ -2,7 +2,7 @@
 module imperfectsilentart.martinfowler.uiArchs.formsandcontrols {
     requires javafx.base;
     requires javafx.controls;
-    requires javafx.graphics;
+    requires transitive javafx.graphics;
     requires javafx.fxml;
     requires org.json;
     requires com.zaxxer.hikari;

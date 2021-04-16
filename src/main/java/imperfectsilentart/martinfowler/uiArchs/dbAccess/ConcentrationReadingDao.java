@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	 http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,13 +15,95 @@
  */
 package imperfectsilentart.martinfowler.uiArchs.dbAccess;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.format.SignStyle;
+import java.time.temporal.ChronoField;
+
+import com.zaxxer.hikari.HikariDataSource;
+
 /**
  * DAO for accessing concentration_reading table.
  *
  * Using no OR-mapper on purpose.
  */
 public class ConcentrationReadingDao {
-
+	/*
+	 * TODO untested whether the time zone offset works
+	 */
+	public final static DateTimeFormatter getReadingTimestampFormat() {
+		final DateTimeFormatterBuilder b = new DateTimeFormatterBuilder();
+		final DateTimeFormatter result = b.appendValue(ChronoField.YEAR, 4, 4, SignStyle.EXCEEDS_PAD).appendPattern("-MM-dd' 'HH:mm:ss[.SSS][Z]").toFormatter();
+		return result;
+	}
+	/**
+	 * Loads the youngest concentration reading record belonging to the monitoring station with the given ID from the database.
+	 * 
+	 * @param internalStationId    ID of relevant monitoring station
+	 * @return domain object of relevant reading record. null if the query result is empty.
+	 * @throws DbAccessException
+	 */
+	public ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws DbAccessException {
+		final String query = "SELECT cr.id, cr.fk_station_id, cr.reading_timestamp, cr.actual_concentration\n"
+				+ "FROM concentration_reading cr JOIN monitoring_station ms on (cr.fk_station_id = ms.id)\n"
+				+ "WHERE ms.id = ?\n"
+				+ "ORDER BY cr.reading_timestamp DESC\n"
+				+ "LIMIT 1";
+		
+		long id = -1;
+		long stationForeignKey = -1;
+		LocalDateTime readingTimestamp = null;
+		int actualConcentration = -1;
+		try(
+			final HikariDataSource connPool = DbConnector.getConnectionPool();
+			final Connection connection = connPool.getConnection();
+			final PreparedStatement stmtForLatestReading = connection.prepareStatement(query);
+		){
+			stmtForLatestReading.setLong(1, internalStationId);
+			connection.setAutoCommit(false);
+			
+			try(
+				final ResultSet resultSet = stmtForLatestReading.executeQuery();
+			){
+				if(! resultSet.next() ) {
+					return null;
+				}
+				id = resultSet.getLong(1);
+				stationForeignKey = resultSet.getLong(2);
+				readingTimestamp = parseReadingTimestamp( resultSet.getString(3) );
+				actualConcentration = resultSet.getInt(4);
+				
+				if( resultSet.next() ) {
+					throw new DbAccessException("Query result contains more tuples than expected. Expected one single tuple. Query:\n"+query);
+				}
+			}
+		} catch (SQLException | DbAccessException e) {
+			throw new DbAccessException("Error while opening database connection or executing query or processing query result. Query:\n"+query, e);
+		}
+		
+		final ConcentrationReading result = new ConcentrationReading(id, stationForeignKey, readingTimestamp, actualConcentration);
+		return result;
+	}
+	
+	/**
+	 * @param readingTimestamp
+	 * @return
+	 * @throws DbAccessException
+	 */
+	private LocalDateTime parseReadingTimestamp(final String readingTimestamp) throws DbAccessException {
+		LocalDateTime result = null;
+		
+		try {
+			result = LocalDateTime.parse(readingTimestamp, ConcentrationReadingDao.getReadingTimestampFormat());
+		}catch(DateTimeParseException e) {
+			throw new DbAccessException("Given timestamp \""+readingTimestamp+"\" doesn't have the required format \""+ConcentrationReadingDao.getReadingTimestampFormat()+"\"", e);
+		}
+		return result;
+	}
 }

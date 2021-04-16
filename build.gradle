@@ -45,9 +45,7 @@ dependencies {
 	testImplementation("com.oracle.database.jdbc:ojdbc8-production:19.8.0.0")
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.8.0-M1'
 	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.0-M1'
-	// TODO get mysql-connector from central repo
-	compile files('/usr/share/java/mysql-connector-java.jar')
-	runtime files('/usr/share/java/mysql-connector-java.jar')
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
 }
 
 sourceSets {
