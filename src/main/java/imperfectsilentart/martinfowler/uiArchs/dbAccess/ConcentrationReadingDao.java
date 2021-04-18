@@ -32,9 +32,11 @@ import com.zaxxer.hikari.HikariDataSource;
  * DAO for accessing concentration_reading table.
  *
  * Using no OR-mapper on purpose.
+ * TODO pessimistic db-locking, thread synchronization
  */
 public class ConcentrationReadingDao {
-	/*
+	/**
+	 * @return DateTimeFormatter    Formatter for generating a date format compatible to MySQL timestamp data type.
 	 * TODO untested whether the time zone offset works
 	 */
 	public final static DateTimeFormatter getReadingTimestampFormat() {
@@ -42,6 +44,35 @@ public class ConcentrationReadingDao {
 		final DateTimeFormatter result = b.appendValue(ChronoField.YEAR, 4, 4, SignStyle.EXCEEDS_PAD).appendPattern("-MM-dd' 'HH:mm:ss[.SSS][Z]").toFormatter();
 		return result;
 	}
+	
+	/**
+	 * Updates actual concentration value of current reading record.
+	 * 
+	 * @throws DbAccessException 
+	 */
+	public synchronized void updateActualConcentration(final int newConcentrationValue, final long readingId) throws DbAccessException {
+		if(readingId < 0) return;
+		
+		final String query = "UPDATE concentration_reading\n"
+				+ "SET actual_concentration  = ?\n"
+				+ "WHERE id = ?\n";
+		
+		try(
+			final HikariDataSource connPool = DbConnector.getConnectionPool();
+			final Connection connection = connPool.getConnection();
+			final PreparedStatement stmt = connection.prepareStatement(query);
+		){
+			stmt.setLong(1, newConcentrationValue);
+			stmt.setLong(2, readingId);
+			connection.setAutoCommit(false);
+			
+			stmt.executeUpdate();
+			connection.commit();
+		} catch (SQLException | DbAccessException e) {
+			throw new DbAccessException("Error while opening database connection or executing update query. Query:\n"+query, e);
+		}
+	}
+	
 	/**
 	 * Loads the youngest concentration reading record belonging to the monitoring station with the given ID from the database.
 	 * 
@@ -49,7 +80,7 @@ public class ConcentrationReadingDao {
 	 * @return domain object of relevant reading record. null if the query result is empty.
 	 * @throws DbAccessException
 	 */
-	public ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws DbAccessException {
+	public synchronized ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws DbAccessException {
 		final String query = "SELECT cr.id, cr.fk_station_id, cr.reading_timestamp, cr.actual_concentration\n"
 				+ "FROM concentration_reading cr JOIN monitoring_station ms on (cr.fk_station_id = ms.id)\n"
 				+ "WHERE ms.id = ?\n"
@@ -63,13 +94,13 @@ public class ConcentrationReadingDao {
 		try(
 			final HikariDataSource connPool = DbConnector.getConnectionPool();
 			final Connection connection = connPool.getConnection();
-			final PreparedStatement stmtForLatestReading = connection.prepareStatement(query);
+			final PreparedStatement stmt = connection.prepareStatement(query);
 		){
-			stmtForLatestReading.setLong(1, internalStationId);
+			stmt.setLong(1, internalStationId);
 			connection.setAutoCommit(false);
 			
 			try(
-				final ResultSet resultSet = stmtForLatestReading.executeQuery();
+				final ResultSet resultSet = stmt.executeQuery();
 			){
 				if(! resultSet.next() ) {
 					return null;

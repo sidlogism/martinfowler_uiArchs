@@ -24,6 +24,7 @@ import imperfectsilentart.martinfowler.uiArchs.dbAccess.DbAccessException;
 import imperfectsilentart.martinfowler.uiArchs.dbAccess.MonitoringStation;
 import imperfectsilentart.martinfowler.uiArchs.dbAccess.MonitoringStationDao;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -56,6 +57,8 @@ public class ReadingDataSheet {
 	 * dynamic members
 	 */
 	private GridPane dataSheetPane = null;
+	// ID of currently displayed concentration reading record
+	private long concentrationReadingId = -1;
 
 	// data depending on current monitoring station
 	private Label lblStationExternalId = null;
@@ -73,6 +76,29 @@ public class ReadingDataSheet {
 	private TextField tfActualConcentration = null;
 	private TextField tfVariance = null;
 	
+	private final ChangeListener<String> actualValueChangeListener = new ChangeListener<String>() {
+			public void changed(ObservableValue<? extends String> ov, String oldActualValue, String newActualValue) {
+				// don't propagate null or empty value
+				if( null == newActualValue || newActualValue.isEmpty() || newActualValue.isBlank() ) return;
+				
+				int newValue = -1;
+				try {
+					newValue = Integer.parseInt(newActualValue);
+				}catch(NumberFormatException e) {
+					logger.log(Level.WARNING, "The given value \""+newActualValue+"\" is no integer number. Expecting integer value for the actual concentration value.", e);
+				}
+				
+				final ConcentrationReadingDao readingDao = new ConcentrationReadingDao();
+				try {
+					readingDao.updateActualConcentration(newValue, concentrationReadingId);
+				} catch (DbAccessException e) {
+					logger.log(Level.WARNING, "Failed to update the actual concentration value in the database. Given actual value was \""+newActualValue+"\".", e);
+				}
+				
+				// finally update variance text field
+				updateVariance( newValue, Integer.parseInt( tfTargetConcentration.getText() ) );
+			}
+		};
 	
 	/**
 	 * private default ctor for singleton pattern
@@ -141,7 +167,7 @@ public class ReadingDataSheet {
 		final MonitoringStationDao stationDao = new MonitoringStationDao();
 		MonitoringStation station = null;
 		try {
-			station = stationDao.getInternalStationId(newExternalId);
+			station = stationDao.getStation(newExternalId);
 			if( null == station ) {
 				throw new DbAccessException("There is no station with given external station ID \""+newExternalId+"\".");
 			}
@@ -170,11 +196,30 @@ public class ReadingDataSheet {
 			wipeReadingDependentTextFields();
 			return;
 		}
-		// FIXME replace separator T in DateTimeFormatter.ISO_OFFSET_DATE_TIME
 		this.tfDate.setText( newRecord.getReadingTimestamp().format( ConcentrationReadingDao.getReadingTimestampFormat() ) );
+		// temporarily disable change listener
+		this.unregisterActualConcentratinChangeListener();
 		this.tfActualConcentration.setText( Integer.toString(newRecord.getActualConcentration()) );
-		final double variance = newRecord.getActualConcentration() - station.getTargetConcentration();
+		this.registerActualConcentrationChangeListener();
+		// update ID of currently displayed concentration reading record
+		this.concentrationReadingId = newRecord.getId();
+		updateVariance( newRecord.getActualConcentration(), station.getTargetConcentration() );
+	}
+	
+	/**
+	 * Recomputes the concentration variance based on the given values.
+	 * 
+	 * @param actualConcentration    value of the actual concentration measured
+	 * @param targetConcentration    value of the target concentration to be reached
+	 */
+	private void updateVariance(final int actualConcentration, final int targetConcentration) {
+		final double variance = actualConcentration - targetConcentration;
 		this.tfVariance.setText( Double.toString(variance) );
+		
+		// Important: use double to avoid integer arithmetics (rounding down decimal digits)
+		double variancePercentage = ( variance / targetConcentration )*100;
+		// remove sign from percentage, since not needed
+		if( variancePercentage < 0) { variancePercentage = (variancePercentage*-1); }
 		
 		/*
 		 * Apply color code to variance text field.
@@ -182,11 +227,6 @@ public class ReadingDataSheet {
 		 * I. e. calculate necessity of changing font color of text field. First set font color back to normal.
 		 */
 		this.tfVariance.setStyle("-fx-text-inner-color: black");
-		// Important: use double to avoid integer arithmetics (rounding down decimal digits)
-		double variancePercentage = ( variance / station.getTargetConcentration() )*100;
-		// remove sign from percentage, since not needed
-		if( variancePercentage < 0) { variancePercentage = (variancePercentage*-1); }
-		
 		if( variance < 0 && variancePercentage >= 10) {
 			this.tfVariance.setStyle("-fx-text-inner-color: red");
 		}else if( variance > 0 && variancePercentage >= 5) {
@@ -195,12 +235,31 @@ public class ReadingDataSheet {
 	}
 	
 	/**
-	 * Registers the given listener to the text fiel for the external stadion ID.
+	 * Registers the given listener to the text field for the external station ID.
 	 * 
 	 * @param changeListener
 	 */
 	public void registerStationChangeListener(final ChangeListener<String> changeListener) {
 		this.tfStationExternalId.textProperty().addListener(changeListener);
+	}
+	
+	
+	/**
+	 * Unregisters the listener from the text field for the actual concentration value.
+	 * 
+	 * @param changeListener
+	 */
+	public void unregisterActualConcentratinChangeListener() {
+		this.tfActualConcentration.textProperty().removeListener(this.actualValueChangeListener);
+	}
+	
+	/**
+	 * Registers the listener to the text field for the actual concentration value.
+	 * 
+	 * @param changeListener
+	 */
+	public void registerActualConcentrationChangeListener() {
+		this.tfActualConcentration.textProperty().addListener(this.actualValueChangeListener);
 	}
 	
 	/**

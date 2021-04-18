@@ -26,6 +26,7 @@ import com.zaxxer.hikari.HikariDataSource;
  * DAO for accessing monitoring_station table.
  *
  * Using no OR-mapper on purpose.
+ * TODO pessimistic db-locking, thread synchronization
  */
 public class MonitoringStationDao {
 	
@@ -36,7 +37,7 @@ public class MonitoringStationDao {
 	 * @return domain object of relevant monitoring station. null if the query result is empty.
 	 * @throws DbAccessException
 	 */
-	public MonitoringStation getInternalStationId(final String stationExternalId) throws DbAccessException {
+	public MonitoringStation getStation(final String stationExternalId) throws DbAccessException {
 		final String query = "SELECT id, station_external_id, station_name, target_concentration FROM monitoring_station WHERE station_external_id = ?";
 
 		long id = -1;
@@ -45,12 +46,12 @@ public class MonitoringStationDao {
 		try(
 			final HikariDataSource connPool = DbConnector.getConnectionPool();
 			final Connection connection = connPool.getConnection();
-			final PreparedStatement stmtForStationId = connection.prepareStatement(query);
+			final PreparedStatement stmt = connection.prepareStatement(query);
 		){
-			stmtForStationId.setString(1, stationExternalId);
+			stmt.setString(1, stationExternalId);
 			connection.setAutoCommit(false);
 			try(
-				final ResultSet resultSet = stmtForStationId.executeQuery();
+				final ResultSet resultSet = stmt.executeQuery();
 			){
 				if(! resultSet.next() ) {
 					return null;

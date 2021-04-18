@@ -81,8 +81,12 @@ public class MonitoringStationList{
 		if(null == newExternalId) {
 			return;
 		}
+		
+		/*
+		 * Incomplete partial names or missing hits are handled implicitly.
+		 * If the selection model doesn't find the given entry, the selection simply doesn't change.
+		 */
 		this.stationList.getSelectionModel().select(newExternalId);
-		//FIXME handle incomplete partial names or missing hits
 	}
 
 

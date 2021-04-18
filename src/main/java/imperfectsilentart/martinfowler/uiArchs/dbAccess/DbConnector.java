@@ -36,7 +36,7 @@ public class DbConnector {
 	/**
 	 * HikariDataSource    global connection pool initialized once using {@link #getConnectionPool()}
 	 * 
-	 * @note    pool is not closed at application shutdown (TODO strategy for closing statically. finalize() is deprecated)
+	 * @note    pool is not closed at application shutdown or until a calling method closes it (TODO strategy for closing statically. finalize() is deprecated)
 	 */
     private static HikariDataSource connectionPool;
     

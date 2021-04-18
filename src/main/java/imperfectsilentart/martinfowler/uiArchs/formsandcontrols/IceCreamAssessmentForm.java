@@ -56,8 +56,10 @@ public class IceCreamAssessmentForm extends Application{
 					}
 				}
 			);
-		
-
+		/*
+		 * Register listener for updating the actual concentration value if the value was changed in the input form.
+		 */
+		ReadingDataSheet.getInstance().registerActualConcentrationChangeListener();
 
 		/*
 		 * Construct new scene consisting of two elements and link the scene to the stage.
