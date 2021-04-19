@@ -7,9 +7,8 @@ module imperfectsilentart.martinfowler.uiArchs.formsandcontrols {
     requires org.json;
     requires com.zaxxer.hikari;
     requires java.sql;
-    requires java.logging;
+    requires org.apache.logging.log4j;
 
-    
     opens imperfectsilentart.martinfowler.uiArchs.formsandcontrols to javafx.graphics;
     exports imperfectsilentart.martinfowler.uiArchs.formsandcontrols;
 }

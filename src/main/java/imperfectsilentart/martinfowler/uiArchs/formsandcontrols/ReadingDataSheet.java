@@ -30,7 +30,9 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 
 
 
@@ -47,15 +49,14 @@ public class ReadingDataSheet {
 	private static final Logger logger = Logger.getLogger(ReadingDataSheet.class.getName());
 	/*
 	 * static members for singleton pattern
+	 * NOTE: Enforcing singleton to the current implementation because of writing DB access and to avoid some multi-threading issues.
 	 */
 	private static ReadingDataSheet instance = new ReadingDataSheet();
 	public static ReadingDataSheet getInstance() {
 		return ReadingDataSheet.instance;
 	}
-	
-	/*
-	 * dynamic members
-	 */
+
+
 	private GridPane dataSheetPane = null;
 	// ID of currently displayed concentration reading record
 	private long concentrationReadingId = -1;
@@ -149,90 +150,6 @@ public class ReadingDataSheet {
 		this.tfVariance.setDisable(true);
 		this.dataSheetPane.add(this.tfVariance, 1, 4);
 	}
-
-	/**
-	 * Set new value for "Station ID" text field.
-	 * 
-	 * @param newExternalId    new value for "Station ID" text field. Null is ignored. Use empty string instead.
-	 * @throws DbAccessException 
-	 */
-	public synchronized void changeReadingRecord(final String newExternalId) {
-		if(null == newExternalId) {
-			return;
-		}
-		
-		/*
-		 * load and display data depending on current monitoring station
-		 */
-		final MonitoringStationDao stationDao = new MonitoringStationDao();
-		MonitoringStation station = null;
-		try {
-			station = stationDao.getStation(newExternalId);
-			if( null == station ) {
-				throw new DbAccessException("There is no station with given external station ID \""+newExternalId+"\".");
-			}
-		} catch (DbAccessException e) {
-			logger.log(Level.WARNING, "Failed to lookup station with given external station ID \""+newExternalId+"\".", e);
-			// wipe text fields to indicate error
-			wipeAllDependentTextFields();
-			return;
-		}
-		this.tfStationExternalId.setText(newExternalId);
-		this.tfTargetConcentration.setText( Integer.toString(station.getTargetConcentration()) );
-		
-		/*
-		 * load and display data depending on current reading record
-		 */
-		final ConcentrationReadingDao readingDao = new ConcentrationReadingDao();
-		ConcentrationReading newRecord = null;
-		try {
-			newRecord = readingDao.getLatestConcentrationReading( station.getId() );
-			if( null == newRecord ) {
-				throw new DbAccessException("There doesn't exist any concentration reading for given station yet. Station: "+station);
-			}
-		} catch (DbAccessException e) {
-			logger.log(Level.WARNING, "Failed to lookup concentration readings for given station. Station: "+station, e);
-			// wipe text fields to indicate error
-			wipeReadingDependentTextFields();
-			return;
-		}
-		this.tfDate.setText( newRecord.getReadingTimestamp().format( ConcentrationReadingDao.getReadingTimestampFormat() ) );
-		// temporarily disable change listener
-		this.unregisterActualConcentratinChangeListener();
-		this.tfActualConcentration.setText( Integer.toString(newRecord.getActualConcentration()) );
-		this.registerActualConcentrationChangeListener();
-		// update ID of currently displayed concentration reading record
-		this.concentrationReadingId = newRecord.getId();
-		updateVariance( newRecord.getActualConcentration(), station.getTargetConcentration() );
-	}
-	
-	/**
-	 * Recomputes the concentration variance based on the given values.
-	 * 
-	 * @param actualConcentration    value of the actual concentration measured
-	 * @param targetConcentration    value of the target concentration to be reached
-	 */
-	private void updateVariance(final int actualConcentration, final int targetConcentration) {
-		final double variance = actualConcentration - targetConcentration;
-		this.tfVariance.setText( Double.toString(variance) );
-		
-		// Important: use double to avoid integer arithmetics (rounding down decimal digits)
-		double variancePercentage = ( variance / targetConcentration )*100;
-		// remove sign from percentage, since not needed
-		if( variancePercentage < 0) { variancePercentage = (variancePercentage*-1); }
-		
-		/*
-		 * Apply color code to variance text field.
-		 * 
-		 * I. e. calculate necessity of changing font color of text field. First set font color back to normal.
-		 */
-		this.tfVariance.setStyle("-fx-text-inner-color: black");
-		if( variance < 0 && variancePercentage >= 10) {
-			this.tfVariance.setStyle("-fx-text-inner-color: red");
-		}else if( variance > 0 && variancePercentage >= 5) {
-			this.tfVariance.setStyle("-fx-text-inner-color: green");
-		}
-	}
 	
 	/**
 	 * Registers the given listener to the text field for the external station ID.
@@ -241,16 +158,6 @@ public class ReadingDataSheet {
 	 */
 	public void registerStationChangeListener(final ChangeListener<String> changeListener) {
 		this.tfStationExternalId.textProperty().addListener(changeListener);
-	}
-	
-	
-	/**
-	 * Unregisters the listener from the text field for the actual concentration value.
-	 * 
-	 * @param changeListener
-	 */
-	public void unregisterActualConcentratinChangeListener() {
-		this.tfActualConcentration.textProperty().removeListener(this.actualValueChangeListener);
 	}
 	
 	/**
@@ -272,12 +179,107 @@ public class ReadingDataSheet {
 	}
 	
 	/**
-	 * @return node created by this class
+	 * Apply given horizontal growth policy to the node created by this class.
 	 */
-	public GridPane getDataSheetPane() {
-		return this.dataSheetPane;
+	public void setHorizontalGrowthPolicy(final Priority growthPolicy) {
+		HBox.setHgrow(this.dataSheetPane, growthPolicy);
+	}
+
+	/**
+	 * Set new value for "Station ID" text field.
+	 * 
+	 * @param newExternalId    new value for "Station ID" text field. Null is ignored. Use empty string instead.
+	 * @return    boolean value indicating whether changing the currently displayed reading record was successful. True = success, false = failure.
+	 * @throws DbAccessException 
+	 */
+	public synchronized boolean changeReadingRecord(final String newExternalId) {
+		if(null == newExternalId) {
+			return false;
+		}
+		
+		/*
+		 * load and display data depending on current monitoring station
+		 */
+		final MonitoringStationDao stationDao = new MonitoringStationDao();
+		MonitoringStation station = null;
+		try {
+			station = stationDao.getStation(newExternalId);
+			if( null == station ) {
+				throw new DbAccessException("There is no station with given external station ID \""+newExternalId+"\".");
+			}
+		} catch (DbAccessException e) {
+			logger.log(Level.WARNING, "Failed to lookup station with given external station ID \""+newExternalId+"\".", e);
+			// wipe text fields to indicate error
+			wipeAllDependentTextFields();
+			return false;
+		}
+		this.tfStationExternalId.setText(newExternalId);
+		this.tfTargetConcentration.setText( Integer.toString(station.getTargetConcentration()) );
+		
+		/*
+		 * load and display data depending on current reading record
+		 */
+		final ConcentrationReadingDao readingDao = new ConcentrationReadingDao();
+		ConcentrationReading newRecord = null;
+		try {
+			newRecord = readingDao.getLatestConcentrationReading( station.getId() );
+			if( null == newRecord ) {
+				throw new DbAccessException("There doesn't exist any concentration reading for given station yet. Station: "+station);
+			}
+		} catch (DbAccessException e) {
+			logger.log(Level.WARNING, "Failed to lookup concentration readings for given station. Station: "+station, e);
+			// wipe text fields to indicate error
+			wipeReadingDependentTextFields();
+			return false;
+		}
+		this.tfDate.setText( newRecord.getReadingTimestamp().format( ConcentrationReadingDao.getReadingTimestampFormat() ) );
+		// temporarily disable change listener
+		this.unregisterActualConcentratinChangeListener();
+		this.tfActualConcentration.setText( Integer.toString(newRecord.getActualConcentration()) );
+		this.registerActualConcentrationChangeListener();
+		// update ID of currently displayed concentration reading record
+		this.concentrationReadingId = newRecord.getId();
+		updateVariance( newRecord.getActualConcentration(), station.getTargetConcentration() );
+		return true;
 	}
 	
+	/**
+	 * Unregisters the listener from the text field for the actual concentration value.
+	 * 
+	 * @param changeListener
+	 */
+	private void unregisterActualConcentratinChangeListener() {
+		this.tfActualConcentration.textProperty().removeListener(this.actualValueChangeListener);
+	}
+	
+	/**
+	 * Recomputes the concentration variance based on the given values.
+	 * 
+	 * @param actualConcentration    value of the actual concentration measured
+	 * @param targetConcentration    value of the target concentration to be reached
+	 */
+	private void updateVariance(final int actualConcentration, final int targetConcentration) {
+		final double variance = actualConcentration - targetConcentration;
+		this.tfVariance.setText( Double.toString(variance) );
+		
+		// Important: use double to avoid integer arithmetics (rounding of decimal digits)
+		double variancePercentage = ( variance / targetConcentration )*100;
+		// remove sign from percentage, since not needed
+		if( variancePercentage < 0) { variancePercentage *= -1; }
+		
+		/*
+		 * Apply color code to variance text field.
+		 * 
+		 * I. e. calculate necessity of changing font color of text field. First set font color back to normal.
+		 */
+		this.tfVariance.setStyle("-fx-text-inner-color: black");
+		if( variance < 0 && variancePercentage >= 10) {
+			this.tfVariance.setStyle("-fx-text-inner-color: red");
+		}else if( variance > 0 && variancePercentage >= 5) {
+			this.tfVariance.setStyle("-fx-text-inner-color: green");
+		}
+	}
+
 	/**
 	 * Wipes all text fields which depend on external station ID.
 	 * The current concentration reading record indirectly depends on the current monitoring station record.

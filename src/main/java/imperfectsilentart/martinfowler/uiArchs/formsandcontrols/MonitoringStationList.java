@@ -33,16 +33,20 @@ public class MonitoringStationList{
 	private static final Logger logger = Logger.getLogger(MonitoringStationList.class.getName());
 	/*
 	 * static members for singleton pattern
+	 * NOTE: Enforcing singleton to the current implementation to avoid some multi-threading issues.
 	 */
 	private static MonitoringStationList instance = new MonitoringStationList();
 	public static MonitoringStationList getInstance() {
 		return MonitoringStationList.instance;
 	}
-	/*
-	 * dynamic members
-	 */
-	final ListView<String> stationList = new ListView<String>();
 
+	
+	final ListView<String> stationList = new ListView<String>();
+	/**
+	 * private default ctor for singleton pattern
+	 * 
+	 * Initializes the internal pane for scrollable list of monitoring stations.
+	 */
 	private MonitoringStationList() {
 		/*
 		 * Load data for scrollable list of monitoring stations.
@@ -65,9 +69,20 @@ public class MonitoringStationList{
 		this.stationList.setItems(stationListData);
 	}
 	
+	/**
+	 * Registers the given listener to the list for selecting a monitoring station.
+	 * 
+	 * @param changeListener
+	 */
 	public void registerStationChangeListener(final ChangeListener<String> changeListener) {
 		this.stationList.getSelectionModel().selectedItemProperty().addListener(changeListener);
 	}
+	
+	/**
+	 * Integrates the node of this pane into the given parent node.
+	 * 
+	 * @param parentPane    given parent node
+	 */
 	public void integrateIntoPane(final Pane parentPane) {
 		parentPane.getChildren().add(this.stationList);
 	}
@@ -81,7 +96,6 @@ public class MonitoringStationList{
 		if(null == newExternalId) {
 			return;
 		}
-		
 		/*
 		 * Incomplete partial names or missing hits are handled implicitly.
 		 * If the selection model doesn't find the given entry, the selection simply doesn't change.
@@ -89,5 +103,13 @@ public class MonitoringStationList{
 		this.stationList.getSelectionModel().select(newExternalId);
 	}
 
+	/**
+	 * Wipe any selection in monitoring station list.
+	 * 
+	 * @param newExternalId    new selection for monitoring station list. Null is ignored. Use empty string instead.
+	 */
+	public void wipeSelection() {
+		this.stationList.getSelectionModel().clearSelection();
+	}
 
 }

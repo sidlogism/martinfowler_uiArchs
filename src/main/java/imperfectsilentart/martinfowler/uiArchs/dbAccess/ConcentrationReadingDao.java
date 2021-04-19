@@ -31,7 +31,7 @@ import com.zaxxer.hikari.HikariDataSource;
 /**
  * DAO for accessing concentration_reading table.
  *
- * Using no OR-mapper on purpose.
+ * NOTE: Using no OR-mapper on purpose.
  * TODO pessimistic db-locking, thread synchronization
  */
 public class ConcentrationReadingDao {

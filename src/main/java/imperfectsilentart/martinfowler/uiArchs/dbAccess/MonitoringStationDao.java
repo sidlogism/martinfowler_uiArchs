@@ -25,7 +25,7 @@ import com.zaxxer.hikari.HikariDataSource;
 /**
  * DAO for accessing monitoring_station table.
  *
- * Using no OR-mapper on purpose.
+ * NOTE: Using no OR-mapper on purpose.
  * TODO pessimistic db-locking, thread synchronization
  */
 public class MonitoringStationDao {

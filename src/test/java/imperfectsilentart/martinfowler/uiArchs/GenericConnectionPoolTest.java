@@ -22,6 +22,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import imperfectsilentart.martinfowler.uiArchs.util.ConfigParser;
+import imperfectsilentart.martinfowler.uiArchs.util.FileSystemAccessException;
 import oracle.ucp.jdbc.PoolDataSource;
 import oracle.ucp.jdbc.PoolDataSourceFactory;
 
@@ -57,7 +59,7 @@ public class GenericConnectionPoolTest {
 			fail("Failed reading configuration: Could not get connection parameters or test queries for DBS "+dbsName+".\n"+e.getCause()+"\n"+e.getStackTrace());
 		}
 		
-		// create connection via conneciton pool
+		// create connection via connection pool
 		Connection conn = null;
 		switch(dbsName) {
 		default:

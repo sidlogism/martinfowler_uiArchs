@@ -43,7 +43,11 @@ public class IceCreamAssessmentForm extends Application{
 						// don't propagate null
 						// if there is no selection (because of wrong or partial station name) or selection disappears, the new value is null, which must be ignored.
 						if( null == newStationName ) return;
-						ReadingDataSheet.getInstance().changeReadingRecord(newStationName);
+						
+						if(! ReadingDataSheet.getInstance().changeReadingRecord(newStationName) ) {
+							//if there is a problem with the new station, wipe selection
+							MonitoringStationList.getInstance().wipeSelection();
+						}
 					}
 				}
 			);
@@ -64,11 +68,11 @@ public class IceCreamAssessmentForm extends Application{
 		/*
 		 * Construct new scene consisting of two elements and link the scene to the stage.
 		 * Leftmost element: a list of monitoring stations
-		 * Rightmost element: fields & entries of an ice cream reading record
+		 * Rightmost element: fields & entries of an ice cream reading record and the corresponding monitoring station
 		 */
 		MonitoringStationList.getInstance().integrateIntoPane(rootPane);
 		ReadingDataSheet.getInstance().integrateIntoPane(rootPane);
-		HBox.setHgrow(ReadingDataSheet.getInstance().getDataSheetPane(), Priority.ALWAYS);
+		ReadingDataSheet.getInstance().setHorizontalGrowthPolicy(Priority.ALWAYS);
 		stage.setScene(new Scene(rootPane, 650, 200));
 		// set stage attributes
 		stage.setTitle("Assessment Record (\"Forms and Controls\" version)");

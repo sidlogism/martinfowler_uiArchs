@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs;
+package imperfectsilentart.martinfowler.uiArchs.util;
 
 /**
  * Custom exception for database access problems.

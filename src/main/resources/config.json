@@ -10,7 +10,7 @@
     },
     "dbParameters": {
         "mysql": {
-            "driverName": "com.mysql.jdbc.Driver",
+            "driverName": "com.mysql.cj.jdbc.Driver",
             "connectionUrl": "jdbc:mysql://localhost:3306/martinfowler_uiArchs?useUnicode=true&characterEncoding=UTF8",
             "user": "TODO",
             "password": "TODO"

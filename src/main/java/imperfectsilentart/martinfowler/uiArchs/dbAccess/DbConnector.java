@@ -23,14 +23,16 @@ import org.json.JSONObject;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import javax.sql.DataSource;
 
-import imperfectsilentart.martinfowler.uiArchs.ConfigParser;
-import imperfectsilentart.martinfowler.uiArchs.FileSystemAccessException;
+import imperfectsilentart.martinfowler.uiArchs.util.ConfigParser;
+import imperfectsilentart.martinfowler.uiArchs.util.FileSystemAccessException;
 /**
- * Simple wrapper for accessing database connection pool.
+ * Simple utility wrapper for accessing database connection pool.
  */
 public class DbConnector {
+	/*
+	 * No ctor needed. Class has only a static utility interface.
+	 */
 	private DbConnector(){}
 	
 	/**

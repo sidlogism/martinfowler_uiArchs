@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs;
+package imperfectsilentart.martinfowler.uiArchs.util;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -36,10 +36,12 @@ public class ConfigParser {
 	public static ConfigParser getInstance() {
 		return ConfigParser.instance;
 	}
-	/*
-	 * dynamic members
-	 */
+
+	
 	private JSONObject rootNode = null;
+	/**
+	 * private default ctor for singleton pattern
+	 */
 	private ConfigParser(){}
 	
 	public JSONObject getRootNode() {
@@ -48,10 +50,14 @@ public class ConfigParser {
 	/**
 	 * Parses the default JSON config file.
 	 * 
+	 * @note: The config file is parsed only once during application lifetime (more precisely: lifetime of corresponing classloader). Further calls always return the same parsed config from the very first call.
+	 * 
 	 * @return    unmarshalled content of the default JSON config file
 	 * @throws FileSystemAccessException 
 	 */
 	public JSONObject parseConfig() throws IOException, JSONException, URISyntaxException, FileSystemAccessException {
+		if(null != this.rootNode) return getRootNode();
+		
 		final String configContent = FileTools.getFileContent(configRelativePath);
 		
 		this.rootNode = new JSONObject(configContent);
