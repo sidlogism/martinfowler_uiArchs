@@ -285,7 +285,7 @@ public class ReadingDataSheet {
 	 * The current concentration reading record indirectly depends on the current monitoring station record.
 	 */
 	private void wipeAllDependentTextFields() {
-		this.tfTargetConcentration.setText("");
+		this.tfTargetConcentration.clear();
 		wipeReadingDependentTextFields();
 	}
 	
@@ -293,9 +293,9 @@ public class ReadingDataSheet {
 	 * Wipes all text field which depend on the current concentration reading record.
 	 */
 	private void wipeReadingDependentTextFields() {
-		this.tfDate.setText("");
-		this.tfActualConcentration.setText("");
-		this.tfVariance.setText("");
+		this.tfDate.clear();
+		this.tfActualConcentration.clear();
+		this.tfVariance.clear();
 	}
 
 

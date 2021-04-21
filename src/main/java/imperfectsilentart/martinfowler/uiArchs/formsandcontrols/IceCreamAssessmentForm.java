@@ -40,9 +40,9 @@ public class IceCreamAssessmentForm extends Application{
 		MonitoringStationList.getInstance().registerStationChangeListener(
 				new ChangeListener<String>() {
 					public void changed(ObservableValue<? extends String> ov, String oldStationName, String newStationName) {
-						// don't propagate null
+						// don't propagate null or empty values
 						// if there is no selection (because of wrong or partial station name) or selection disappears, the new value is null, which must be ignored.
-						if( null == newStationName ) return;
+						if( null == newStationName || newStationName.isEmpty() || newStationName.isBlank() ) return;
 						
 						if(! ReadingDataSheet.getInstance().changeReadingRecord(newStationName) ) {
 							//if there is a problem with the new station, wipe selection
@@ -54,8 +54,9 @@ public class IceCreamAssessmentForm extends Application{
 		ReadingDataSheet.getInstance().registerStationChangeListener(
 				new ChangeListener<String>() {
 					public void changed(ObservableValue<? extends String> ov, String oldStationName, String newStationName) {
-						// don't propagate null
-						if( null == newStationName ) return;
+						// don't propagate null or empty values
+						if( null == newStationName || newStationName.isEmpty() || newStationName.isBlank() ) return;
+						
 						MonitoringStationList.getInstance().changeSelection(newStationName);
 					}
 				}

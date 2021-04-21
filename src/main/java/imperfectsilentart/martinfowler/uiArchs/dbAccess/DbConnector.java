@@ -69,6 +69,8 @@ public class DbConnector {
 
             config.setMaximumPoolSize(10);
             config.setAutoCommit(false);
+            // REPEATABLE READ is default transaction isolation level in MySQL. Just assuring in case of using other DBS.
+            config.setTransactionIsolation("TRANSACTION_REPEATABLE_READ");
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");

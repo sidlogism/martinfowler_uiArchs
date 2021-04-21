@@ -32,7 +32,6 @@ import com.zaxxer.hikari.HikariDataSource;
  * DAO for accessing concentration_reading table.
  *
  * NOTE: Using no OR-mapper on purpose.
- * TODO pessimistic db-locking, thread synchronization
  */
 public class ConcentrationReadingDao {
 	/**
@@ -61,13 +60,17 @@ public class ConcentrationReadingDao {
 			final HikariDataSource connPool = DbConnector.getConnectionPool();
 			final Connection connection = connPool.getConnection();
 			final PreparedStatement stmt = connection.prepareStatement(query);
+			final PreparedStatement lockStmt = connection.prepareStatement("LOCK TABLES concentration_reading WRITE;");
+			final PreparedStatement unlockStmt = connection.prepareStatement("UNLOCK TABLES;");
 		){
 			stmt.setLong(1, newConcentrationValue);
 			stmt.setLong(2, readingId);
 			connection.setAutoCommit(false);
+			lockStmt.execute();
 			
 			stmt.executeUpdate();
 			connection.commit();
+			unlockStmt.execute();
 		} catch (SQLException | DbAccessException e) {
 			throw new DbAccessException("Error while opening database connection or executing update query. Query:\n"+query, e);
 		}
