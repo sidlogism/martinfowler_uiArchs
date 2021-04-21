@@ -1,7 +1,7 @@
 
-INSERT INTO monitoring_station (id, station_external_id, station_name, target_concentration) VALUES (NULL, "IC001", "ice corner 1", "11");
-INSERT INTO monitoring_station (id, station_external_id, station_name, target_concentration) VALUES (NULL, "ZO001", "Zoo Kiosk 2", "22");
-INSERT INTO monitoring_station (id, station_external_id, station_name, target_concentration) VALUES (NULL, "MW001", "Mobile ice wagon 3", "33");
+INSERT INTO monitoring_station (id, station_external_id, station_name, target_concentration) VALUES (NULL, "IC001", "ice corner 1", 11);
+INSERT INTO monitoring_station (id, station_external_id, station_name, target_concentration) VALUES (NULL, "ZO001", "Zoo Kiosk 2", 22);
+INSERT INTO monitoring_station (id, station_external_id, station_name, target_concentration) VALUES (NULL, "MW001", "Mobile ice wagon 3", 33);
 
 
 INSERT INTO concentration_reading (id, fk_station_id, reading_timestamp, actual_concentration) VALUES (NULL, 1, "2021-01-11 11:11:11", 11);

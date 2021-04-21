@@ -36,7 +36,7 @@ import com.zaxxer.hikari.HikariDataSource;
 public class ConcentrationReadingDao {
 	/**
 	 * @return DateTimeFormatter    Formatter for generating a date format compatible to MySQL timestamp data type.
-	 * TODO untested whether the time zone offset works
+	 * TODO Heed Oracle timestamp format for "DATE"-type. untested whether the time zone offset works
 	 */
 	public final static DateTimeFormatter getReadingTimestampFormat() {
 		final DateTimeFormatterBuilder b = new DateTimeFormatterBuilder();

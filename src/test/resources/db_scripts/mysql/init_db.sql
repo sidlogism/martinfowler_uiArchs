@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS martinfowler_uiArchs CHARACTER SET UTF8 COLLATE UT
 USE martinfowler_uiArchs;
 
 CREATE TABLE IF NOT EXISTS monitoring_station (
-	id SERIAl PRIMARY KEY,
+	id SERIAL PRIMARY KEY,
 	station_external_id VARCHAR(255) NOT NULL UNIQUE,
 	INDEX monitoring_station__idx__station_external_id (station_external_id ASC),
 	INDEX monitoring_station__combined_idx (
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS monitoring_station (
 
 
 CREATE TABLE IF NOT EXISTS concentration_reading (
-	id SERIAl PRIMARY KEY,
+	id SERIAL PRIMARY KEY,
 	fk_station_id BIGINT UNSIGNED NOT NULL,
 	INDEX concentration_reading__idx__fk_station_id (fk_station_id ASC),
 	FOREIGN KEY (fk_station_id)
