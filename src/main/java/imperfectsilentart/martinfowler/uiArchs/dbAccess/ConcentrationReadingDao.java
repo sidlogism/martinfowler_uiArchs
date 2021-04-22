@@ -15,6 +15,8 @@
  */
 package imperfectsilentart.martinfowler.uiArchs.dbAccess;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,8 +27,15 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.format.SignStyle;
 import java.time.temporal.ChronoField;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.json.JSONException;
 
 import com.zaxxer.hikari.HikariDataSource;
+
+import imperfectsilentart.martinfowler.uiArchs.util.ConfigParser;
+import imperfectsilentart.martinfowler.uiArchs.util.FileSystemAccessException;
 
 /**
  * DAO for accessing concentration_reading table.
@@ -34,6 +43,7 @@ import com.zaxxer.hikari.HikariDataSource;
  * NOTE: Using no OR-mapper on purpose.
  */
 public class ConcentrationReadingDao {
+	private static final Logger logger = Logger.getLogger(ConcentrationReadingDao.class.getName());
 	/**
 	 * @return DateTimeFormatter    Formatter for generating a date format compatible to MySQL timestamp data type.
 	 * TODO Heed Oracle timestamp format for "DATE"-type. untested whether the time zone offset works
@@ -51,26 +61,43 @@ public class ConcentrationReadingDao {
 	 */
 	public synchronized void updateActualConcentration(final int newConcentrationValue, final long readingId) throws DbAccessException {
 		if(readingId < 0) return;
-		
 		final String query = "UPDATE concentration_reading\n"
 				+ "SET actual_concentration  = ?\n"
 				+ "WHERE id = ?\n";
+		/*
+		 * Get name of currently used DBS. Need to handle pessimistic locking different for each DBS.
+		 */
+		String activeDbs = null;
+		try {
+			ConfigParser.getInstance().parseConfig();
+			activeDbs = ConfigParser.getInstance().getRootNode().getString("activeDbs");
+		}catch(IOException | JSONException | URISyntaxException | FileSystemAccessException e) {
+			throw new DbAccessException("Failed reading configuration: Could not get name of currently used DBS.", e);
+		}
 		
 		try(
 			final HikariDataSource connPool = DbConnector.getConnectionPool();
 			final Connection connection = connPool.getConnection();
 			final PreparedStatement stmt = connection.prepareStatement(query);
-			final PreparedStatement lockStmt = connection.prepareStatement("LOCK TABLES concentration_reading WRITE;");
-			final PreparedStatement unlockStmt = connection.prepareStatement("UNLOCK TABLES;");
+			final PreparedStatement lockStmtMysql = connection.prepareStatement("LOCK TABLE concentration_reading WRITE");
+			final PreparedStatement lockStmtOracle = connection.prepareStatement("LOCK TABLE concentration_reading IN EXCLUSIVE MODE NOWAIT");
+			final PreparedStatement unlockStmt = connection.prepareStatement("UNLOCK TABLES");
 		){
 			stmt.setLong(1, newConcentrationValue);
 			stmt.setLong(2, readingId);
 			connection.setAutoCommit(false);
-			lockStmt.execute();
+			switch(activeDbs) {
+				case "oracleXE":
+					lockStmtOracle.execute();
+					break;
+				case "mysql":
+				default:
+					lockStmtMysql.execute();
+			}
 			
 			stmt.executeUpdate();
 			connection.commit();
-			unlockStmt.execute();
+			if( "mysql".equals(activeDbs)) unlockStmt.execute();
 		} catch (SQLException | DbAccessException e) {
 			throw new DbAccessException("Error while opening database connection or executing update query. Query:\n"+query, e);
 		}
@@ -84,11 +111,21 @@ public class ConcentrationReadingDao {
 	 * @throws DbAccessException
 	 */
 	public synchronized ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws DbAccessException {
-		final String query = "SELECT cr.id, cr.fk_station_id, cr.reading_timestamp, cr.actual_concentration\n"
-				+ "FROM concentration_reading cr JOIN monitoring_station ms on (cr.fk_station_id = ms.id)\n"
-				+ "WHERE ms.id = ?\n"
-				+ "ORDER BY cr.reading_timestamp DESC\n"
-				+ "LIMIT 1";
+		/*
+		 * TOP query compatible to general SQL syntax.
+		 * Other dialects allow elegant single query constructs:
+		 *     MySQL: "LIMIT 1"
+		 *     Oracle SQL: "FETCH FIRST 1 ROW ONLY"
+		 */
+		final String query = 
+				"SELECT id, fk_station_id, reading_timestamp, actual_concentration\n"
+				+ "FROM concentration_reading\n"
+				+ "WHERE reading_timestamp =\n"
+				+ "(\n"
+				+ "    SELECT MAX(cr.reading_timestamp)\n"
+				+ "    FROM concentration_reading cr JOIN monitoring_station ms on (cr.fk_station_id = ms.id)\n"
+				+ "    WHERE ms.id = ?\n"
+				+ ")";
 		
 		long id = -1;
 		long stationForeignKey = -1;
@@ -106,16 +143,13 @@ public class ConcentrationReadingDao {
 				final ResultSet resultSet = stmt.executeQuery();
 			){
 				if(! resultSet.next() ) {
+					logger.log(Level.WARNING, "Query result is empty. Expected one single tuple as result. Query:\n"+query);
 					return null;
 				}
 				id = resultSet.getLong(1);
 				stationForeignKey = resultSet.getLong(2);
 				readingTimestamp = parseReadingTimestamp( resultSet.getString(3) );
 				actualConcentration = resultSet.getInt(4);
-				
-				if( resultSet.next() ) {
-					throw new DbAccessException("Query result contains more tuples than expected. Expected one single tuple. Query:\n"+query);
-				}
 			}
 		} catch (SQLException | DbAccessException e) {
 			throw new DbAccessException("Error while opening database connection or executing query or processing query result. Query:\n"+query, e);

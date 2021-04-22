@@ -20,6 +20,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.zaxxer.hikari.HikariDataSource;
 /**
@@ -28,6 +30,7 @@ import com.zaxxer.hikari.HikariDataSource;
  * NOTE: Using no OR-mapper on purpose.
  */
 public class MonitoringStationDao {
+	private static final Logger logger = Logger.getLogger(MonitoringStationDao.class.getName());
 	
 	/**
 	 * Loads the monitoring station with the given external ID from the database.
@@ -53,15 +56,12 @@ public class MonitoringStationDao {
 				final ResultSet resultSet = stmt.executeQuery();
 			){
 				if(! resultSet.next() ) {
+					logger.log(Level.WARNING, "Query result is empty. Expected one single tuple as result. Query:\n"+query);
 					return null;
 				}
 				id = resultSet.getLong(1);
 				stationName = resultSet.getString(3);
 				targetConcentration = resultSet.getInt(4);
-				
-				if( resultSet.next() ) {
-					throw new DbAccessException("Query result contains more tuples than expected. Expected one single tuple. Query:\n"+query);
-				}
 			}
 		} catch (SQLException | DbAccessException e) {
 			throw new DbAccessException("Error while opening database connection or executing query or processing query result. Query\n"+query, e);
