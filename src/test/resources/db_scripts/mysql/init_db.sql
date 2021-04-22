@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS concentration_reading (
 		REFERENCES monitoring_station(id)
 		ON DELETE SET DEFAULT
 		ON UPDATE CASCADE,
-	reading_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	reading_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	INDEX concentration_reading__idx__reading_timestamp (reading_timestamp ASC),
 	actual_concentration SMALLINT NOT NULL
 );

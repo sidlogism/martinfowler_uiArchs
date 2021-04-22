@@ -21,7 +21,13 @@ CREATE TABLE concentration_reading (
 	reading_timestamp DATE DEFAULT SYSDATE NOT NULL,
 	actual_concentration NUMBER(5,0) NOT NULL
 );
-
-
 CREATE INDEX concentration_reading__idx__fk_station_id ON concentration_reading (fk_station_id ASC);
 CREATE INDEX concentration_reading__idx__reading_timestamp ON concentration_reading (reading_timestamp ASC);
+
+
+CREATE OR REPLACE TRIGGER concentration_reading__trigger__reading_timestamp
+BEFORE UPDATE ON concentration_reading
+FOR EACH ROW
+BEGIN
+    SELECT SYSDATE INTO :NEW.reading_timestamp FROM dual;
+END;

@@ -75,11 +75,14 @@ public class ConcentrationReadingDao {
 			throw new DbAccessException("Failed reading configuration: Could not get name of currently used DBS.", e);
 		}
 		
+		/*
+		 * Pessimistic locking for update statement.
+		 */
 		try(
 			final HikariDataSource connPool = DbConnector.getConnectionPool();
 			final Connection connection = connPool.getConnection();
 			final PreparedStatement stmt = connection.prepareStatement(query);
-			final PreparedStatement lockStmtMysql = connection.prepareStatement("LOCK TABLE concentration_reading WRITE");
+			final PreparedStatement lockStmtMysql = connection.prepareStatement("LOCK TABLES concentration_reading WRITE");
 			final PreparedStatement lockStmtOracle = connection.prepareStatement("LOCK TABLE concentration_reading IN EXCLUSIVE MODE NOWAIT");
 			final PreparedStatement unlockStmt = connection.prepareStatement("UNLOCK TABLES");
 		){
@@ -112,7 +115,7 @@ public class ConcentrationReadingDao {
 	 */
 	public synchronized ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws DbAccessException {
 		/*
-		 * TOP query compatible to general SQL syntax.
+		 * TOP query compatible to standard SQL syntax.
 		 * Other dialects allow elegant single query constructs:
 		 *     MySQL: "LIMIT 1"
 		 *     Oracle SQL: "FETCH FIRST 1 ROW ONLY"
@@ -120,11 +123,11 @@ public class ConcentrationReadingDao {
 		final String query = 
 				"SELECT id, fk_station_id, reading_timestamp, actual_concentration\n"
 				+ "FROM concentration_reading\n"
-				+ "WHERE reading_timestamp =\n"
+				+ "WHERE fk_station_id = ? AND reading_timestamp =\n"
 				+ "(\n"
-				+ "    SELECT MAX(cr.reading_timestamp)\n"
-				+ "    FROM concentration_reading cr JOIN monitoring_station ms on (cr.fk_station_id = ms.id)\n"
-				+ "    WHERE ms.id = ?\n"
+				+ "    SELECT MAX(reading_timestamp)\n"
+				+ "    FROM concentration_reading\n"
+				+ "    WHERE fk_station_id = ?\n"
 				+ ")";
 		
 		long id = -1;
@@ -137,6 +140,7 @@ public class ConcentrationReadingDao {
 			final PreparedStatement stmt = connection.prepareStatement(query);
 		){
 			stmt.setLong(1, internalStationId);
+			stmt.setLong(2, internalStationId);
 			connection.setAutoCommit(false);
 			
 			try(
@@ -150,6 +154,10 @@ public class ConcentrationReadingDao {
 				stationForeignKey = resultSet.getLong(2);
 				readingTimestamp = parseReadingTimestamp( resultSet.getString(3) );
 				actualConcentration = resultSet.getInt(4);
+				
+				if( resultSet.next() ) {
+					throw new DbAccessException("Query result contains more tuples than expected. Expected one single tuple. Query:\n"+query);
+				}
 			}
 		} catch (SQLException | DbAccessException e) {
 			throw new DbAccessException("Error while opening database connection or executing query or processing query result. Query:\n"+query, e);

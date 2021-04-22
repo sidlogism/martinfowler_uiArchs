@@ -70,18 +70,34 @@ public class DbConnector {
 
 			config.setMaximumPoolSize(10);
 			config.setAutoCommit(false);
-			switch(activeDbs) {
-				case "oracleXE":
-					config.setTransactionIsolation("TRANSACTION_SERIALIZABLE");
-					break;
-				case "mysql":
-				default:
-					// REPEATABLE READ is default transaction isolation level in MySQL. Just assuring in case of using other DBS.
-					config.setTransactionIsolation("TRANSACTION_REPEATABLE_READ");
-			}
 			config.addDataSourceProperty("cachePrepStmts", "true");
 			config.addDataSourceProperty("prepStmtCacheSize", "250");
 			config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+			/*
+			 * set global transaction isolation level and query logging properties depending on used DBS
+			 */
+			switch(activeDbs) {
+			case "oracleXE":
+				config.setTransactionIsolation("TRANSACTION_SERIALIZABLE");
+				break;
+			case "mysql":
+				// REPEATABLE READ is default transaction isolation level in MySQL. Just assuring in case of using other DBS.
+				config.setTransactionIsolation("TRANSACTION_REPEATABLE_READ");
+				config.addDataSourceProperty("logger", "com.mysql.cj.log.StandardLogger");
+				config.addDataSourceProperty("logSlowQueries", "true");
+				config.addDataSourceProperty("dumpQueriesOnException", "true");
+				if( dbParameters.getBoolean("logJdbcActionTrace") ) {
+					config.addDataSourceProperty("traceProtocol", "true");
+				}
+				if( dbParameters.getBoolean("logDbOperationTimings") ) {
+					config.addDataSourceProperty("profileSQL", "true");
+				}
+				if( dbParameters.getBoolean("logAllDbOperations") ) {
+					config.addDataSourceProperty("autoGenerateTestcaseScript", "true");
+				}
+				break;
+			default:
+			}
 		 
 			connectionPool = new HikariDataSource(config);
 		}

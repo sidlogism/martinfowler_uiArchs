@@ -62,6 +62,10 @@ public class MonitoringStationDao {
 				id = resultSet.getLong(1);
 				stationName = resultSet.getString(3);
 				targetConcentration = resultSet.getInt(4);
+				
+				if( resultSet.next() ) {
+					throw new DbAccessException("Query result contains more tuples than expected. Expected one single tuple. Query:\n"+query);
+				}
 			}
 		} catch (SQLException | DbAccessException e) {
 			throw new DbAccessException("Error while opening database connection or executing query or processing query result. Query\n"+query, e);

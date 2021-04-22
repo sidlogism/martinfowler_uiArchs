@@ -1,5 +1,5 @@
 {
-    "activeDbs": "mysql",
+    "activeDbs": "oracleXE",
     "testQueries": {
         "mysql": [
             "select station_name from monitoring_station"
@@ -13,7 +13,10 @@
             "driverName": "com.mysql.cj.jdbc.Driver",
             "connectionUrl": "jdbc:mysql://localhost:3306/martinfowler_uiArchs?useUnicode=true&characterEncoding=UTF8",
             "user": "TODO",
-            "password": "TODO"
+            "password": "TODO",
+			"logJdbcActionTrace": false,
+			"logDbOperationTimings": false,
+			"logAllDbOperations": true
         },
         "oracleXE": {
             "driverName": "oracle.jdbc.OracleDriver",
