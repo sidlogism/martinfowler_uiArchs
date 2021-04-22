@@ -86,15 +86,9 @@ public class DbConnector {
 				config.addDataSourceProperty("logger", "com.mysql.cj.log.StandardLogger");
 				config.addDataSourceProperty("logSlowQueries", "true");
 				config.addDataSourceProperty("dumpQueriesOnException", "true");
-				if( dbParameters.getBoolean("logJdbcActionTrace") ) {
-					config.addDataSourceProperty("traceProtocol", "true");
-				}
-				if( dbParameters.getBoolean("logDbOperationTimings") ) {
-					config.addDataSourceProperty("profileSQL", "true");
-				}
-				if( dbParameters.getBoolean("logAllDbOperations") ) {
-					config.addDataSourceProperty("autoGenerateTestcaseScript", "true");
-				}
+				if( dbParameters.getBoolean("logAllDbOperations") ) config.addDataSourceProperty("autoGenerateTestcaseScript", "true");
+				if( dbParameters.getBoolean("logDbOperationTimings") ) config.addDataSourceProperty("profileSQL", "true");
+				if( dbParameters.getBoolean("logJdbcActionTrace") ) config.addDataSourceProperty("traceProtocol", "true");
 				break;
 			default:
 			}
