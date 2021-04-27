@@ -1,5 +1,5 @@
 
-module imperfectsilentart.martinfowler.uiArchs.formsandcontrols {
+module imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view {
     requires javafx.base;
     requires javafx.controls;
     requires transitive javafx.graphics;
@@ -9,6 +9,6 @@ module imperfectsilentart.martinfowler.uiArchs.formsandcontrols {
     requires java.sql;
     requires org.apache.logging.log4j;
 
-    opens imperfectsilentart.martinfowler.uiArchs.formsandcontrols to javafx.graphics;
-    exports imperfectsilentart.martinfowler.uiArchs.formsandcontrols;
+    opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view to javafx.graphics;
+    exports imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 }
