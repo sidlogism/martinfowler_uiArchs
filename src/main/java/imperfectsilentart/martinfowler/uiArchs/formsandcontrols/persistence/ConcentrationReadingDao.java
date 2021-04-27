@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs.dbAccess;
+package imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -116,7 +116,9 @@ public class ConcentrationReadingDao {
 	public synchronized ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws DbAccessException {
 		/*
 		 * TOP query compatible to standard SQL syntax.
-		 * Other dialects allow elegant single query constructs:
+		 * IMPORTANT: Don't filter by timestamp-value only because it is not always a unique value.
+		 * 
+		 * Other dialects allow elegant single query constructs in combination with ORDER BY:
 		 *     MySQL: "LIMIT 1"
 		 *     Oracle SQL: "FETCH FIRST 1 ROW ONLY"
 		 */

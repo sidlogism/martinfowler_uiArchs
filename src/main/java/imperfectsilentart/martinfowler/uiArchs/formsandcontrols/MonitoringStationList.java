@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import imperfectsilentart.martinfowler.uiArchs.dbAccess.DbAccessException;
-import imperfectsilentart.martinfowler.uiArchs.dbAccess.MonitoringStationDao;
+import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.DbAccessException;
+import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.MonitoringStationDao;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

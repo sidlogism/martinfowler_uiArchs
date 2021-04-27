@@ -24,8 +24,8 @@ import org.junit.jupiter.api.Test;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-import imperfectsilentart.martinfowler.uiArchs.dbAccess.DbAccessException;
-import imperfectsilentart.martinfowler.uiArchs.dbAccess.DbConnector;
+import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.DbAccessException;
+import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.DbConnector;
 
 
 
