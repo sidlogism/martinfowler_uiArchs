@@ -42,9 +42,13 @@ dependencies {
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.14.1'
 	// db access
-	implementation "com.zaxxer:HikariCP:4.0.3"
-	implementation("com.oracle.database.jdbc:ojdbc8-production:19.8.0.0")
+	implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
+	implementation group: 'com.oracle.database.jdbc', name: 'ojdbc8-production', version: '19.8.0.0'
 	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
+	// using JPA without application server
+	implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '3.0.0'
+	implementation group: 'org.hibernate.orm', name: 'hibernate-hikaricp', version: '6.0.0.Alpha7'
+	implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.0.0.Alpha7'
 	// unit test framework
 	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.0-M1'
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.8.0-M1'
@@ -54,7 +58,9 @@ sourceSets {
 	test {
 		resources {
 			srcDir 'src/test/resources'
+			// TODO unnecessary??
 			include 'src/main/resources/config.json'
+			include 'src/main/resources/META-INF/persistence.xml'
 		}
 	}
 }
@@ -69,13 +75,25 @@ test {
 }
 
 
+/*
+ * TODO workaround for ensuring  'src/main/resources/META-INF/persistence.xml'
+ * is available at runtime under 'build/classes/main/META-INF/persistence.xml'
+ */
+sourceSets.main.output.resourcesDir = sourceSets.main.java.outputDir
+jar {
+	duplicatesStrategy = 'exclude'
+}
+// Ensure 'src/main/resources/META-INF/persistence.xml' is visible at compile time.
+compileJava.dependsOn(processResources)
+
+
 application {
 	/*
 	mainModule = 'imperfectsilentart.martinfowler.uiArchs.formsandcontrols'
 	mainClass = "imperfectsilentart.martinfowler.uiArchs.formsandcontrols.IceCreamAssessmentForm"
 	*/
-	mainModule = 'imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view'
-	mainClass = "imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IceCreamAssessmentFormView"
+	mainModule = 'imperfectsilentart.martinfowler.uiArchs.mvc_standalone'
+	mainClass = 'imperfectsilentart.martinfowler.uiArchs.mvc_standalone.MvcStandaloneLauncher'
 	
 }
 
