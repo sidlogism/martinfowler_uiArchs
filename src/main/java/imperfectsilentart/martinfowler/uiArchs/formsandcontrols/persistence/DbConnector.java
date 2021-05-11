@@ -40,13 +40,13 @@ public class DbConnector {
 	 * 
 	 * @note	pool is not closed at application shutdown or until a calling method closes it (TODO strategy for closing statically. finalize() is deprecated)
 	 */
-	private static HikariDataSource connectionPool;
+	private static HikariDataSource CONNECTION_POOL;
 	
 	/**
 	 * Provides connection pool initialized with default parameters
 	 * 
 	 * @return HikariDataSource	connection pool initialized with default parameters.
-	 * @note	HikariDataSource instead of javax.sql.DataSource to allow closing the pool externally. 
+	 * @note	returns HikariDataSource instead of javax.sql.DataSource to allow closing the pool externally. 
 	 * 
 	 * @throws DbAccessException
 	 * @throws FileSystemAccessException 
@@ -61,8 +61,8 @@ public class DbConnector {
 		}catch(IOException | JSONException | URISyntaxException | FileSystemAccessException e) {
 			throw new DbAccessException("Failed reading configuration: Could not get connection parameters.", e);
 		}
-		if(null == connectionPool || connectionPool.isClosed()){
-			HikariConfig config = new HikariConfig();
+		if(null == CONNECTION_POOL || CONNECTION_POOL.isClosed()){
+			final HikariConfig config = new HikariConfig();
 				 
 			config.setJdbcUrl(dbParameters.getString("connectionUrl"));
 			config.setUsername(dbParameters.getString("user"));
@@ -93,8 +93,8 @@ public class DbConnector {
 			default:
 			}
 		 
-			connectionPool = new HikariDataSource(config);
+			CONNECTION_POOL = new HikariDataSource(config);
 		}
-		return connectionPool;
+		return CONNECTION_POOL;
 	}
 }

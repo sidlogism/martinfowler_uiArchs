@@ -16,6 +16,8 @@
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence;
 
 import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,7 +27,7 @@ import javax.persistence.Transient;
 /**
  * Domain object holding data of a concentration reading record.
  */
-@Entity
+@Entity(name = "concenctration_reading")
 public class ConcentrationReading {
 	private long id;
 	private long stationForeignKey;
@@ -49,28 +51,55 @@ public class ConcentrationReading {
 	public long getId() {
 		return id;
 	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
 	
 	/**
 	 * @return the stationForeignKey
 	 */
-	@ManyToOne
+//	@ManyToOne
+	@Column(name="fk_station_id", columnDefinition = "BIGINT UNSIGNED", nullable=false)
 	public long getStationForeignKey() {
 		return stationForeignKey;
+	}
+	/**
+	 * @param stationForeignKey the stationForeignKey to set
+	 */
+	public void setStationForeignKey(long stationForeignKey) {
+		this.stationForeignKey = stationForeignKey;
 	}
 	
 	/**
 	 * @return the readingTimestamp
 	 */
 	@Transient
+	@Column(name="reading_timestamp", columnDefinition = "TIMESTAMP", nullable=false)
 	public LocalDateTime getReadingTimestamp() {
 		return readingTimestamp;
+	}
+	/**
+	 * @param readingTimestamp the readingTimestamp to set
+	 */
+	public void setReadingTimestamp(LocalDateTime readingTimestamp) {
+		this.readingTimestamp = readingTimestamp;
 	}
 	
 	/**
 	 * @return the actualConcentration
 	 */
+	@Column(name="actual_concentration", columnDefinition = "SMALLINT", nullable=false)
 	public int getActualConcentration() {
 		return actualConcentration;
+	}
+	/**
+	 * @param actualConcentration the actualConcentration to set
+	 */
+	public void setActualConcentration(int actualConcentration) {
+		this.actualConcentration = actualConcentration;
 	}
 	
 	@Override

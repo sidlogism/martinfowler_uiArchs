@@ -17,6 +17,7 @@ package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence
 
 import java.util.ArrayList;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,16 +26,16 @@ import javax.persistence.OneToMany;
 /**
  * Domain object holding data of a monitoring station record.
  */
-@Entity
+@Entity(name = "monitoring_station")
 public class MonitoringStation {
 	private long id;
 	private String stationExternalId;
 	private String stationName;
 	private int targetConcentration;
-	private ArrayList<ConcentrationReading> readings;
+//	private ArrayList<ConcentrationReading> readings;
 	
 	MonitoringStation(){
-		this.readings = new ArrayList<ConcentrationReading>();
+//		this.readings = new ArrayList<ConcentrationReading>();
 	}
 	
 	MonitoringStation(final long id, final String stationExternalId, final String stationName, final int targetConcentration){
@@ -42,7 +43,7 @@ public class MonitoringStation {
 		this.stationExternalId = stationExternalId;
 		this.stationName = stationName;
 		this.targetConcentration = targetConcentration;
-		this.readings = new ArrayList<ConcentrationReading>();
+//		this.readings = new ArrayList<ConcentrationReading>();
 	}
 	
 	/**
@@ -53,35 +54,63 @@ public class MonitoringStation {
 	public long getId() {
 		return id;
 	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
 	
 	/**
 	 * @return the stationExternalId
 	 */
+	@Column(name="station_external_id", nullable=false, unique = true)
 	public String getStationExternalId() {
 		return stationExternalId;
 	}
+	/**
+	 * @param stationExternalId the stationExternalId to set
+	 */
+	public void setStationExternalId(String stationExternalId) {
+		this.stationExternalId = stationExternalId;
+	}
+
 	
 	/**
 	 * @return the stationName
 	 */
+	@Column(name="station_name")
 	public String getStationName() {
 		return stationName;
+	}
+	/**
+	 * @param stationName the stationName to set
+	 */
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
 	}
 	
 	/**
 	 * @return the targetConcentration
 	 */
+	@Column(name="target_concentration", nullable=false)
 	public int getTargetConcentration() {
 		return targetConcentration;
+	}
+	/**
+	 * @param targetConcentration the targetConcentration to set
+	 */
+	public void setTargetConcentration(int targetConcentration) {
+		this.targetConcentration = targetConcentration;
 	}
 	
 	/**
 	 * @return the readings
 	 */
-	@OneToMany(mappedBy = "stationForeignKey")
-	public ArrayList<ConcentrationReading> getReadings() {
-		return readings;
-	}
+//	@OneToMany(mappedBy = "stationForeignKey")
+//	public ArrayList<ConcentrationReading> getReadings() {
+//		return readings;
+//	}
 	
 //	public ArrayList<MonitoringStation> getAll() {
 //		return readings;

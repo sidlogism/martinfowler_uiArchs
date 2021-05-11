@@ -1,5 +1,6 @@
 {
-    "activeDbs": "oracleXE",
+    "activeDbs": "mysql",
+    "defaultPersistenceUnit": "martinfowler_uiArchs_pu",
     "testQueries": {
         "mysql": [
             "select station_name from monitoring_station"
