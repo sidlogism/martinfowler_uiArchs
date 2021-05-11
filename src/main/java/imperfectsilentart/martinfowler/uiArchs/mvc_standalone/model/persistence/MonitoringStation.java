@@ -15,7 +15,8 @@
  */
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,10 +33,10 @@ public class MonitoringStation {
 	private String stationExternalId;
 	private String stationName;
 	private int targetConcentration;
-//	private ArrayList<ConcentrationReading> readings;
+	private Collection<ConcentrationReading> readings;
 	
 	MonitoringStation(){
-//		this.readings = new ArrayList<ConcentrationReading>();
+		this.readings = new HashSet<ConcentrationReading>();
 	}
 	
 	MonitoringStation(final long id, final String stationExternalId, final String stationName, final int targetConcentration){
@@ -43,7 +44,7 @@ public class MonitoringStation {
 		this.stationExternalId = stationExternalId;
 		this.stationName = stationName;
 		this.targetConcentration = targetConcentration;
-//		this.readings = new ArrayList<ConcentrationReading>();
+		this.readings = new HashSet<ConcentrationReading>();
 	}
 	
 	/**
@@ -107,14 +108,16 @@ public class MonitoringStation {
 	/**
 	 * @return the readings
 	 */
-//	@OneToMany(mappedBy = "stationForeignKey")
-//	public ArrayList<ConcentrationReading> getReadings() {
-//		return readings;
-//	}
-	
-//	public ArrayList<MonitoringStation> getAll() {
-//		return readings;
-//	}
+	@OneToMany(mappedBy = "station")
+	public Collection<ConcentrationReading> getReadings() {
+		return readings;
+	}
+	/**
+	 * @param readings the readings to set
+	 */
+	public void setReadings(Collection<ConcentrationReading> readings) {
+		this.readings = readings;
+	}
 	
 	@Override
 	public String toString() {

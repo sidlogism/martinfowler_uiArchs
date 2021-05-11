@@ -2,12 +2,14 @@ package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PeristenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools;
@@ -52,13 +54,19 @@ public class IceCreamAssessmentFormView extends Application{
 			for ( MonitoringStation station : result ) {
 				System.out.println( "Station: " + station.getStationName() );
 			}
+			final MonitoringStation firstStation = result.get(0);
+			System.out.println( "1st station: " + firstStation );
+			final Collection<ConcentrationReading> readings = firstStation.getReadings();
+			for ( ConcentrationReading r : readings ) {
+				System.out.println( "1st station reading: " + r );
+			}
+			
 			em.getTransaction().commit();
 		} catch (PeristenceException e) {
 			logger.log(Level.WARNING, "Failed to execute query ... ", e);
 		}finally {
 			if(null != em) em.close();
 		}
-		
 		
 
 		// set stage attributes

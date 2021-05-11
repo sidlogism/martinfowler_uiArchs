@@ -72,28 +72,20 @@ public class PersistenceTools {
 			configOverrides.put("javax.persistence.jdbc.url", dbParameters.getString("connectionUrl") );
 			configOverrides.put("javax.persistence.jdbc.user", dbParameters.getString("user") );
 			configOverrides.put("javax.persistence.jdbc.password", dbParameters.getString("password") );
+			configOverrides.put("hibernate.format_sql", "true" );
+			configOverrides.put("hibernate.use_sql_comments", "true" );
 			/*
-			 * set global transaction isolation level and query logging properties depending on used DBS
+			 * set global transaction isolation level and other properties depending on used DBS
 			 */
 			switch(activeDbs) {
 			case "oracleXE":
-				configOverrides.put("javax.persistence.jdbc.transactionIsolation", "TRANSACTION_SERIALIZABLE" );
 				configOverrides.put("hibernate.dialect", "org.hibernate.dialect.Oracle18cDialect" );
+				configOverrides.put("javax.persistence.jdbc.transactionIsolation", "TRANSACTION_SERIALIZABLE" );
 				break;
 			case "mysql":
 				configOverrides.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect" );
 				// REPEATABLE READ is default transaction isolation level in MySQL. Just assuring in case of using other DBS.
 				configOverrides.put("javax.persistence.jdbc.transactionIsolation", "TRANSACTION_REPEATABLE_READ" );
-				/*
-				 * java.util.Properties
-				final Properties mysqlProperties = new Properties();
-				mysqlProperties.setProperty("logger", "com.mysql.cj.log.StandardLogger");
-				mysqlProperties.setProperty("logSlowQueries", "true");
-				mysqlProperties.setProperty("dumpQueriesOnException", "true");
-				configOverrides.put("hibernate.hikari.dataSourceProperties", mysqlProperties.toString() );
-				*/
-				configOverrides.put("hibernate.format_sql", "true" );
-				configOverrides.put("hibernate.use_sql_comments", "true" );
 				if( dbParameters.getBoolean("logAllDbOperations") ) configOverrides.put("hibernate.show_sql", "true" );
 				if( dbParameters.getBoolean("logDbOperationTimings") ) configOverrides.put("hibernate.generate_statistics", "true" );
 				break;

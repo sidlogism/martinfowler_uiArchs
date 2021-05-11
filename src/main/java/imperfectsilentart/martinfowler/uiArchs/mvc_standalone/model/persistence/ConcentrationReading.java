@@ -21,24 +21,25 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 /**
  * Domain object holding data of a concentration reading record.
  */
-@Entity(name = "concenctration_reading")
+@Entity(name = "concentration_reading")
 public class ConcentrationReading {
 	private long id;
-	private long stationForeignKey;
+	private MonitoringStation station;
 	private transient LocalDateTime readingTimestamp;
 	private int actualConcentration;
 	
 	ConcentrationReading(){}
 	
-	ConcentrationReading(final long id, final long stationForeignKey, final LocalDateTime readingTimestamp, final int actualConcentration){
+	ConcentrationReading(final long id, final MonitoringStation station, final LocalDateTime readingTimestamp, final int actualConcentration){
 		this.id = id;
-		this.stationForeignKey = stationForeignKey;
+		this.station = station;
 		this.readingTimestamp = readingTimestamp;
 		this.actualConcentration = actualConcentration;
 	}
@@ -59,18 +60,18 @@ public class ConcentrationReading {
 	}
 	
 	/**
-	 * @return the stationForeignKey
+	 * @return the station
 	 */
-//	@ManyToOne
-	@Column(name="fk_station_id", columnDefinition = "BIGINT UNSIGNED", nullable=false)
-	public long getStationForeignKey() {
-		return stationForeignKey;
+	@ManyToOne(targetEntity = MonitoringStation.class, optional = false)
+	@JoinColumn(name="fk_station_id", columnDefinition = "BIGINT UNSIGNED", nullable=false, referencedColumnName = "id")
+	public MonitoringStation getStation() {
+		return station;
 	}
 	/**
-	 * @param stationForeignKey the stationForeignKey to set
+	 * @param station the station to set
 	 */
-	public void setStationForeignKey(long stationForeignKey) {
-		this.stationForeignKey = stationForeignKey;
+	public void setStation(MonitoringStation station) {
+		this.station = station;
 	}
 	
 	/**
@@ -104,7 +105,7 @@ public class ConcentrationReading {
 	
 	@Override
 	public String toString() {
-		return "ConcentrationReading [id=" + id + ", stationForeignKey=" + stationForeignKey + ", readingTimestamp="
+		return "ConcentrationReading [id=" + id + ", station=" + station + ", readingTimestamp="
 				+ readingTimestamp + ", actualConcentration=" + actualConcentration + "]";
 	}
 }
