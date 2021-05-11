@@ -17,10 +17,10 @@ package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence
 
 import java.util.ArrayList;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * Domain object holding data of a monitoring station record.

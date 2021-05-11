@@ -1,6 +1,8 @@
 module imperfectsilentart.martinfowler.uiArchs.mvc_standalone {
 	requires java.sql;
-	requires jakarta.persistence;
+	requires java.persistence;
+	requires org.hibernate.orm.core;
+	//requires org.eclipse.persistence.jpa;
 	requires javafx.base;
 	requires javafx.controls;
 	requires javafx.fxml;
