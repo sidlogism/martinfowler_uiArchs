@@ -43,7 +43,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PeristenceException;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools;
 import imperfectsilentart.martinfowler.uiArchs.util.ConfigParser;
 import imperfectsilentart.martinfowler.uiArchs.util.FileSystemAccessException;
@@ -118,7 +118,7 @@ public class DbConnectionTest {
 		EntityManager em = null;
 		try {
 			em = PersistenceTools.getEntityManager();
-		} catch (PeristenceException e) {
+		} catch (PersistenceException e) {
 			logger.log(Level.WARNING, "Failed to execute query ... ", e);
 		}finally {
 			if(null != em) em.close();
@@ -156,7 +156,7 @@ public class DbConnectionTest {
 			}
 			
 			em.getTransaction().commit();
-		} catch (PeristenceException e) {
+		} catch (PersistenceException e) {
 			logger.log(Level.WARNING, "Failed to execute query ... ", e);
 		}finally {
 			if(null != em) em.close();

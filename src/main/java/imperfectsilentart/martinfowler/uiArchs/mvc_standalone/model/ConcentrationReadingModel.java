@@ -29,6 +29,8 @@ import org.json.JSONException;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.util.ConfigParser;
 import imperfectsilentart.martinfowler.uiArchs.util.FileSystemAccessException;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
@@ -44,10 +46,10 @@ public class ConcentrationReadingModel {
 	/**
 	 * Updates actual concentration value of current reading record.
 	 * 
-	 * @throws PeristenceException 
+	 * @throws PersistenceException 
 	 */
 	// FIXME  use TypedQuery.executeUpdate()
-	public synchronized void updateActualConcentration(final int newConcentrationValue, final long readingId) throws PeristenceException {
+	public synchronized void updateActualConcentration(final int newConcentrationValue, final long readingId) throws PersistenceException {
 		if(readingId < 0) return;
 		final String query = "UPDATE concentration_reading\n"
 				+ "SET actual_concentration  = ?\n"
@@ -60,12 +62,12 @@ public class ConcentrationReadingModel {
 			ConfigParser.getInstance().parseConfig();
 			activeDbs = ConfigParser.getInstance().getRootNode().getString("activeDbs");
 		}catch(IOException | JSONException | URISyntaxException | FileSystemAccessException e) {
-			throw new PeristenceException("Failed reading configuration: Could not get name of currently used DBS.", e);
+			throw new PersistenceException("Failed reading configuration: Could not get name of currently used DBS.", e);
 		}
 		
 		/*
 		 * Pessimistic locking for update statement.
-		 */
+
 		try(
 			final HikariDataSource connPool = DbConnector.getConnectionPool();
 			final Connection connection = connPool.getConnection();
@@ -89,9 +91,10 @@ public class ConcentrationReadingModel {
 			stmt.executeUpdate();
 			connection.commit();
 			if( "mysql".equals(activeDbs)) unlockStmt.execute();
-		} catch (PeristenceException e) {
-			throw new PeristenceException("Error while opening database connection or executing update query. Query:\n"+query, e);
+		} catch (PersistenceException e) {
+			throw new PersistenceException("Error while opening database connection or executing update query. Query:\n"+query, e);
 		}
+				 */
 	}
 	
 	//getLatestConcentrationReading
@@ -101,9 +104,9 @@ public class ConcentrationReadingModel {
 	 * 
 	 * @param internalStationId    ID of relevant monitoring station
 	 * @return domain object of relevant reading record. null if the query result is empty.
-	 * @throws PeristenceException
+	 * @throws PersistenceException
 	 */
-	public synchronized ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws PeristenceException {
+	public synchronized ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws PersistenceException {
 		/*
 		 * TOP query compatible to standard SQL syntax.
 		 * IMPORTANT: Don't filter by timestamp-value only because it is not always a unique value.
@@ -111,7 +114,6 @@ public class ConcentrationReadingModel {
 		 * Other dialects allow elegant single query constructs in combination with ORDER BY:
 		 *     MySQL: "LIMIT 1"
 		 *     Oracle SQL: "FETCH FIRST 1 ROW ONLY"
-		 */
 		final String query = 
 				"SELECT id, fk_station_id, reading_timestamp, actual_concentration\n"
 				+ "FROM concentration_reading\n"
@@ -148,15 +150,17 @@ public class ConcentrationReadingModel {
 				actualConcentration = resultSet.getInt(4);
 				
 				if( resultSet.next() ) {
-					throw new PeristenceException("Query result contains more tuples than expected. Expected one single tuple. Query:\n"+query);
+					throw new PersistenceException("Query result contains more tuples than expected. Expected one single tuple. Query:\n"+query);
 				}
 			}
-		} catch (PeristenceException | TimeProcessingException e) {
-			throw new PeristenceException("Error while opening database connection or executing query or processing query result. Query:\n"+query, e);
+		} catch (PersistenceException | TimeProcessingException e) {
+			throw new PersistenceException("Error while opening database connection or executing query or processing query result. Query:\n"+query, e);
 		}
 		
 		final ConcentrationReading result = new ConcentrationReading(id, stationForeignKey, readingTimestamp, actualConcentration);
 		return result;
+		 */
+		return null;
 	}
 
 }

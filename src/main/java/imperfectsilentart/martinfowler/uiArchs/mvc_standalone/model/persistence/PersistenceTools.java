@@ -51,10 +51,10 @@ public class PersistenceTools {
 	 * @return EntityManager	entity manager initialized with default parameters for data source.
 	 * @note	Caller is responsible for closing the returned entity manager.
 	 * 
-	 * @throws PeristenceException
+	 * @throws PersistenceException
 	 * @throws FileSystemAccessException 
 	 */
-	public static synchronized EntityManager getEntityManager() throws PeristenceException{
+	public static synchronized EntityManager getEntityManager() throws PersistenceException{
 		JSONObject dbParameters = null;
 		String activeDbs = null;
 		String persistenceUnitName = null;
@@ -64,7 +64,7 @@ public class PersistenceTools {
 			persistenceUnitName = ConfigParser.getInstance().getRootNode().getString("defaultPersistenceUnit");
 			dbParameters = ConfigParser.getInstance().getRootNode().getJSONObject("dbParameters").getJSONObject(activeDbs);
 		}catch(IOException | JSONException | URISyntaxException | FileSystemAccessException e) {
-			throw new PeristenceException("Failed reading configuration: Could not get connection parameters.", e);
+			throw new PersistenceException("Failed reading configuration: Could not get connection parameters.", e);
 		}
 		if(null == ENTITY_MANAGER || !ENTITY_MANAGER.isOpen() ){
 			final Map<String, Object> configOverrides = new HashMap<String, Object>();

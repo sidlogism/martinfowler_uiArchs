@@ -24,20 +24,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.MonitoringStationList;
-import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.ReadingDataSheet;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IMonitoringStationModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.MonitoringStationModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PeristenceException;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceException;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
 /**
  * Controller handling user actions in views related to monitoring stations.
@@ -47,28 +46,36 @@ public class MonitoringStationController implements Initializable, ChangeListene
 	//FIXME extract interface
 	private static final Logger logger = Logger.getLogger(MonitoringStationController.class.getName());
 	private IMonitoringStationModel model = null;
-	private ReadingDataSheetController readingController = null;
 
 	@FXML
-	public ListView<String> stationList = new ListView<String>();
+	public ListView<String> stationList;
+	/*
+	 * IMPORTANT: For keeping station view and reading view in sync, the corresponding controllers must know each other.
+	 * This link is established here.
+	 */
+	@FXML
+	public ReadingDataSheetController readingViewController;
 
-	
 	/**
 	 * private default ctor for singleton pattern
 	 * 
 	 * Initializes the internal pane for scrollable list of monitoring stations.
 	 */
-	public MonitoringStationController(final ReadingDataSheetController readingController) {
-		logger.log(Level.INFO, "gotcha");
+	public MonitoringStationController() {
+		logger.log(Level.INFO, "station ctor");
 		this.model = new MonitoringStationModel();
-		//this.readingController = readingController;
 	}
 	
 	@Override
 	public void initialize(URL url, ResourceBundle resources) {
 		// FIXME log url ,resources
-		logger.log(Level.INFO, "gotcha");
+		logger.log(Level.INFO, "station init");
 		
+		/*
+		 * IMPORTANT: For keeping station view and reading view in sync, the corresponding controllers must know each other.
+		 * This link is established here.
+		 */
+		this.readingViewController.setStationController(this);
 		/*
 		 * Initialize list of monitoring stations.
 		 * Currently the list contains only one string representing column monitoring_station.station_external_id.
@@ -79,7 +86,7 @@ public class MonitoringStationController implements Initializable, ChangeListene
 			final List<MonitoringStation> stations = model.findAll();
 			final List<String> externalIds = stations.stream().map(MonitoringStation::getStationExternalId).collect( Collectors.toList() );
 			stationListData = FXCollections.observableArrayList( externalIds );
-		} catch (PeristenceException e) {
+		} catch (PersistenceException e) {
 			final List<String> data = new ArrayList<String>();
 			data.add("- data access error -");
 			stationListData = FXCollections.observableArrayList( data );
@@ -93,7 +100,6 @@ public class MonitoringStationController implements Initializable, ChangeListene
 		 */
 		this.stationList.getSelectionModel().selectedItemProperty().addListener(this);
 	}
-
 	
 	/**
 	 * Set new selection for monitoring station list.
@@ -123,19 +129,24 @@ public class MonitoringStationController implements Initializable, ChangeListene
 
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldStationValue, String newStationName) {
-		// call ReadingDataSheetController.changeReadingRecord !!!
-		// don't propagate null or empty values
-		// if there is no selection (because of wrong or partial station name) or selection disappears, the new value is null, which must be ignored.
-		if( null == newStationName || newStationName.isEmpty() || newStationName.isBlank() ) return;
-		
-		if(! ReadingDataSheet.getInstance().changeReadingRecord(newStationName) ) {
-			/*
-			 * If there is a problem with the new station, wipe selection.
-			 * To avoid redundant listener updates temporarily unregister from changes of the list selection.
-			 */
-			this.stationList.getSelectionModel().selectedItemProperty().removeListener(this);
-			wipeSelection();
-			this.stationList.getSelectionModel().selectedItemProperty().addListener(this);
+		if( observable instanceof ReadOnlyObjectProperty ) {
+			// don't propagate null or empty values
+			// if there is no selection (because of wrong or partial station name) or selection disappears, the new value is null, which must be ignored.
+			if( null == newStationName || newStationName.isEmpty() || newStationName.isBlank() ) return;
+			
+			if(! this.readingViewController.changeReadingRecord(newStationName) ) {
+				/*
+				 * If there is a problem with the new station, wipe selection.
+				 * To avoid redundant listener updates temporarily unregister from changes of the list selection.
+				 */
+				this.stationList.getSelectionModel().selectedItemProperty().removeListener(this);
+				wipeSelection();
+				this.stationList.getSelectionModel().selectedItemProperty().addListener(this);
+			}
+			return;
+		}else if ( observable instanceof TextField ) {
+			return;
 		}
+		logger.log(Level.WARNING, "Unknown class of observed object. The observed object has unknown type "+observable.getClass().getName()+".\nold value:"+oldStationValue+"\nnew value:"+newStationName);
 	}
 }

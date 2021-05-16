@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane alignment="CENTER" hgap="7.0" vgap="7.0" xmlns:fx="http://javafx.com/fxml/1" 
-		xmlns="http://javafx.com/javafx/2.2">
-		
+<GridPane alignment="CENTER" hgap="7.0" vgap="7.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2"
+		fx:controller="imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.ReadingDataSheetController">
 	<children>
 		<Label text="Station ID" alignment="TOP_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="0"  />
-		<TextField fx:id="tfStationExternalId" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+		<TextField fx:id="tfStationExternalId" GridPane.columnIndex="1" GridPane.rowIndex="0"
+			onAction="#handleStationExternalIdChange"/>
 		
 		<Label text="Target" alignment="TOP_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 		<TextField fx:id="tfTargetConcentration" editable="false" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
@@ -22,7 +19,8 @@
 		<TextField fx:id="tfDate" editable="false" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
 		<Label text="Actual" alignment="TOP_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-		<TextField fx:id="tfActualConcentration" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+		<TextField fx:id="tfActualConcentration" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+			<!-- onAction="#handleActualConcentrationChange"/> -->
 		
 		<Label text="Variance" alignment="TOP_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="4" />
 		<TextField fx:id="tfVariance" editable="false" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>

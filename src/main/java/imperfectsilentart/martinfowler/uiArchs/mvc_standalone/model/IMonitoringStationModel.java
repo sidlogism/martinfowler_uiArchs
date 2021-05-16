@@ -3,7 +3,7 @@ package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model;
 import java.util.List;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PeristenceException;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceException;
 
 /**
  * Business logic for accessing and processing all data related to monitoring stations.
@@ -16,13 +16,13 @@ public interface IMonitoringStationModel {
 	 * 
 	 * @param stationExternalId    external ID of relevant monitoring station
 	 * @return domain object of relevant monitoring station. null if the query result is empty.
-	 * @throws PeristenceException
+	 * @throws PersistenceException
 	 */
-	MonitoringStation getStation(String stationExternalId) throws PeristenceException;
+	MonitoringStation getStation(String stationExternalId) throws PersistenceException;
 
 	/**
 	 * @return Container holding the String representation of every monitoring station record.
-	 * @throws PeristenceException
+	 * @throws PersistenceException
 	 */
-	List<MonitoringStation> findAll() throws PeristenceException;
+	List<MonitoringStation> findAll() throws PersistenceException;
 }

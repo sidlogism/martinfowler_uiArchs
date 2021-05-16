@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PeristenceException;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools;
 /**
  * Business logic for accessing and processing all data related to monitoring stations.
@@ -35,10 +35,10 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 	 * 
 	 * @param stationExternalId    external ID of relevant monitoring station
 	 * @return domain object of relevant monitoring station. null if the query result is empty.
-	 * @throws PeristenceException
+	 * @throws PersistenceException
 	 */
 	@Override
-	public synchronized MonitoringStation getStation(final String stationExternalId) throws PeristenceException {
+	public synchronized MonitoringStation getStation(final String stationExternalId) throws PersistenceException {
 		// TODO prepared statements?
 		final String query = "FROM monitoring_station WHERE station_external_id = "+stationExternalId;
 
@@ -49,8 +49,8 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 			em.getTransaction().begin();
 			result = em.createQuery( query, MonitoringStation.class ).getSingleResult();
 			em.getTransaction().commit();
-		} catch (PeristenceException e) {
-			throw new PeristenceException("Error while accessing or processing "+MonitoringStation.class.getName()+" with external ID: "+stationExternalId+". Query\n"+query, e);
+		} catch (PersistenceException e) {
+			throw new PersistenceException("Error while accessing or processing "+MonitoringStation.class.getName()+" with external ID: "+stationExternalId+". Query\n"+query, e);
 		}finally {
 			if(null != em) em.close();
 		}
@@ -60,10 +60,10 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 	
 	/**
 	 * @return Container holding the String representation of every monitoring station record.
-	 * @throws PeristenceException
+	 * @throws PersistenceException
 	 */
 	@Override
-	public synchronized List<MonitoringStation> findAll() throws PeristenceException {
+	public synchronized List<MonitoringStation> findAll() throws PersistenceException {
 		// TODO prepared statements?
 		final String query = "FROM monitoring_station ORDER BY id ASC";
 		
@@ -74,8 +74,8 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 			em.getTransaction().begin();
 			result = em.createQuery( query, MonitoringStation.class ).getResultList();
 			em.getTransaction().commit();
-		} catch (PeristenceException e) {
-			throw new PeristenceException("Error while accessing or processing all "+MonitoringStation.class.getName()+". Query\n"+query, e);
+		} catch (PersistenceException e) {
+			throw new PersistenceException("Error while accessing or processing all "+MonitoringStation.class.getName()+". Query\n"+query, e);
 		}finally {
 			if(null != em) em.close();
 		}

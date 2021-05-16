@@ -23,11 +23,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IConcentrationReadingModel;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
-import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
 
 /**
  * Domain object holding data of a concentration reading record.

@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.MvcInitializationException;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.MonitoringStationController;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.ReadingDataSheetController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,12 +17,10 @@ import javafx.stage.Stage;
 /**
  * "Standalone MVC" version of assessment form-UI from https://www.martinfowler.com/eaaDev/uiArchs.html .
  */
-public class IceCreamAssessmentFormView extends Application implements IAssessmentFormView{
-	private static final Logger logger = Logger.getLogger(IceCreamAssessmentFormView.class.getName());
+public class AssessmentFormView extends Application implements IAssessmentFormView{
+	private static final Logger logger = Logger.getLogger(AssessmentFormView.class.getName());
 	//TODO model
-	//TODO interface
-	
-	
+	private MonitoringStationController stationController = null;
 	/**
 	 * Launches a new UI-instance on the screen.
 	 * 

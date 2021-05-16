@@ -20,29 +20,29 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.scene.input.InputEvent;
 import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.MonitoringStationList;
 import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.ConcentrationReading;
 import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.ConcentrationReadingDao;
 import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.DbAccessException;
 import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.MonitoringStation;
 import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.MonitoringStationDao;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ConcentrationReadingModel;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 
 
 
 /**
  * Business logic for accessing and processing all data related to ice cream reading records.
+ * 
+ * TODO
  * The pane contains all data fields (read only) and record entries of one ice cream reading record.
  * Each field or entry has a label with corresponding text field.
  * 
@@ -52,56 +52,80 @@ import javafx.scene.layout.Priority;
  * 
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.ReadingDataSheet
  */
-public class ReadingDataSheetController implements Initializable, ChangeListener<String>{
+public class ReadingDataSheetController implements Initializable{
 	//FIXME extract interface
 	private static final Logger logger = Logger.getLogger(ReadingDataSheetController.class.getName());
+	private ConcentrationReadingModel model = null;
+	private MonitoringStationController stationController = null;
+
 	// ID of currently displayed concentration reading record
 	private long concentrationReadingId = -1;
 	
 	// data depending on current monitoring station
-	private TextField tfStationExternalId = null;
-	private TextField tfTargetConcentration = null;
+	@FXML
+	public TextField tfStationExternalId;
+	@FXML
+	public TextField tfTargetConcentration;
 	// data depending on current reading record
-	private TextField tfDate = null;
-	private TextField tfActualConcentration = null;
-	private TextField tfVariance = null;
+	@FXML
+	public TextField tfDate;
+	@FXML
+	public TextField tfActualConcentration;
+	@FXML
+	public TextField tfVariance;
 
 	public ReadingDataSheetController() {
+		logger.log(Level.INFO, "reading ctor");
+		this.model = new ConcentrationReadingModel();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		//FIXME init text fields
-		
-		/*
-		 * IMPORTANT: Register this controller as listener to value changes of the actual concentration text field.
-		 */
-		this.tfActualConcentration.textProperty().addListener(this);
+		logger.log(Level.INFO, "reading init");
 	}
 	
+	/**
+	 * @param stationController the stationController to set
+	 */
+	public void setStationController(MonitoringStationController stationController) {
+		this.stationController = stationController;
+	}
 	
 	/**
 	 * Registers the given listener to the text field for the external station ID.
 	 * 
 	 * @param changeListener
 	 */
-	
-	//@FXML
-	private void handleButtonAction(ActionEvent event) {
-		//FIXME better?
+	@FXML
+	public void handleStationExternalIdChange(final Event event) {
+		//FIXME test check enter
+		logger.log(Level.INFO, "event: "+event);
+		logger.log(Level.INFO, "event type: "+event.getEventType());
+		logger.log(Level.INFO, "event source: "+event.getSource());
+		logger.log(Level.INFO, "event target: "+event.getTarget());
+		if( event instanceof InputEvent ) {
+			final String newStationName = tfStationExternalId.getText();
+			// don't propagate null or empty values
+			if( null == newStationName || newStationName.isEmpty() || newStationName.isBlank() ) return;
+			
+			this.stationController.changeSelection(newStationName);
+		}
 	}
-	public void registerStationChangeListener(final ChangeListener<String> changeListener) {
-		this.tfStationExternalId.textProperty().addListener(
-				new ChangeListener<String>() {
-					public void changed(ObservableValue<? extends String> ov, String oldStationName, String newStationName) {
-						// don't propagate null or empty values
-						if( null == newStationName || newStationName.isEmpty() || newStationName.isBlank() ) return;
-						
-						MonitoringStationList.getInstance().changeSelection(newStationName);
-					}
-				}
-			);
-	}
+//	
+//	public void registerStationChangeListener(final ChangeListener<String> changeListener) {
+//		//FIXME rm: imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.MonitoringStationController.changed(ObservableValue<? extends String>, String, String)
+//		this.tfStationExternalId.textProperty().addListener(
+//				new ChangeListener<String>() {
+//					public void changed(ObservableValue<? extends String> ov, String oldStationName, String newStationName) {
+//						// don't propagate null or empty values
+//						if( null == newStationName || newStationName.isEmpty() || newStationName.isBlank() ) return;
+//						
+//						MonitoringStationList.getInstance().changeSelection(newStationName);
+//					}
+//				}
+//			);
+//	}
 
 	/**
 	 * Set new value for "Station ID" text field.
@@ -151,10 +175,10 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 			return false;
 		}
 		this.tfDate.setText( newRecord.getReadingTimestamp().format( TimeTools.getReadingTimestampFormat() ) );
-		// temporarily disable change listener
-		this.unregisterActualConcentratinChangeListener(); //FIXME unregister this
+		/*
+		 * To avoid redundant listener updates temporarily unregister from changes of the actual concentration text field.
+		 */
 		this.tfActualConcentration.setText( Integer.toString(newRecord.getActualConcentration()) );
-		this.registerActualConcentrationChangeListener(); //FIXME register this
 		// update ID of currently displayed concentration reading record
 		this.concentrationReadingId = newRecord.getId();
 		updateVariance( newRecord.getActualConcentration(), station.getTargetConcentration() );
@@ -207,8 +231,10 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 		this.tfVariance.clear();
 	}
 
-	@Override
-	public void changed(ObservableValue<? extends String> observable, String oldActualValue, String newActualValue) {
+	/*
+	 * IMPORTANT: Register this controller as listener to value changes of the actual concentration text field.
+	@FXML
+	public void handleActualConcentrationChange(ObservableValue<? extends String> observable, String oldActualValue, String newActualValue) {
 		// don't propagate null or empty value
 		if( null == newActualValue || newActualValue.isEmpty() || newActualValue.isBlank() ) return;
 		
@@ -230,4 +256,5 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 		// finally update variance text field
 		updateVariance( newValue, Integer.parseInt( tfTargetConcentration.getText() ) );
 	}
+	 */
 }

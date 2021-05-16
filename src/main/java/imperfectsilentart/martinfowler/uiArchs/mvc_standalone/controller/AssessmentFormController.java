@@ -15,8 +15,8 @@
  */
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
 
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.AssessmentFormView;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IAssessmentFormView;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IceCreamAssessmentFormView;
 
 /**
  * Beschreibung
@@ -26,8 +26,9 @@ import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IceCreamAsses
 public class AssessmentFormController implements IAssessmentFormController {
 	//TODO model
 	//TODO interface
-	private IAssessmentFormView view = new IceCreamAssessmentFormView();
-	// sub-controllers TODO suffices strategy pattern?
+	private IAssessmentFormView view = new AssessmentFormView();
+	
+	public AssessmentFormController() {}
 	
 	@Override
 	public void launchUi(final String[] args) {

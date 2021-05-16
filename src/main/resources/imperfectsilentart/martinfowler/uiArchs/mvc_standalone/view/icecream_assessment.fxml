@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.geometry.*?>
-<?import javafx.collections.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 
 <HBox fx:id="rootPane" alignment="BASELINE_LEFT" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx/2.2" 
 	fx:controller="imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.MonitoringStationController">
 	<children>
 		<ListView fx:id="stationList"/>
-		<fx:include source="reading_data_sheet.fxml" charset="utf-8"/>
+		<fx:include fx:id="readingView" source="reading_data_sheet.fxml" charset="utf-8"/>
 	</children>
 </HBox>

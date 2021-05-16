@@ -237,7 +237,7 @@ public class ReadingDataSheet {
 		}
 		this.tfDate.setText( newRecord.getReadingTimestamp().format( TimeTools.getReadingTimestampFormat() ) );
 		// temporarily disable change listener
-		this.unregisterActualConcentratinChangeListener();
+		this.unregisterActualConcentrationChangeListener();
 		this.tfActualConcentration.setText( Integer.toString(newRecord.getActualConcentration()) );
 		this.registerActualConcentrationChangeListener();
 		// update ID of currently displayed concentration reading record
@@ -251,7 +251,7 @@ public class ReadingDataSheet {
 	 * 
 	 * @param changeListener
 	 */
-	private void unregisterActualConcentratinChangeListener() {
+	private void unregisterActualConcentrationChangeListener() {
 		this.tfActualConcentration.textProperty().removeListener(this.actualValueChangeListener);
 	}
 	
