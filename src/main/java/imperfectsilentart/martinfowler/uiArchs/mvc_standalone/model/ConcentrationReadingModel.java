@@ -39,16 +39,13 @@ public class ConcentrationReadingModel implements IConcentrationReadingModel {
 	@Override
 	public synchronized void updateActualConcentration(final int newConcentrationValue, final long readingId) throws ModelPersistenceException {
 		if(readingId < 0) return;
-		// TODO prepared statements?
-		final String queryText = "FROM concentration_reading\n"
-				+ "WHERE id = "+readingId+"\n";
 
 		EntityManager em = null;
 		ConcentrationReading updatedReading = null;
 		try {
 			em = PersistenceTools.getEntityManager();
 			em.getTransaction().begin();
-			updatedReading = em.createQuery( queryText, ConcentrationReading.class ).getSingleResult();
+			updatedReading = em.find( ConcentrationReading.class, Long.valueOf(readingId) );
 			updatedReading.setActualConcentration(newConcentrationValue);
 			// FIXME update timestamp
 			em.persist(updatedReading);
@@ -57,9 +54,9 @@ public class ConcentrationReadingModel implements IConcentrationReadingModel {
 			if(null != em && em.getTransaction().isActive()) {
 				em.getTransaction().rollback();
 			}else {
-				throw new ModelPersistenceException("Could not roll back failed update of "+ConcentrationReading.class.getName()+" record with ID: "+readingId+". Persistence manager or transaction is in invalid state. Query\n"+queryText, e);
+				throw new ModelPersistenceException("Could not roll back failed update of "+ConcentrationReading.class.getName()+" record with ID: "+readingId+". Persistence manager or transaction is in invalid state.", e);
 			}
-			throw new ModelPersistenceException("Error while updating "+ConcentrationReading.class.getName()+" with ID: "+readingId+". Query\n"+queryText, e);
+			throw new ModelPersistenceException("Error while updating "+ConcentrationReading.class.getName()+" with ID: "+readingId+".", e);
 		}finally {
 			if( null != em && em.getEntityManagerFactory().isOpen() ) em.getEntityManagerFactory().close();
 		}
@@ -82,11 +79,10 @@ public class ConcentrationReadingModel implements IConcentrationReadingModel {
 		 *     MySQL: "LIMIT 1"
 		 *     Oracle SQL: "FETCH FIRST 1 ROW ONLY"
 		 */
-		// TODO prepared statements?
 		final String queryText = 
-				"FROM concentration_reading\n"
-				+ "WHERE station = "+internalStationId+ "\n"
-				+ "ORDER BY readingTimestamp DESC";
+			"FROM concentration_reading\n"
+			+ "WHERE station = :station\n"
+			+ "ORDER BY readingTimestamp DESC";
 
 		ConcentrationReading result = null;
 		EntityManager em = null;
@@ -94,6 +90,7 @@ public class ConcentrationReadingModel implements IConcentrationReadingModel {
 			em = PersistenceTools.getEntityManager();
 			em.getTransaction().begin();
 			final TypedQuery<ConcentrationReading> query = em.createQuery( queryText, ConcentrationReading.class );
+			query.setParameter("station", Long.valueOf(internalStationId) );
 			query.setFirstResult(0);
 			query.setMaxResults(1);
 			result = query.getSingleResult();

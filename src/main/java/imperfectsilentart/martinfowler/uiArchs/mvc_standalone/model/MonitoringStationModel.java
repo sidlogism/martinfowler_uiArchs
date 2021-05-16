@@ -40,15 +40,16 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 	 */
 	@Override
 	public synchronized MonitoringStation getStation(final String stationExternalId) throws ModelPersistenceException {
-		// TODO prepared statements?
-		final String query = "FROM monitoring_station WHERE stationExternalId = '"+stationExternalId+"'";
+		final String query = "FROM monitoring_station WHERE stationExternalId = :id";
 
 		MonitoringStation result = null;
 		EntityManager em = null;
 		try {
 			em = PersistenceTools.getEntityManager();
 			em.getTransaction().begin();
-			result = em.createQuery( query, MonitoringStation.class ).getSingleResult();
+			result = em.createQuery( query, MonitoringStation.class )
+				.setParameter("id", stationExternalId)
+				.getSingleResult();
 			em.getTransaction().commit();
 		} catch (ModelPersistenceException | PersistenceException e) {
 			// TODO resource leak on exception: [JavaFX Application Thread] ERROR org.hibernate.orm.connections.pooling - Connection leak detected: there are 1 unclosed connections upon shutting down pool jdbc:...
@@ -66,7 +67,6 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 	 */
 	@Override
 	public synchronized List<MonitoringStation> findAll() throws ModelPersistenceException {
-		// TODO prepared statements?
 		final String query = "FROM monitoring_station ORDER BY id ASC";
 		
 		List<MonitoringStation> result = null;
