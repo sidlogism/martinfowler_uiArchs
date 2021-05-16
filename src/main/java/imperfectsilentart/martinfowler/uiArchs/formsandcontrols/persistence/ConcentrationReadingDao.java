@@ -22,11 +22,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.DateTimeParseException;
-import java.time.format.SignStyle;
-import java.time.temporal.ChronoField;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,23 +31,17 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import imperfectsilentart.martinfowler.uiArchs.util.ConfigParser;
 import imperfectsilentart.martinfowler.uiArchs.util.FileSystemAccessException;
+import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
+import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
 
 /**
  * DAO for accessing concentration_reading table.
  *
  * NOTE: Using no OR-mapper on purpose.
+ * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ConcentrationReadingModel
  */
 public class ConcentrationReadingDao {
 	private static final Logger logger = Logger.getLogger(ConcentrationReadingDao.class.getName());
-	/**
-	 * @return DateTimeFormatter    Formatter for generating a date format compatible to MySQL timestamp data type.
-	 * TODO Heed Oracle timestamp format for "DATE"-type. untested whether the time zone offset works
-	 */
-	public final static DateTimeFormatter getReadingTimestampFormat() {
-		final DateTimeFormatterBuilder b = new DateTimeFormatterBuilder();
-		final DateTimeFormatter result = b.appendValue(ChronoField.YEAR, 4, 4, SignStyle.EXCEEDS_PAD).appendPattern("-MM-dd' 'HH:mm:ss[.SSS][Z]").toFormatter();
-		return result;
-	}
 	
 	/**
 	 * Updates actual concentration value of current reading record.
@@ -154,34 +143,19 @@ public class ConcentrationReadingDao {
 				}
 				id = resultSet.getLong(1);
 				stationForeignKey = resultSet.getLong(2);
-				readingTimestamp = parseReadingTimestamp( resultSet.getString(3) );
+				readingTimestamp = TimeTools.parseReadingTimestamp( resultSet.getString(3) );
 				actualConcentration = resultSet.getInt(4);
 				
 				if( resultSet.next() ) {
 					throw new DbAccessException("Query result contains more tuples than expected. Expected one single tuple. Query:\n"+query);
 				}
 			}
-		} catch (SQLException | DbAccessException e) {
+		} catch (SQLException | DbAccessException | TimeProcessingException e) {
 			throw new DbAccessException("Error while opening database connection or executing query or processing query result. Query:\n"+query, e);
 		}
 		
 		final ConcentrationReading result = new ConcentrationReading(id, stationForeignKey, readingTimestamp, actualConcentration);
 		return result;
 	}
-	
-	/**
-	 * @param readingTimestamp
-	 * @return
-	 * @throws DbAccessException
-	 */
-	private LocalDateTime parseReadingTimestamp(final String readingTimestamp) throws DbAccessException {
-		LocalDateTime result = null;
-		
-		try {
-			result = LocalDateTime.parse(readingTimestamp, ConcentrationReadingDao.getReadingTimestampFormat());
-		}catch(DateTimeParseException e) {
-			throw new DbAccessException("Given timestamp \""+readingTimestamp+"\" doesn't have the required format \""+ConcentrationReadingDao.getReadingTimestampFormat()+"\"", e);
-		}
-		return result;
-	}
+
 }

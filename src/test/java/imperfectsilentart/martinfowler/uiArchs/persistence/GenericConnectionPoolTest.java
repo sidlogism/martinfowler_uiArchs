@@ -4,7 +4,7 @@ as shown at http://oss.oracle.com/licenses/upl
  * 
  * Based on https://github.com/oracle/oracle-db-examples/blob/master/java/jdbc/ConnectionSamples/ADBQuickStart.java
  */
-package imperfectsilentart.martinfowler.uiArchs;
+package imperfectsilentart.martinfowler.uiArchs.persistence;
 
 import static org.junit.jupiter.api.Assertions.fail;
 

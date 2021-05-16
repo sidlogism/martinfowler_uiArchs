@@ -28,6 +28,7 @@ import javafx.scene.layout.Pane;
 
 /**
  * Wrapper class for scrollable list of monitoring stations.
+ * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.MonitoringStationController
  */
 public class MonitoringStationList{
 	private static final Logger logger = Logger.getLogger(MonitoringStationList.class.getName());
@@ -41,7 +42,7 @@ public class MonitoringStationList{
 	}
 
 	
-	final ListView<String> stationList = new ListView<String>();
+	private final ListView<String> stationList = new ListView<String>();
 	/**
 	 * private default ctor for singleton pattern
 	 * 
@@ -97,7 +98,7 @@ public class MonitoringStationList{
 			return;
 		}
 		/*
-		 * Incomplete partial names or missing hits are handled implicitly.
+		 * Incomplete partial names or missing hits are handled implicitly:
 		 * If the selection model doesn't find the given entry, the selection simply doesn't change.
 		 */
 		this.stationList.getSelectionModel().select(newExternalId);

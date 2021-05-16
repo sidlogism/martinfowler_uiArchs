@@ -23,6 +23,7 @@ import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.Conc
 import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.DbAccessException;
 import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.MonitoringStation;
 import imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.MonitoringStationDao;
+import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
@@ -44,6 +45,8 @@ import javafx.scene.layout.Priority;
  * The record entries "Station ID" and "Date" can be modified to initiate an internal search for the corresponding ice cream reading record.
  * The record entry "Actual" can be modified to change the entry "actual value" of the currently active ice cream reading record.
  * All other entries and data fields are calculated from external sources and thus the corresponding text fields are read only.
+ * 
+ * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.ReadingDataSheetController
  */
 public class ReadingDataSheet {
 	private static final Logger logger = Logger.getLogger(ReadingDataSheet.class.getName());
@@ -232,7 +235,7 @@ public class ReadingDataSheet {
 			wipeReadingDependentTextFields();
 			return false;
 		}
-		this.tfDate.setText( newRecord.getReadingTimestamp().format( ConcentrationReadingDao.getReadingTimestampFormat() ) );
+		this.tfDate.setText( newRecord.getReadingTimestamp().format( TimeTools.getReadingTimestampFormat() ) );
 		// temporarily disable change listener
 		this.unregisterActualConcentratinChangeListener();
 		this.tfActualConcentration.setText( Integer.toString(newRecord.getActualConcentration()) );
