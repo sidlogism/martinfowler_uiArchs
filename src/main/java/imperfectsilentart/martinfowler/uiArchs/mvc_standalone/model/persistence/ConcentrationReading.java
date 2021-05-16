@@ -89,11 +89,6 @@ public class ConcentrationReading implements Comparable< ConcentrationReading > 
 	public void setReadingTimestamp(LocalDateTime readingTimestamp){
 		this.readingTimestamp = readingTimestamp;
 	}
-	// FIXME Check if "T"-separator with default formatter causes Problem when writing back to DB.
-// Possible workaround if there's a problem: make readingTimestamp transient again and Type String. Use jata.time.* Types only within application, not in JPA-DB connection.
-//	public void setReadingTimestamp(String readingTimestampText) throws TimeProcessingException {
-//		this.readingTimestamp = TimeTools.parseReadingTimestamp(readingTimestampText);
-//	}
 	
 	/**
 	 * @return the actualConcentration

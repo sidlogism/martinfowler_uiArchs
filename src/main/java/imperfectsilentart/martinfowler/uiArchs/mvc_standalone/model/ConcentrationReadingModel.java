@@ -15,152 +15,95 @@
  */
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.json.JSONException;
-
-import com.zaxxer.hikari.HikariDataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceException;
-import imperfectsilentart.martinfowler.uiArchs.util.ConfigParser;
-import imperfectsilentart.martinfowler.uiArchs.util.FileSystemAccessException;
-import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
-import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools;
 
 /**
  * Business logic for accessing and processing all data related to concentration readings.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.ConcentrationReadingDao
  */
-public class ConcentrationReadingModel {
+public class ConcentrationReadingModel implements IConcentrationReadingModel {
 	private static final Logger logger = Logger.getLogger(ConcentrationReadingModel.class.getName());
-	// FIXME extract interface
 	/**
 	 * Updates actual concentration value of current reading record.
 	 * 
-	 * @throws PersistenceException 
+	 * @throws ModelPersistenceException 
 	 */
-	// FIXME  use TypedQuery.executeUpdate()
-	public synchronized void updateActualConcentration(final int newConcentrationValue, final long readingId) throws PersistenceException {
+	@Override
+	public synchronized void updateActualConcentration(final int newConcentrationValue, final long readingId) throws ModelPersistenceException {
 		if(readingId < 0) return;
-		final String query = "UPDATE concentration_reading\n"
-				+ "SET actual_concentration  = ?\n"
-				+ "WHERE id = ?\n";
-		/*
-		 * Get name of currently used DBS. Need to handle pessimistic locking different for each DBS.
-		 */
-		String activeDbs = null;
-		try {
-			ConfigParser.getInstance().parseConfig();
-			activeDbs = ConfigParser.getInstance().getRootNode().getString("activeDbs");
-		}catch(IOException | JSONException | URISyntaxException | FileSystemAccessException e) {
-			throw new PersistenceException("Failed reading configuration: Could not get name of currently used DBS.", e);
-		}
-		
-		/*
-		 * Pessimistic locking for update statement.
+		// TODO prepared statements?
+		final String queryText = "FROM concentration_reading\n"
+				+ "WHERE id = "+readingId+"\n";
 
-		try(
-			final HikariDataSource connPool = DbConnector.getConnectionPool();
-			final Connection connection = connPool.getConnection();
-			final PreparedStatement stmt = connection.prepareStatement(query);
-			final PreparedStatement lockStmtMysql = connection.prepareStatement("LOCK TABLES concentration_reading WRITE");
-			final PreparedStatement lockStmtOracle = connection.prepareStatement("LOCK TABLE concentration_reading IN EXCLUSIVE MODE NOWAIT");
-			final PreparedStatement unlockStmt = connection.prepareStatement("UNLOCK TABLES");
-		){
-			stmt.setLong(1, newConcentrationValue);
-			stmt.setLong(2, readingId);
-			connection.setAutoCommit(false);
-			switch(activeDbs) {
-				case "oracleXE":
-					lockStmtOracle.execute();
-					break;
-				case "mysql":
-				default:
-					lockStmtMysql.execute();
+		EntityManager em = null;
+		ConcentrationReading updatedReading = null;
+		try {
+			em = PersistenceTools.getEntityManager();
+			em.getTransaction().begin();
+			updatedReading = em.createQuery( queryText, ConcentrationReading.class ).getSingleResult();
+			updatedReading.setActualConcentration(newConcentrationValue);
+			// FIXME update timestamp
+			em.persist(updatedReading);
+			em.getTransaction().commit();
+		} catch (ModelPersistenceException | PersistenceException e) {
+			if(null != em && em.getTransaction().isActive()) {
+				em.getTransaction().rollback();
+			}else {
+				throw new ModelPersistenceException("Could not roll back failed update of "+ConcentrationReading.class.getName()+" record with ID: "+readingId+". Persistence manager or transaction is in invalid state. Query\n"+queryText, e);
 			}
-			
-			stmt.executeUpdate();
-			connection.commit();
-			if( "mysql".equals(activeDbs)) unlockStmt.execute();
-		} catch (PersistenceException e) {
-			throw new PersistenceException("Error while opening database connection or executing update query. Query:\n"+query, e);
+			throw new ModelPersistenceException("Error while updating "+ConcentrationReading.class.getName()+" with ID: "+readingId+". Query\n"+queryText, e);
+		}finally {
+			if( null != em && em.getEntityManagerFactory().isOpen() ) em.getEntityManagerFactory().close();
 		}
-				 */
 	}
 	
-	//getLatestConcentrationReading
-	//FIXME mvc: use TypedQuery.setMaxResults() TypedQuery.setFirstResult()
 	/**
-	 * Loads the youngest concentration reading record belonging to the monitoring station with the given ID from the database.
+	 * Loads the youngest concentration reading record belonging to the monitoring station with the given ID from persistence layer.
 	 * 
 	 * @param internalStationId    ID of relevant monitoring station
 	 * @return domain object of relevant reading record. null if the query result is empty.
-	 * @throws PersistenceException
+	 * @throws ModelPersistenceException
 	 */
-	public synchronized ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws PersistenceException {
+	@Override
+	public synchronized ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws ModelPersistenceException {
 		/*
-		 * TOP query compatible to standard SQL syntax.
 		 * IMPORTANT: Don't filter by timestamp-value only because it is not always a unique value.
 		 * 
-		 * Other dialects allow elegant single query constructs in combination with ORDER BY:
+		 * Retrieving all reading records related to the given station ID, then order descending by timestamp and get the first record.
+		 * Equivalent constructs in other SQL dialects:
 		 *     MySQL: "LIMIT 1"
 		 *     Oracle SQL: "FETCH FIRST 1 ROW ONLY"
-		final String query = 
-				"SELECT id, fk_station_id, reading_timestamp, actual_concentration\n"
-				+ "FROM concentration_reading\n"
-				+ "WHERE fk_station_id = ? AND reading_timestamp =\n"
-				+ "(\n"
-				+ "    SELECT MAX(reading_timestamp)\n"
-				+ "    FROM concentration_reading\n"
-				+ "    WHERE fk_station_id = ?\n"
-				+ ")";
-		
-		long id = -1;
-		long stationForeignKey = -1;
-		LocalDateTime readingTimestamp = null;
-		int actualConcentration = -1;
-		try(
-			final HikariDataSource connPool = DbConnector.getConnectionPool();
-			final Connection connection = connPool.getConnection();
-			final PreparedStatement stmt = connection.prepareStatement(query);
-		){
-			stmt.setLong(1, internalStationId);
-			stmt.setLong(2, internalStationId);
-			connection.setAutoCommit(false);
-			
-			try(
-				final ResultSet resultSet = stmt.executeQuery();
-			){
-				if(! resultSet.next() ) {
-					logger.log(Level.WARNING, "Query result is empty. Expected one single tuple as result. Query:\n"+query);
-					return null;
-				}
-				id = resultSet.getLong(1);
-				stationForeignKey = resultSet.getLong(2);
-				readingTimestamp = TimeTools.parseReadingTimestamp( resultSet.getString(3) );
-				actualConcentration = resultSet.getInt(4);
-				
-				if( resultSet.next() ) {
-					throw new PersistenceException("Query result contains more tuples than expected. Expected one single tuple. Query:\n"+query);
-				}
-			}
-		} catch (PersistenceException | TimeProcessingException e) {
-			throw new PersistenceException("Error while opening database connection or executing query or processing query result. Query:\n"+query, e);
-		}
-		
-		final ConcentrationReading result = new ConcentrationReading(id, stationForeignKey, readingTimestamp, actualConcentration);
-		return result;
 		 */
-		return null;
+		// TODO prepared statements?
+		final String queryText = 
+				"FROM concentration_reading\n"
+				+ "WHERE station = "+internalStationId+ "\n"
+				+ "ORDER BY readingTimestamp DESC";
+
+		ConcentrationReading result = null;
+		EntityManager em = null;
+		try {
+			em = PersistenceTools.getEntityManager();
+			em.getTransaction().begin();
+			final TypedQuery<ConcentrationReading> query = em.createQuery( queryText, ConcentrationReading.class );
+			query.setFirstResult(0);
+			query.setMaxResults(1);
+			result = query.getSingleResult();
+			em.getTransaction().commit();
+		} catch (ModelPersistenceException | PersistenceException e) {
+			throw new ModelPersistenceException("Error while accessing or processing "+ConcentrationReading.class.getName()+" with station foreign key (station ID): "+internalStationId+". Query\n"+queryText, e);
+		}finally {
+			if( null != em && em.getEntityManagerFactory().isOpen() ) em.getEntityManagerFactory().close();
+		}
+		return result;
 	}
 
 }

@@ -19,9 +19,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools;
 /**
  * Business logic for accessing and processing all data related to monitoring stations.
@@ -31,16 +32,16 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 	private static final Logger logger = Logger.getLogger(MonitoringStationModel.class.getName());
 	
 	/**
-	 * Loads the monitoring station with the given external ID from the database.
+	 * Loads the monitoring station with the given external ID from persistence layer.
 	 * 
 	 * @param stationExternalId    external ID of relevant monitoring station
 	 * @return domain object of relevant monitoring station. null if the query result is empty.
-	 * @throws PersistenceException
+	 * @throws ModelPersistenceException
 	 */
 	@Override
-	public synchronized MonitoringStation getStation(final String stationExternalId) throws PersistenceException {
+	public synchronized MonitoringStation getStation(final String stationExternalId) throws ModelPersistenceException {
 		// TODO prepared statements?
-		final String query = "FROM monitoring_station WHERE station_external_id = "+stationExternalId;
+		final String query = "FROM monitoring_station WHERE stationExternalId = '"+stationExternalId+"'";
 
 		MonitoringStation result = null;
 		EntityManager em = null;
@@ -49,10 +50,11 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 			em.getTransaction().begin();
 			result = em.createQuery( query, MonitoringStation.class ).getSingleResult();
 			em.getTransaction().commit();
-		} catch (PersistenceException e) {
-			throw new PersistenceException("Error while accessing or processing "+MonitoringStation.class.getName()+" with external ID: "+stationExternalId+". Query\n"+query, e);
+		} catch (ModelPersistenceException | PersistenceException e) {
+			// TODO resource leak on exception: [JavaFX Application Thread] ERROR org.hibernate.orm.connections.pooling - Connection leak detected: there are 1 unclosed connections upon shutting down pool jdbc:...
+			throw new ModelPersistenceException("Error while accessing or processing "+MonitoringStation.class.getName()+" with external ID: "+stationExternalId+". Query\n"+query, e);
 		}finally {
-			if(null != em) em.close();
+			if( null != em && em.getEntityManagerFactory().isOpen() ) em.getEntityManagerFactory().close();
 		}
 
 		return result;
@@ -60,10 +62,10 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 	
 	/**
 	 * @return Container holding the String representation of every monitoring station record.
-	 * @throws PersistenceException
+	 * @throws ModelPersistenceException
 	 */
 	@Override
-	public synchronized List<MonitoringStation> findAll() throws PersistenceException {
+	public synchronized List<MonitoringStation> findAll() throws ModelPersistenceException {
 		// TODO prepared statements?
 		final String query = "FROM monitoring_station ORDER BY id ASC";
 		
@@ -74,10 +76,10 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 			em.getTransaction().begin();
 			result = em.createQuery( query, MonitoringStation.class ).getResultList();
 			em.getTransaction().commit();
-		} catch (PersistenceException e) {
-			throw new PersistenceException("Error while accessing or processing all "+MonitoringStation.class.getName()+". Query\n"+query, e);
+		} catch (ModelPersistenceException | PersistenceException e) {
+			throw new ModelPersistenceException("Error while accessing or processing all "+MonitoringStation.class.getName()+". Query\n"+query, e);
 		}finally {
-			if(null != em) em.close();
+			if( null != em && em.getEntityManagerFactory().isOpen() ) em.getEntityManagerFactory().close();
 		}
 		return result;
 	}

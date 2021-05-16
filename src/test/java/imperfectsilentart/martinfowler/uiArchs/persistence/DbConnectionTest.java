@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,8 +43,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools;
 import imperfectsilentart.martinfowler.uiArchs.util.ConfigParser;
 import imperfectsilentart.martinfowler.uiArchs.util.FileSystemAccessException;
@@ -118,10 +119,10 @@ public class DbConnectionTest {
 		EntityManager em = null;
 		try {
 			em = PersistenceTools.getEntityManager();
-		} catch (PersistenceException e) {
+		} catch (ModelPersistenceException | PersistenceException e) {
 			logger.log(Level.WARNING, "Failed to execute query ... ", e);
 		}finally {
-			if(null != em) em.close();
+			if( null != em && em.getEntityManagerFactory().isOpen() ) em.getEntityManagerFactory().close();
 		}
 		// just for better separation of tests outputs
 		logger.log(Level.INFO, "\n\n\n\n");
@@ -156,10 +157,10 @@ public class DbConnectionTest {
 			}
 			
 			em.getTransaction().commit();
-		} catch (PersistenceException e) {
+		} catch (ModelPersistenceException | PersistenceException e) {
 			logger.log(Level.WARNING, "Failed to execute query ... ", e);
 		}finally {
-			if(null != em) em.close();
+			if( null != em && em.getEntityManagerFactory().isOpen() ) em.getEntityManagerFactory().close();
 		}
 		// just for better separation of tests outputs
 		logger.log(Level.INFO, "\n\n\n\n");

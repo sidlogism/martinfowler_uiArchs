@@ -15,8 +15,8 @@
  */
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.IAssessmentFormController;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.AssessmentFormController;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.IAssessmentFormController;
 
 /**
  * "Standalone MVC" version of assessment application from https://www.martinfowler.com/eaaDev/uiArchs.html .
@@ -30,8 +30,6 @@ public class MvcStandaloneLauncher {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//TODO model
-		//TODO interface
 		//TODO suffices strategy pattern?
 		final IAssessmentFormController controller = new AssessmentFormController();
 		controller.launchUi(args);

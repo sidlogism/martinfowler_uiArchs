@@ -39,10 +39,10 @@ import javafx.scene.layout.Priority;
 
 /**
  * This wrapper class encapsulates a pane used as an interface for showing, searching and modifying ice cream reading records.
- * The pane contains all data fields (read only) and record entries of one ice cream reading record.
+ * The pane contains all data fields (read only) and record entries of one ice cream reading record and some fields from the corresponding monitoring station.
  * Each field or entry has a label with corresponding text field.
  * 
- * The record entries "Station ID" and "Date" can be modified to initiate an internal search for the corresponding ice cream reading record.
+ * The record entry "Station ID" can be modified to initiate an internal search for the corresponding ice cream reading record.
  * The record entry "Actual" can be modified to change the entry "actual value" of the currently active ice cream reading record.
  * All other entries and data fields are calculated from external sources and thus the corresponding text fields are read only.
  * 

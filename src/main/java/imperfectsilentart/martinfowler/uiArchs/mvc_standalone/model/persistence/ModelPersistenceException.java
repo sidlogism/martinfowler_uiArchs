@@ -18,20 +18,20 @@ package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence
 /**
  * Custom exception for database access problems.
  */
-public class PersistenceException extends Exception {
+public class ModelPersistenceException extends Exception {
 	private static final long serialVersionUID = -2945303167253987142L;
 
 	/**
 	 * @param message
 	 */
-	public PersistenceException(String message) {
+	public ModelPersistenceException(String message) {
 		super(message);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public PersistenceException(Throwable cause) {
+	public ModelPersistenceException(Throwable cause) {
 		super(cause);
 	}
 
@@ -39,7 +39,7 @@ public class PersistenceException extends Exception {
 	 * @param message
 	 * @param cause
 	 */
-	public PersistenceException(String message, Throwable cause) {
+	public ModelPersistenceException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
@@ -49,7 +49,7 @@ public class PersistenceException extends Exception {
 	 * @param enableSuppression
 	 * @param writableStackTrace
 	 */
-	public PersistenceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+	public ModelPersistenceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 }

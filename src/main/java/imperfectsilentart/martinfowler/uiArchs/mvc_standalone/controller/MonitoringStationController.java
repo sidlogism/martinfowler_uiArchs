@@ -24,11 +24,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.persistence.PersistenceException;
+
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IMonitoringStationModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.MonitoringStationModel;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceException;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -36,40 +39,35 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 
 /**
  * Controller handling user actions in views related to monitoring stations.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.MonitoringStationList
  */
-public class MonitoringStationController implements Initializable, ChangeListener<String> {
-	//FIXME extract interface
+public class MonitoringStationController implements Initializable, ChangeListener<String>, IMonitoringStationController {
 	private static final Logger logger = Logger.getLogger(MonitoringStationController.class.getName());
 	private IMonitoringStationModel model = null;
 
 	@FXML
 	public ListView<String> stationList;
-	/*
+	/**
 	 * IMPORTANT: For keeping station view and reading view in sync, the corresponding controllers must know each other.
 	 * This link is established here.
+	 * 
+	 * TODO suffices strategy pattern?
 	 */
 	@FXML
-	public ReadingDataSheetController readingViewController;
+	public IReadingDataSheetController readingViewController;
 
-	/**
-	 * private default ctor for singleton pattern
-	 * 
-	 * Initializes the internal pane for scrollable list of monitoring stations.
-	 */
 	public MonitoringStationController() {
-		logger.log(Level.INFO, "station ctor");
+		logger.log(Level.FINE, "station ctor");
 		this.model = new MonitoringStationModel();
 	}
 	
 	@Override
 	public void initialize(URL url, ResourceBundle resources) {
-		// FIXME log url ,resources
-		logger.log(Level.INFO, "station init");
+		logger.log(Level.FINE, "station init");
 		
 		/*
 		 * IMPORTANT: For keeping station view and reading view in sync, the corresponding controllers must know each other.
@@ -86,13 +84,13 @@ public class MonitoringStationController implements Initializable, ChangeListene
 			final List<MonitoringStation> stations = model.findAll();
 			final List<String> externalIds = stations.stream().map(MonitoringStation::getStationExternalId).collect( Collectors.toList() );
 			stationListData = FXCollections.observableArrayList( externalIds );
-		} catch (PersistenceException e) {
+		} catch (ModelPersistenceException | PersistenceException e) {
 			final List<String> data = new ArrayList<String>();
 			data.add("- data access error -");
 			stationListData = FXCollections.observableArrayList( data );
 			logger.log(Level.SEVERE, "Failed to load data from DB.", e);
 		}
-		logger.log(Level.INFO, "Data: "+stationListData);
+		logger.log(Level.FINE, "Initializing station list with these entries: "+stationListData);
 		this.stationList.setItems(stationListData);
 		
 		/*
@@ -106,6 +104,7 @@ public class MonitoringStationController implements Initializable, ChangeListene
 	 * 
 	 * @param newExternalId    new selection for monitoring station list. Null is ignored. Use empty string instead.
 	 */
+	@Override
 	public void changeSelection(final String newExternalId) {
 		if(null == newExternalId) {
 			return;
@@ -122,16 +121,38 @@ public class MonitoringStationController implements Initializable, ChangeListene
 	 * 
 	 * @param newExternalId    new selection for monitoring station list. Null is ignored. Use empty string instead.
 	 */
+	@Override
 	public void wipeSelection() {
 		this.stationList.getSelectionModel().clearSelection();
 	}
+	
+	/**
+	 * Forwards the monitoring station with the given external ID from the model.
+	 * 
+	 * @param stationExternalId    external ID of relevant monitoring station
+	 * @return domain object of relevant monitoring station. null if the query result is empty.
+	 * @throws ModelPersistenceException
+	 */
+	@Override
+	public synchronized MonitoringStation getStation(final String stationExternalId) throws ModelPersistenceException{
+		return this.model.getStation(stationExternalId);
+	}
 
-
+	/**
+	 * ChangeListener callback
+	 *     if selection in station list of station view changed
+	 *     or if text field "Station ID" in reading view changed.
+	 * The record entry "Station ID" of reading view can be modified initiate an internal search for the corresponding ice cream reading record.
+	 */
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldStationValue, String newStationName) {
 		if( observable instanceof ReadOnlyObjectProperty ) {
-			// don't propagate null or empty values
-			// if there is no selection (because of wrong or partial station name) or selection disappears, the new value is null, which must be ignored.
+			/*
+			 * ReadOnlyObjectProperty indicates a selection change in station list in station view.
+			 * 
+			 * don't propagate null or empty values
+			 * if there is no selection (because of wrong or partial station name) or selection disappears, the new value is null, which must be ignored.
+			 */
 			if( null == newStationName || newStationName.isEmpty() || newStationName.isBlank() ) return;
 			
 			if(! this.readingViewController.changeReadingRecord(newStationName) ) {
@@ -144,7 +165,15 @@ public class MonitoringStationController implements Initializable, ChangeListene
 				this.stationList.getSelectionModel().selectedItemProperty().addListener(this);
 			}
 			return;
-		}else if ( observable instanceof TextField ) {
+		}else if ( observable instanceof StringProperty || observable instanceof TextInputControl ) {
+			/*
+			 * StringProperty indicates a value change in external station ID in reading view (text field).
+			 * 
+			 * NOTE:
+			 * The event handler approach doesn't apply here because events on text fields are only fired on pressing Enter.
+			 * The exactly expected class would be the private nested class TextInputControl$TextProperty, which cannot be imported since it is private.
+			 */
+			changeSelection(newStationName);
 			return;
 		}
 		logger.log(Level.WARNING, "Unknown class of observed object. The observed object has unknown type "+observable.getClass().getName()+".\nold value:"+oldStationValue+"\nnew value:"+newStationName);

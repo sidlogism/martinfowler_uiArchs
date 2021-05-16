@@ -19,17 +19,16 @@ import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.AssessmentFor
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IAssessmentFormView;
 
 /**
- * Beschreibung
- *
- * @author Imperfect Silent Art
+ * Business logic for accessing and initializing assessment UI main view.
  */
 public class AssessmentFormController implements IAssessmentFormController {
-	//TODO model
-	//TODO interface
 	private IAssessmentFormView view = new AssessmentFormView();
 	
-	public AssessmentFormController() {}
-	
+	/**
+	 * Construct and display assessment UI main view.
+	 * 
+	 * @param args    command line arguments
+	 */
 	@Override
 	public void launchUi(final String[] args) {
 		this.view.launchUi(args);
