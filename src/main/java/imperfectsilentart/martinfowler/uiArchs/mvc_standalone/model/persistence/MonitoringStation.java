@@ -28,18 +28,18 @@ import javax.persistence.OneToMany;
  * Domain object holding data of a monitoring station record.
  */
 @Entity(name = "monitoring_station")
-public class MonitoringStation {
+public class MonitoringStation implements Comparable< MonitoringStation >{
 	private long id;
 	private String stationExternalId;
 	private String stationName;
 	private int targetConcentration;
 	private Collection<ConcentrationReading> readings;
 	
-	MonitoringStation(){
+	public MonitoringStation(){
 		this.readings = new HashSet<ConcentrationReading>();
 	}
 	
-	MonitoringStation(final long id, final String stationExternalId, final String stationName, final int targetConcentration){
+	public MonitoringStation(final long id, final String stationExternalId, final String stationName, final int targetConcentration){
 		this.id = id;
 		this.stationExternalId = stationExternalId;
 		this.stationName = stationName;
@@ -123,5 +123,10 @@ public class MonitoringStation {
 	public String toString() {
 		return "MonitoringStation [id=" + id + ", stationExternalId=" + stationExternalId + ", stationName="
 				+ stationName + ", targetConcentration=" + targetConcentration + "]";
+	}
+
+	@Override
+	public int compareTo(MonitoringStation o) {
+		return Long.valueOf( this.id - o.getId() ).intValue();
 	}
 }

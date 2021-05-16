@@ -1,3 +1,4 @@
+// TODO Check if separating subprojects formsandcontrols and mvc_standalone in two modules helps clarity and prevents using classes from wrong subproject.
 module imperfectsilentart.martinfowler.uiArchs.mvc_standalone {
 	requires javafx.base;
 	requires javafx.controls;
@@ -15,7 +16,6 @@ module imperfectsilentart.martinfowler.uiArchs.mvc_standalone {
 	requires java.xml.bind;
 
 	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view to javafx.graphics;
-	exports imperfectsilentart.martinfowler.uiArchs.mvc_standalone;
 	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence to org.hibernate.orm.core;
-	exports imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence;
+	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller to javafx.fxml;
 }

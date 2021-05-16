@@ -10,21 +10,10 @@
 <?import javafx.scene.text.*?>
 
 
-<HBox fx:id="rootPane" alignment="BASELINE_LEFT" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx/2.2">
-	<fx:define>
-		<FXCollections fx:id="dummyValues" fx:factory="observableArrayList">
-			<String fx:value="A"/>
-			<String fx:value="B"/>
-			<String fx:value="C"/>
-		</FXCollections>
-	</fx:define>
-	
+<HBox fx:id="rootPane" alignment="BASELINE_LEFT" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx/2.2" 
+	fx:controller="imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.MonitoringStationController">
 	<children>
-		<ListView>
-			<items>
-				<fx:reference source="dummyValues"/>
-			</items>
-		</ListView>
+		<ListView fx:id="stationList"/>
 		<fx:include source="reading_data_sheet.fxml" charset="utf-8"/>
 	</children>
 </HBox>

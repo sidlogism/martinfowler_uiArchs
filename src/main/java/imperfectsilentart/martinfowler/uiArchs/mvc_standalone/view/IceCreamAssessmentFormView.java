@@ -2,17 +2,9 @@ package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
-
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PeristenceException;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,7 +14,7 @@ import javafx.stage.Stage;
 /**
  * "Standalone MVC" version of assessment form-UI from https://www.martinfowler.com/eaaDev/uiArchs.html .
  */
-public class IceCreamAssessmentFormView extends Application{
+public class IceCreamAssessmentFormView extends Application implements IAssessmentFormView{
 	private static final Logger logger = Logger.getLogger(IceCreamAssessmentFormView.class.getName());
 	//TODO model
 	//TODO interface
@@ -33,6 +25,7 @@ public class IceCreamAssessmentFormView extends Application{
 	 * 
 	 * @param args
 	 */
+	@Override
 	public void launchUi(final String[] args){
 		launch(args);
 	}
@@ -45,28 +38,6 @@ public class IceCreamAssessmentFormView extends Application{
 		
 		
 		
-		//FIXME JPA test
-		EntityManager em = null;
-		try {
-			em = PersistenceTools.getEntityManager();
-			em.getTransaction().begin();
-			List<MonitoringStation> result = em.createQuery( "from monitoring_station", MonitoringStation.class ).getResultList();
-			for ( MonitoringStation station : result ) {
-				System.out.println( "Station: " + station.getStationName() );
-			}
-			final MonitoringStation firstStation = result.get(0);
-			System.out.println( "1st station: " + firstStation );
-			final Collection<ConcentrationReading> readings = firstStation.getReadings();
-			for ( ConcentrationReading r : readings ) {
-				System.out.println( "1st station reading: " + r );
-			}
-			
-			em.getTransaction().commit();
-		} catch (PeristenceException e) {
-			logger.log(Level.WARNING, "Failed to execute query ... ", e);
-		}finally {
-			if(null != em) em.close();
-		}
 		
 
 		// set stage attributes

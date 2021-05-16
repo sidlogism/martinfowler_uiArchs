@@ -25,19 +25,23 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IConcentrationReadingModel;
+import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
+import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
+
 /**
  * Domain object holding data of a concentration reading record.
  */
 @Entity(name = "concentration_reading")
-public class ConcentrationReading {
+public class ConcentrationReading implements Comparable< ConcentrationReading >  {
 	private long id;
 	private MonitoringStation station;
-	private transient LocalDateTime readingTimestamp;
+	private LocalDateTime readingTimestamp;
 	private int actualConcentration;
 	
-	ConcentrationReading(){}
+	public ConcentrationReading(){}
 	
-	ConcentrationReading(final long id, final MonitoringStation station, final LocalDateTime readingTimestamp, final int actualConcentration){
+	public ConcentrationReading(final long id, final MonitoringStation station, final LocalDateTime readingTimestamp, final int actualConcentration){
 		this.id = id;
 		this.station = station;
 		this.readingTimestamp = readingTimestamp;
@@ -77,17 +81,22 @@ public class ConcentrationReading {
 	/**
 	 * @return the readingTimestamp
 	 */
-	@Transient
 	@Column(name="reading_timestamp", columnDefinition = "TIMESTAMP", nullable=false)
 	public LocalDateTime getReadingTimestamp() {
 		return readingTimestamp;
 	}
 	/**
 	 * @param readingTimestamp the readingTimestamp to set
+	 * @throws TimeProcessingException 
 	 */
-	public void setReadingTimestamp(LocalDateTime readingTimestamp) {
+	public void setReadingTimestamp(LocalDateTime readingTimestamp){
 		this.readingTimestamp = readingTimestamp;
 	}
+	// FIXME Check if "T"-separator with default formatter causes Problem when writing back to DB.
+// Possible workaround if there's a problem: make readingTimestamp transient again and Type String. Use jata.time.* Types only within application, not in JPA-DB connection.
+//	public void setReadingTimestamp(String readingTimestampText) throws TimeProcessingException {
+//		this.readingTimestamp = TimeTools.parseReadingTimestamp(readingTimestampText);
+//	}
 	
 	/**
 	 * @return the actualConcentration
@@ -107,5 +116,11 @@ public class ConcentrationReading {
 	public String toString() {
 		return "ConcentrationReading [id=" + id + ", station=" + station + ", readingTimestamp="
 				+ readingTimestamp + ", actualConcentration=" + actualConcentration + "]";
+	}
+
+	@Override
+	public int compareTo(final ConcentrationReading o) {
+		if( null == o.getReadingTimestamp() || null == this.readingTimestamp) return +1;
+		return this.readingTimestamp.compareTo( o.getReadingTimestamp() );
 	}
 }
