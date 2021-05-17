@@ -1,7 +1,7 @@
 CREATE SEQUENCE monitoring_station__sqn__id INCREMENT BY 1;
 CREATE TABLE monitoring_station (
 	id NUMBER DEFAULT monitoring_station__sqn__id.nextval NOT NULL PRIMARY KEY, -- PRIMARY KEY contraint implies UNIQUE
-	station_external_id VARCHAR2(255) NOT NULL UNIQUE, -- UNIQUE implies implicit index creatien
+	station_external_id VARCHAR2(255) NOT NULL UNIQUE, -- UNIQUE implies implicit index creation
 	station_name VARCHAR2(4000) DEFAULT NULL,
 	target_concentration SMALLINT NOT NULL
 );
@@ -17,7 +17,7 @@ CREATE TABLE concentration_reading (
 	fk_station_id NUMBER NOT NULL,
 	FOREIGN KEY (fk_station_id)
 		REFERENCES monitoring_station(id)
-        ON DELETE SET NULL, -- ON UPDATE CASCADE missing in Oracle SQL. Maybe already implicit behaviour?
+		ON DELETE SET NULL, -- ON UPDATE CASCADE missing in Oracle SQL. Maybe already implicit behaviour?
 	reading_timestamp DATE DEFAULT SYSDATE NOT NULL,
 	actual_concentration NUMBER(5,0) NOT NULL
 );
@@ -29,5 +29,5 @@ CREATE OR REPLACE TRIGGER concentration_reading__trigger__reading_timestamp
 BEFORE UPDATE ON concentration_reading
 FOR EACH ROW
 BEGIN
-    SELECT SYSDATE INTO :NEW.reading_timestamp FROM dual;
+	SELECT SYSDATE INTO :NEW.reading_timestamp FROM dual;
 END;

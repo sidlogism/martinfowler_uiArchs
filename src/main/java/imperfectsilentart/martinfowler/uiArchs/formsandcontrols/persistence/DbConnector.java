@@ -28,6 +28,8 @@ import imperfectsilentart.martinfowler.uiArchs.util.ConfigParser;
 import imperfectsilentart.martinfowler.uiArchs.util.FileSystemAccessException;
 /**
  * Simple utility wrapper for accessing database connection pool.
+ * 
+ * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools
  */
 public class DbConnector {
 	/*

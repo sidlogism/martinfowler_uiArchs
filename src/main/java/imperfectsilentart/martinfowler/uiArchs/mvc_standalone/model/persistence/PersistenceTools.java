@@ -31,6 +31,8 @@ import imperfectsilentart.martinfowler.uiArchs.util.ConfigParser;
 import imperfectsilentart.martinfowler.uiArchs.util.FileSystemAccessException;
 /**
  * Simple utility wrapper for accessing persistence layer.
+ * 
+ * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.DbConnector
  */
 public class PersistenceTools {
 	/*

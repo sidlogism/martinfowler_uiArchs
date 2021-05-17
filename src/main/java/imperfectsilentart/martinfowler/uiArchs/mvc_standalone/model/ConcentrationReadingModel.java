@@ -30,6 +30,7 @@ import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.ConcentrationReadingDao
  */
 public class ConcentrationReadingModel implements IConcentrationReadingModel {
+	// TODO make observed object? add relevant UI-controls? controller + view observe model.
 	private static final Logger logger = Logger.getLogger(ConcentrationReadingModel.class.getName());
 	/**
 	 * Updates actual concentration value of current reading record.
@@ -47,7 +48,7 @@ public class ConcentrationReadingModel implements IConcentrationReadingModel {
 			em.getTransaction().begin();
 			updatedReading = em.find( ConcentrationReading.class, Long.valueOf(readingId) );
 			updatedReading.setActualConcentration(newConcentrationValue);
-			// FIXME update timestamp
+			// FIXME Mysql: update timestamp. Oracle: overwritten by trigger concentration_reading__trigger__reading_timestamp
 			em.persist(updatedReading);
 			em.getTransaction().commit();
 		} catch (ModelPersistenceException | PersistenceException e) {

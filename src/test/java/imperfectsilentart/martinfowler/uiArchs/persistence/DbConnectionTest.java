@@ -153,7 +153,7 @@ public class DbConnectionTest {
 			final List<ConcentrationReading> sortedReadings = readings.stream().collect( Collectors.toList());
 			Collections.sort(sortedReadings);
 			for ( ConcentrationReading r : sortedReadings ) {
-				logger.log(Level.INFO, "1st station reading: " + r );
+				logger.log(Level.INFO, "1st station readings: " + r );
 			}
 			
 			em.getTransaction().commit();

@@ -26,6 +26,8 @@ import javax.persistence.OneToMany;
 
 /**
  * Domain object holding data of a monitoring station record.
+ * 
+ * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.MonitoringStation
  */
 @Entity(name = "monitoring_station")
 public class MonitoringStation implements Comparable< MonitoringStation >{

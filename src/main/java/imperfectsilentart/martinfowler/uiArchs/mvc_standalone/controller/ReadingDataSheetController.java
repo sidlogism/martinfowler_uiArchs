@@ -74,6 +74,18 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 		this.model = new ConcentrationReadingModel();
 	}
 
+	/**
+	 * Called to initialize a controller after its root element has been
+	 * completely processed.
+	 *
+	 * @param location
+	 * The location used to resolve relative paths for the root object, or
+	 * {@code null} if the location is not known.
+	 *
+	 * @param resources
+	 * The resources used to localize the root object, or {@code null} if
+	 * the root object was not localized.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		logger.log(Level.FINE, "reading init");
@@ -213,7 +225,7 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 
 	/**
 	 * ChangeListener callback if text field "Actual" changed.
-	 * The record entry "Actual" can be modified to change the entry "actual value" of the currently active ice cream reading record.
+	 * The record entry "Actual" can be modified to change the entry "actual value" of the currently active ice cream concentration reading record.
 	 */
 	@Override
 	public void changed(ObservableValue<? extends String> observable, String oldActualValue, String newActualValue) {

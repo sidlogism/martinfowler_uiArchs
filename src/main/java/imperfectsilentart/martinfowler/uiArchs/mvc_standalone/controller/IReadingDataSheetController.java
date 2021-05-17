@@ -30,7 +30,7 @@ public interface IReadingDataSheetController {
 
 	/**
 	 * ChangeListener callback if text field "Actual" changed.
-	 * The record entry "Actual" can be modified to change the entry "actual value" of the currently active ice cream reading record.
+	 * The record entry "Actual" can be modified to change the entry "actual value" of the currently active ice cream concentration reading record.
 	 */
 	public void changed(ObservableValue<? extends String> observable, String oldActualValue, String newActualValue);
 

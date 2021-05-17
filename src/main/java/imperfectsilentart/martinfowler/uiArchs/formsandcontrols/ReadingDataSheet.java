@@ -43,7 +43,7 @@ import javafx.scene.layout.Priority;
  * Each field or entry has a label with corresponding text field.
  * 
  * The record entry "Station ID" can be modified to initiate an internal search for the corresponding ice cream reading record.
- * The record entry "Actual" can be modified to change the entry "actual value" of the currently active ice cream reading record.
+ * The record entry "Actual" can be modified to change the entry "actual value" of the currently active ice cream concentration reading record.
  * All other entries and data fields are calculated from external sources and thus the corresponding text fields are read only.
  * 
  * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.ReadingDataSheetController
