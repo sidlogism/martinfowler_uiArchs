@@ -28,6 +28,8 @@ import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
 
 /**
  * Domain object holding data of a concentration reading record.
+ * 
+ * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.ConcentrationReading
  */
 @Entity(name = "concentration_reading")
 public class ConcentrationReading implements Comparable< ConcentrationReading >  {
@@ -112,7 +114,8 @@ public class ConcentrationReading implements Comparable< ConcentrationReading > 
 
 	@Override
 	public int compareTo(final ConcentrationReading o) {
-		if( null == o.getReadingTimestamp() || null == this.readingTimestamp) return +1;
+		if( null == o.getReadingTimestamp() ) return +1;
+		if( null == this.readingTimestamp) return -1;
 		return this.readingTimestamp.compareTo( o.getReadingTimestamp() );
 	}
 }

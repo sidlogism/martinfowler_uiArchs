@@ -17,6 +17,8 @@ package imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence;
 
 /**
  * Domain object holding data of a monitoring station record.
+ * 
+ * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation
  */
 public class MonitoringStation {
 	private long id;
