@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- TODO improve HBox gap size, see css -->
+
+<HBox fx:id="rootPane" alignment="BASELINE_LEFT" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx/2.2" 
+	fx:controller="imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.MonitoringStationController">
+	<children>
+		<ListView fx:id="stationList"/>
+		<fx:include fx:id="readingView" source="reading_data_sheet.fxml" charset="utf-8"/>
+	</children>
+</HBox>
