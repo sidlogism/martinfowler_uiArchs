@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
+package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 
 
 import java.net.URL;
@@ -45,8 +45,8 @@ import javafx.scene.control.TextInputControl;
  * Controller handling user actions in views related to monitoring stations.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.MonitoringStationList
  */
-public class MonitoringStationController implements Initializable, ChangeListener<String>, IMonitoringStationController {
-	private static final Logger logger = Logger.getLogger(MonitoringStationController.class.getName());
+public class MonitoringStationView implements Initializable, ChangeListener<String>, IMonitoringStationView {
+	private static final Logger logger = Logger.getLogger(MonitoringStationView.class.getName());
 	private IMonitoringStationModel model = null;
 
 	@FXML
@@ -58,9 +58,9 @@ public class MonitoringStationController implements Initializable, ChangeListene
 	 * TODO suffices strategy pattern?
 	 */
 	@FXML
-	public IReadingDataSheetController readingViewController;
+	public IReadingDataSheetView readingViewController;
 
-	public MonitoringStationController() {
+	public MonitoringStationView() {
 		logger.log(Level.FINE, "station ctor");
 		this.model = new MonitoringStationModel();
 	}

@@ -1,4 +1,4 @@
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
+package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import javafx.beans.value.ObservableValue;
 
-public interface IReadingDataSheetController {
+public interface IReadingDataSheetView {
 
 	void initialize(URL location, ResourceBundle resources);
 
@@ -17,7 +17,7 @@ public interface IReadingDataSheetController {
 	 * @param stationController    StationController to be set at initialization.
 	 * TODO too much cohesion: cannot use interface IMonitoringStationController because of listener registration.
 	 */
-	public void setStationController(final MonitoringStationController stationController);
+	public void setStationController(final MonitoringStationView stationController);
 
 	/**
 	 * Set new value for "Station ID" text field.

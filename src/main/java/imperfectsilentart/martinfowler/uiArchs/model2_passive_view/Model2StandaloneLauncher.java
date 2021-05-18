@@ -22,7 +22,7 @@ import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller.IA
  * Variance of the Model2-pattern or MVP-pattern with a 'passive view' (see https://www.martinfowler.com/eaaDev/PassiveScreen.html) of assessment application from https://www.martinfowler.com/eaaDev/uiArchs.html .
  */
 
-public class MvcStandaloneLauncher {
+public class Model2StandaloneLauncher {
 	/**
 	 * Initializes the application's domain model and controllers.
 	 * The controller initializes the internal application prerequirements and then launches the UI.

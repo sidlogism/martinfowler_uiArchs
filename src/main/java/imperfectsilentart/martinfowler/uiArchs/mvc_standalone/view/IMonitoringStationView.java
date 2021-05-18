@@ -1,4 +1,4 @@
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
+package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -7,7 +7,7 @@ import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
 import javafx.beans.value.ObservableValue;
 
-public interface IMonitoringStationController {
+public interface IMonitoringStationView {
 
 	void initialize(URL url, ResourceBundle resources);
 

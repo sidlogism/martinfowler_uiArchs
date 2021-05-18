@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
+package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -41,8 +41,8 @@ import javafx.scene.control.TextField;
  * 
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.ReadingDataSheet
  */
-public class ReadingDataSheetController implements Initializable, ChangeListener<String>, IReadingDataSheetController {
-	private static final Logger logger = Logger.getLogger(ReadingDataSheetController.class.getName());
+public class ReadingDataSheetView implements Initializable, ChangeListener<String>, IReadingDataSheetView {
+	private static final Logger logger = Logger.getLogger(ReadingDataSheetView.class.getName());
 	private IConcentrationReadingModel model = null;
 	/**
 	 * IMPORTANT: For keeping station view and reading view in sync, the corresponding controllers must know each other.
@@ -51,7 +51,7 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 	 * TODO too much cohesion: cannot use interface IMonitoringStationController because of listener registration in {@link #setStationController}.
 	 * Doesn't suffice strategy pattern?
 	 */
-	private MonitoringStationController stationController = null;
+	private MonitoringStationView stationController = null;
 
 	// ID of currently displayed concentration reading record
 	private long concentrationReadingId = -1;
@@ -69,7 +69,7 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 	@FXML
 	public TextField tfVariance;
 
-	public ReadingDataSheetController() {
+	public ReadingDataSheetView() {
 		logger.log(Level.FINE, "reading ctor");
 		this.model = new ConcentrationReadingModel();
 	}
@@ -105,7 +105,7 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 	 * TODO too much cohesion: cannot use interface IMonitoringStationController because of listener registration.
 	 */
 	@Override
-	public void setStationController(MonitoringStationController stationController) {
+	public void setStationController(MonitoringStationView stationController) {
 		this.stationController = stationController;
 		if(null == this.tfStationExternalId) {
 			logger.log(Level.WARNING, "Text field of station external id is not initialized yet. Failed to register station list controller as change listener to text field of station external id.");
