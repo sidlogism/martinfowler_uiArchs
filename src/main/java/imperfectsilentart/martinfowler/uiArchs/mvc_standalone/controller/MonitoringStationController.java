@@ -167,7 +167,7 @@ public class MonitoringStationController implements Initializable, ChangeListene
 			 */
 			if( null == newStationName || newStationName.isEmpty() || newStationName.isBlank() ) return;
 			
-			if(! this.readingViewController.changeReadingRecord(newStationName) ) {
+			if(! this.readingViewController.switchContents(newStationName) ) {
 				/*
 				 * If there is a problem with the new station, wipe selection.
 				 * To avoid redundant listener updates temporarily unregister from changes of the list selection.

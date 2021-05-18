@@ -119,14 +119,14 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 	}
 
 	/**
-	 * Set new value for "Station ID" text field.
+	 * Handle switch in selected monitoring station. All contents of reading data sheet must be updated.
 	 * 
 	 * @param newExternalId    new value for "Station ID" text field. Null is ignored. Use empty string instead.
 	 * @return    boolean value indicating whether changing the currently displayed reading record was successful. True = success, false = failure.
 	 * @throws ModelPersistenceException 
 	 */
 	@Override
-	public synchronized boolean changeReadingRecord(final String newExternalId) {
+	public synchronized boolean switchContents(final String newExternalId) {
 		if(null == newExternalId || null == stationController) {
 			return false;
 		}

@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 
 /**
  * "Standalone MVC" version of assessment form-UI from https://www.martinfowler.com/eaaDev/uiArchs.html .
+ * 
+ * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.IceCreamAssessmentForm
  */
 public class AssessmentFormView extends Application implements IAssessmentFormView{
 	private static final Logger logger = Logger.getLogger(AssessmentFormView.class.getName());

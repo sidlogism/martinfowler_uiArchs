@@ -26,7 +26,7 @@ public interface IReadingDataSheetController {
 	 * @return    boolean value indicating whether changing the currently displayed reading record was successful. True = success, false = failure.
 	 * @throws ModelPersistenceException 
 	 */
-	public boolean changeReadingRecord(final String newExternalId);
+	public boolean switchContents(final String newExternalId);
 
 	/**
 	 * ChangeListener callback if text field "Actual" changed.

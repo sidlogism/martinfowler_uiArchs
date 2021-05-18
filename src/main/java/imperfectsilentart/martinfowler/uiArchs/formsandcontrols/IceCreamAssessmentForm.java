@@ -17,6 +17,7 @@ import javafx.stage.Stage;
  * "Forms and Controls" version of assessment form from https://www.martinfowler.com/eaaDev/uiArchs.html .
  * 
  * @note    For simplicity DB table locking is done pessimistic.
+ * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.AssessmentFormView
  */
 public class IceCreamAssessmentForm extends Application{
 	private static final Logger logger = Logger.getLogger(IceCreamAssessmentForm.class.getName());
@@ -44,7 +45,7 @@ public class IceCreamAssessmentForm extends Application{
 						// if there is no selection (because of wrong or partial station name) or selection disappears, the new value is null, which must be ignored.
 						if( null == newStationName || newStationName.isEmpty() || newStationName.isBlank() ) return;
 						
-						if(! ReadingDataSheet.getInstance().changeReadingRecord(newStationName) ) {
+						if(! ReadingDataSheet.getInstance().switchContents(newStationName) ) {
 							//if there is a problem with the new station, wipe selection
 							MonitoringStationList.getInstance().wipeSelection();
 						}

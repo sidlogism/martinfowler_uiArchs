@@ -195,7 +195,7 @@ public class ReadingDataSheet {
 	 * @return    boolean value indicating whether changing the currently displayed reading record was successful. True = success, false = failure.
 	 * @throws DbAccessException 
 	 */
-	public synchronized boolean changeReadingRecord(final String newExternalId) {
+	public synchronized boolean switchContents(final String newExternalId) {
 		if(null == newExternalId) {
 			return false;
 		}
