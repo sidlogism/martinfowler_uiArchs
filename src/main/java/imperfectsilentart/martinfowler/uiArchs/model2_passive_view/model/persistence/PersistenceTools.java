@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

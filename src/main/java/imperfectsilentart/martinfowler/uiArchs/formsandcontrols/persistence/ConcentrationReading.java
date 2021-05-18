@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 /**
  * Domain object holding data of a concentration reading record.
  * 
- * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading
+ * @see imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ConcentrationReading
  */
 public class ConcentrationReading {
 	private long id;

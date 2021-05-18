@@ -1,4 +1,4 @@
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller;
 
 /**
  * Business logic for accessing and initializing assessment UI main view.

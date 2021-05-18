@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.AssessmentFormController;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.IAssessmentFormController;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller.AssessmentFormController;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller.IAssessmentFormController;
 
 /**
- * "Standalone MVC" version of assessment application from https://www.martinfowler.com/eaaDev/uiArchs.html .
+ * Variance of the Model2-pattern or MVP-pattern with a 'passive view' (see https://www.martinfowler.com/eaaDev/PassiveScreen.html) of assessment application from https://www.martinfowler.com/eaaDev/uiArchs.html .
  */
 
 public class MvcStandaloneLauncher {

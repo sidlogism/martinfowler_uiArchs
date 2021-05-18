@@ -1,10 +1,10 @@
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ModelPersistenceException;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.MonitoringStation;
 import javafx.beans.value.ObservableValue;
 
 public interface IMonitoringStationController {

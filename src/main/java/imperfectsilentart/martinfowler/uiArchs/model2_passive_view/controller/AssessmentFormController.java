@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.AssessmentFormView;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IAssessmentFormView;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.view.AssessmentFormView;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.view.IAssessmentFormView;
 
 /**
  * Business logic for accessing and initializing assessment UI main view.

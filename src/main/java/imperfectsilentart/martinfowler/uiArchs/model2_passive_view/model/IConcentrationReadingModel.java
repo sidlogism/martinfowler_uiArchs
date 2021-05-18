@@ -1,7 +1,7 @@
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ConcentrationReading;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ModelPersistenceException;
 
 public interface IConcentrationReadingModel {
 	/**

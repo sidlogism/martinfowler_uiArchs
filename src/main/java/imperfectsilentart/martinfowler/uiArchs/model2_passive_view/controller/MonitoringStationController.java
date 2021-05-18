@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller;
 
 
 import java.net.URL;
@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IMonitoringStationModel;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.MonitoringStationModel;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.IMonitoringStationModel;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.MonitoringStationModel;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ModelPersistenceException;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.MonitoringStation;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;

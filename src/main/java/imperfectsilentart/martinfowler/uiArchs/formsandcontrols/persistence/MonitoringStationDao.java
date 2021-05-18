@@ -28,7 +28,7 @@ import com.zaxxer.hikari.HikariDataSource;
  * DAO for accessing monitoring_station table.
  *
  * NOTE: Using no OR-mapper on purpose.
- * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.MonitoringStationModel
+ * @see imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.MonitoringStationModel
  */
 public class MonitoringStationDao {
 	private static final Logger logger = Logger.getLogger(MonitoringStationDao.class.getName());

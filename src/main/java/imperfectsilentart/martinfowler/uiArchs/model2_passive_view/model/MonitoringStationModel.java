@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,9 +21,9 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ModelPersistenceException;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.MonitoringStation;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.PersistenceTools;
 /**
  * Business logic for accessing and processing all data related to monitoring stations.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.MonitoringStationDao

@@ -17,7 +17,7 @@ import javafx.stage.Stage;
  * "Forms and Controls" version of assessment form from https://www.martinfowler.com/eaaDev/uiArchs.html .
  * 
  * @note    For simplicity DB table locking is done pessimistic.
- * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.AssessmentFormView
+ * @see imperfectsilentart.martinfowler.uiArchs.model2_passive_view.view.AssessmentFormView
  */
 public class IceCreamAssessmentForm extends Application{
 	private static final Logger logger = Logger.getLogger(IceCreamAssessmentForm.class.getName());

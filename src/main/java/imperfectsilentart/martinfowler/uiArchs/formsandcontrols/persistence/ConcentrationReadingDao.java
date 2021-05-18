@@ -38,7 +38,7 @@ import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
  * DAO for accessing concentration_reading table.
  *
  * NOTE: Using no OR-mapper on purpose.
- * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ConcentrationReadingModel
+ * @see imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.ConcentrationReadingModel
  */
 public class ConcentrationReadingDao {
 	private static final Logger logger = Logger.getLogger(ConcentrationReadingDao.class.getName());

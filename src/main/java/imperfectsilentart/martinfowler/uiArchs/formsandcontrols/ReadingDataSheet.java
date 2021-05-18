@@ -46,7 +46,7 @@ import javafx.scene.layout.Priority;
  * The record entry "Actual" can be modified to change the entry "actual value" of the currently active ice cream concentration reading record.
  * All other entries and data fields are calculated from external sources and thus the corresponding text fields are read only.
  * 
- * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.ReadingDataSheetController
+ * @see imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller.ReadingDataSheetController
  */
 public class ReadingDataSheet {
 	private static final Logger logger = Logger.getLogger(ReadingDataSheet.class.getName());

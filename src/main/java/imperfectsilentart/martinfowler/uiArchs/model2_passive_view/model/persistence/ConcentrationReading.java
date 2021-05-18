@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +25,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ConcentrationReadingModel;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.ConcentrationReadingModel;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
 
 /**

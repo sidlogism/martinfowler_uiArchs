@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,11 +22,11 @@ import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ConcentrationReadingModel;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IConcentrationReadingModel;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.ConcentrationReadingModel;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.IConcentrationReadingModel;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ConcentrationReading;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ModelPersistenceException;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.MonitoringStation;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

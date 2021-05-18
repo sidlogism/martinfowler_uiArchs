@@ -1,9 +1,9 @@
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model;
 
 import java.util.List;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ModelPersistenceException;
+import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.MonitoringStation;
 
 /**
  * Business logic for accessing and processing all data related to monitoring stations.

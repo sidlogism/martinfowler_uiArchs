@@ -1,4 +1,4 @@
-package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
+package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.view;
 
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * "Standalone MVC" version of assessment form-UI from https://www.martinfowler.com/eaaDev/uiArchs.html .
+ * Variance of the Model2-pattern or MVP-pattern with a 'passive view' (see https://www.martinfowler.com/eaaDev/PassiveScreen.html) of assessment form-UI from https://www.martinfowler.com/eaaDev/uiArchs.html .
  * 
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.IceCreamAssessmentForm
  */

@@ -28,7 +28,7 @@ import javafx.scene.layout.Pane;
 
 /**
  * Wrapper class for scrollable list of monitoring stations.
- * @see imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.MonitoringStationController
+ * @see imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller.MonitoringStationController
  */
 public class MonitoringStationList{
 	private static final Logger logger = Logger.getLogger(MonitoringStationList.class.getName());
