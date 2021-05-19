@@ -5,7 +5,8 @@ package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
  */
 public interface IAssessmentFormController {
 	/**
-	 * Construct and display assessment UI main view.
+	 * Construct and launch assessment UI main view.
+	 * @note    IMPORTANT: any internal initialization should be done in constructor and not here.
 	 * 
 	 * @param args    command line arguments
 	 */

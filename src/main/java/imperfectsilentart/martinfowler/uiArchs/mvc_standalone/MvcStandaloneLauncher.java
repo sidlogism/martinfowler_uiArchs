@@ -24,7 +24,6 @@ import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.IAssess
 
 public class MvcStandaloneLauncher {
 	/**
-	 * Initializes the application's domain model and controllers.
 	 * The controller initializes the internal application prerequirements and then launches the UI.
 	 * 
 	 * @param args

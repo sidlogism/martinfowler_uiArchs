@@ -1,36 +1,68 @@
-/*
- * Copyright 2021 Imperfect Silent Art
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.AssessmentFormView;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IAssessmentFormView;
+
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.MonitoringStationView;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
- * Business logic for accessing and initializing assessment UI main view.
+ * Controller for assessment UI main view.
+ * 
+ * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.IceCreamAssessmentForm
  */
-public class AssessmentFormController implements IAssessmentFormController {
-	private IAssessmentFormView view = new AssessmentFormView();
+public class AssessmentFormController extends Application implements IAssessmentFormController{
+	private static final Logger logger = Logger.getLogger(AssessmentFormController.class.getName());
+	/**
+	 * First create top most controller i. e. station controller in order to inform station view about its corresponding controller later.
+	 * The nested reading controller is created internally by station controller.
+	 * I. e. controllers are constructed in the same nested fashion as their views.
+	 */
+	private IStationController stationController = null;
+	
+	public AssessmentFormController() {
+		this.stationController = new MonitoringStationController();
+	}
 	
 	/**
-	 * Construct and display assessment UI main view.
+	 * Construct and launch assessment UI main view.
+	 * @note    IMPORTANT: any internal initialization should be done in constructor and not here.
 	 * 
 	 * @param args    command line arguments
 	 */
 	@Override
 	public void launchUi(final String[] args) {
-		this.view.launchUi(args);
+		launch(args);
 	}
+
+	@Override
+	public void start(final Stage stage) throws IOException
+	{
+		final FXMLLoader loader = new FXMLLoader( MonitoringStationView.class.getResource("icecream_assessment.fxml") );
+		// create station view and inform it about its corresponding controller
+		final MonitoringStationView stationView = new MonitoringStationView( );
+		stationView.setStationController(this.stationController);
+		// Hand station view to application loader. NOTE: In this subproject "fx:controller" references view objects!
+		loader.setController(stationView);
+		
+		final Parent root = loader.load();
+		stage.setScene(new Scene(root, 650, 200));
+		
+		// set stage attributes
+		stage.getScene().getStylesheets().add( MonitoringStationView.class.getResource("icecream_assessment.css").toExternalForm() );
+		stage.setTitle("Assessment Record (\"Standalone MVC\" version)");
+		stage.setResizable(true);
+		stage.centerOnScreen();
+		// make stage visible
+		logger.log(Level.INFO, "Displaying and starting application "+this.getClass().getName() );
+		stage.show();
+	}
+
+
 }

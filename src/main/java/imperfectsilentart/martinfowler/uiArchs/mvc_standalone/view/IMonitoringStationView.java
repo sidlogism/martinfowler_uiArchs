@@ -1,45 +1,34 @@
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.List;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import javafx.beans.value.ObservableValue;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.IStationController;
 
 public interface IMonitoringStationView {
-
-	void initialize(URL url, ResourceBundle resources);
-
 	/**
-	 * Set new selection for monitoring station list.
+	 * Inform station view about its corresponding controller.
 	 * 
-	 * @param newExternalId    new selection for monitoring station list. Null is ignored. Use empty string instead.
+	 * @param controller the controller to set
 	 */
-	public void changeSelection(final String newExternalId);
+	public void setStationController(final IStationController controller);
+	
+	/**
+	 * Initialize list of monitoring stations.
+	 * Currently the list contains only one string representing a monitoring station because there currently is no out-of-the-box list for multiple columns in JavaFX.
+	 * 
+	 * @param    stationIdentifyers    list of single strings representing a monitoring station each
+	 */
+	public void overwriteUIStationList(final List<String> stationIdentifyers);
 
 	/**
-	 * Wipe any selection in monitoring station list.
+	 * Set new selection for station view.
 	 * 
-	 * @param newExternalId    new selection for monitoring station list. Null is ignored. Use empty string instead.
+	 * @param newExternalId    new selection for station view. Null is ignored. Use empty string instead.
+	 */
+	public void overwriteUISelection(final String newExternalId);
+
+	/**
+	 * Wipe any selection in station view.
 	 */
 	public void wipeSelection();
-
-	/**
-	 * Forwards the monitoring station with the given external ID from the model.
-	 * 
-	 * @param stationExternalId    external ID of relevant monitoring station
-	 * @return domain object of relevant monitoring station. null if the query result is empty.
-	 * @throws ModelPersistenceException
-	 */
-	public MonitoringStation getStation(final String stationExternalId) throws ModelPersistenceException;
-
-	/**
-	 * ChangeListener callback
-	 *     if selection in station list of station view changed
-	 *     or if text field "Station ID" in reading view changed.
-	 * The record entry "Station ID" of reading view can be modified initiate an internal search for the corresponding ice cream reading record.
-	 */
-	public void changed(ObservableValue<? extends String> observable, String oldStationValue, String newStationName);
-
 }

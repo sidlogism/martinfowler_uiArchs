@@ -23,13 +23,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  * Domain object holding data of a monitoring station record.
  * 
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.MonitoringStation
  */
-@Entity(name = "monitoring_station")
+@Entity
+@Table(name = "monitoring_station")
 public class MonitoringStation implements Comparable< MonitoringStation >{
 	private long id;
 	private String stationExternalId;

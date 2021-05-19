@@ -141,7 +141,7 @@ public class DbConnectionTest {
 			em.getTransaction().begin();
 			
 			//1st query
-			List<MonitoringStation> result = em.createQuery( "from monitoring_station", MonitoringStation.class ).getResultList();
+			List<MonitoringStation> result = em.createQuery( "from MonitoringStation", MonitoringStation.class ).getResultList();
 			for ( MonitoringStation station : result ) {
 				logger.log(Level.INFO, "Station: " + station.getStationName() );
 			}

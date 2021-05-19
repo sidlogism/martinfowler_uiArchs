@@ -15,7 +15,8 @@ module imperfectsilentart.martinfowler.uiArchs.mvc_standalone {
 	requires com.fasterxml.classmate;
 	requires java.xml.bind;
 
-	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view to javafx.graphics;
+	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view to javafx.fxml;
+	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller to javafx.graphics,javafx.fxml;
 	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence to org.hibernate.orm.core;
-	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller to javafx.fxml;
+	opens imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence to org.hibernate.orm.core;
 }
