@@ -106,8 +106,6 @@ public class MonitoringStationList{
 
 	/**
 	 * Wipe any selection in monitoring station list.
-	 * 
-	 * @param newExternalId    new selection for monitoring station list. Null is ignored. Use empty string instead.
 	 */
 	public void wipeSelection() {
 		this.stationList.getSelectionModel().clearSelection();

@@ -81,7 +81,7 @@ public class ConcentrationReadingModel implements IConcentrationReadingModel {
 		 *     Oracle SQL: "FETCH FIRST 1 ROW ONLY"
 		 */
 		final String queryText = 
-			"FROM concentration_reading\n"
+			"FROM Model2ConcentrationReading\n"
 			+ "WHERE station = :station\n"
 			+ "ORDER BY readingTimestamp DESC";
 

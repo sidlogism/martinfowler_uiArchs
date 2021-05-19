@@ -24,7 +24,6 @@ import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.controller.IA
 
 public class Model2StandaloneLauncher {
 	/**
-	 * Initializes the application's domain model and controllers.
 	 * The controller initializes the internal application prerequirements and then launches the UI.
 	 * 
 	 * @param args

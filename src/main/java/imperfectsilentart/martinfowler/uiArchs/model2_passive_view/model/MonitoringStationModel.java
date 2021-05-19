@@ -41,7 +41,7 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 	@Override
 	public synchronized MonitoringStation getStation(final String stationExternalId) throws ModelPersistenceException {
 		// TODO make observed object? add relevant UI-controls? controller + view observe model.
-		final String query = "FROM monitoring_station WHERE stationExternalId = :id";
+		final String query = "FROM Model2MonitoringStation WHERE stationExternalId = :id";
 
 		MonitoringStation result = null;
 		EntityManager em = null;
@@ -68,7 +68,7 @@ public class MonitoringStationModel implements IMonitoringStationModel {
 	 */
 	@Override
 	public synchronized List<MonitoringStation> findAll() throws ModelPersistenceException {
-		final String query = "FROM monitoring_station ORDER BY id ASC";
+		final String query = "FROM Model2MonitoringStation ORDER BY id ASC";
 		
 		List<MonitoringStation> result = null;
 		EntityManager em = null;

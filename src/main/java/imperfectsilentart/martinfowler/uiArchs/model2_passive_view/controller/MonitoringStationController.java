@@ -130,8 +130,6 @@ public class MonitoringStationController implements Initializable, ChangeListene
 
 	/**
 	 * Wipe any selection in monitoring station list.
-	 * 
-	 * @param newExternalId    new selection for monitoring station list. Null is ignored. Use empty string instead.
 	 */
 	@Override
 	public void wipeSelection() {
