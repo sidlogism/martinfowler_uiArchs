@@ -38,8 +38,8 @@ import javafx.scene.input.InputMethodEvent;
  * View handling UI elements related to reading view.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.ReadingDataSheet
  */
-public class ReadingDataSheetView implements Initializable, IReadingDataSheetView {
-	private static final Logger logger = Logger.getLogger(ReadingDataSheetView.class.getName());
+public class ReadingView implements Initializable, IReadingView {
+	private static final Logger logger = Logger.getLogger(ReadingView.class.getName());
 	private IReadingController controller = null;
 
 	// data depending on current monitoring station
@@ -61,7 +61,7 @@ public class ReadingDataSheetView implements Initializable, IReadingDataSheetVie
 	 */
 	private long currentReadingId = -1;
 
-	public ReadingDataSheetView() {
+	public ReadingView() {
 		logger.log(Level.INFO, "reading view ctor");
 	}
 	

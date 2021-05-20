@@ -4,7 +4,7 @@ import java.util.List;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.IStationController;
 
-public interface IMonitoringStationView {
+public interface IStationView {
 	/**
 	 * Inform station view about its corresponding controller.
 	 * 

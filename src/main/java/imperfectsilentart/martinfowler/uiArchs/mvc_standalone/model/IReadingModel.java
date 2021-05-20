@@ -3,7 +3,7 @@ package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 
-public interface IConcentrationReadingModel {
+public interface IReadingModel {
 	/**
 	 * Updates actual concentration value of current reading record.
 	 * 

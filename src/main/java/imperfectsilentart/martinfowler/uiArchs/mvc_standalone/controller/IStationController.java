@@ -1,7 +1,7 @@
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IMonitoringStationView;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingDataSheetView;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IStationView;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingView;
 
 public interface IStationController {
 
@@ -13,7 +13,7 @@ public interface IStationController {
 	 * 
 	 * @note    In this current sample implementation the station view object itself calls this method on the station controller in a bootstrapping fashion.
 	 */
-	public void initializeController(final IMonitoringStationView stationView, final IReadingDataSheetView readingView);
+	public void initializeController(final IStationView stationView, final IReadingView readingView);
 
 	/**
 	 * Set new selection for monitoring station view.

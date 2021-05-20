@@ -24,22 +24,22 @@ import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IMonitoringStationModel;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.MonitoringStationModel;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IStationModel;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.StationModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IMonitoringStationView;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingDataSheetView;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IStationView;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingView;
 import javafx.fxml.FXML;
 
 /**
  * Controller handling user actions in views related to monitoring stations.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.MonitoringStationList
  */
-public class MonitoringStationController implements IStationController{
-	private static final Logger logger = Logger.getLogger(MonitoringStationController.class.getName());
-	private IMonitoringStationModel model = null;
-	private IMonitoringStationView view = null;
+public class StationController implements IStationController{
+	private static final Logger logger = Logger.getLogger(StationController.class.getName());
+	private IStationModel model = null;
+	private IStationView view = null;
 	/**
 	 * IMPORTANT: For keeping station view and reading view in sync, the corresponding controllers must know each other.
 	 * This link is established here.
@@ -49,9 +49,9 @@ public class MonitoringStationController implements IStationController{
 	private IReadingController readingController = null;
 	
 
-	public MonitoringStationController() {
+	public StationController() {
 		logger.log(Level.INFO, "station controller ctor");
-		this.model = new MonitoringStationModel();
+		this.model = new StationModel();
 	}
 	
 	/**
@@ -63,10 +63,10 @@ public class MonitoringStationController implements IStationController{
 	 * @note    In this current sample implementation the station view object itself calls this method on the station controller in a bootstrapping fashion.
 	 */
 	@Override
-	public void initializeController(final IMonitoringStationView stationView, final IReadingDataSheetView readingView) {
+	public void initializeController(final IStationView stationView, final IReadingView readingView) {
 		this.view = stationView;
 		// Controllers are constructed in the same nested fashion as their views.
-		this.readingController =  new ReadingDataSheetController(this, readingView, model);
+		this.readingController =  new ReadingController(this, readingView, model);
 		
 		/*
 		 * Initialize list of monitoring stations.

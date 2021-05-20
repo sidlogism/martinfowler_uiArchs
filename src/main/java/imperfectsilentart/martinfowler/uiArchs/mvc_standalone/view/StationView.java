@@ -35,8 +35,8 @@ import javafx.scene.control.ListView;
  * View handling UI elements related to monitoring station view.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.MonitoringStationList
  */
-public class MonitoringStationView implements Initializable, ChangeListener<String>, IMonitoringStationView {
-	private static final Logger logger = Logger.getLogger(MonitoringStationView.class.getName());
+public class StationView implements Initializable, ChangeListener<String>, IStationView {
+	private static final Logger logger = Logger.getLogger(StationView.class.getName());
 	private IStationController controller = null;
 	
 	@FXML
@@ -48,9 +48,9 @@ public class MonitoringStationView implements Initializable, ChangeListener<Stri
 	 * This link is established here.
 	 */
 	@FXML
-	public IReadingDataSheetView readingViewController;
+	public IReadingView readingViewController;
 
-	public MonitoringStationView(){
+	public StationView(){
 		logger.log(Level.INFO, "station view ctor");
 	}
 	

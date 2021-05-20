@@ -13,7 +13,7 @@ The record entry "Actual" can be modified to change the entry "actual value" of 
 All other entries and data fields are calculated from external sources and thus the corresponding text fields are read only.
  -->
 <GridPane alignment="CENTER" hgap="7.0" vgap="7.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2"
-		fx:controller="imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.ReadingDataSheetView">
+		fx:controller="imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.ReadingView">
 	<children>
 		<Label text="Station ID" alignment="TOP_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="0"  />
 		<TextField fx:id="tfStationExternalId" GridPane.columnIndex="1" GridPane.rowIndex="0"

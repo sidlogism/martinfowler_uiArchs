@@ -20,13 +20,13 @@ import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ConcentrationReadingModel;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IConcentrationReadingModel;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IMonitoringStationModel;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ReadingModel;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IReadingModel;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IStationModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingDataSheetView;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingView;
 
 
 
@@ -34,11 +34,11 @@ import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingDataS
  * Controller handling user actions in views related to readings.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.ReadingDataSheet
  */
-public class ReadingDataSheetController implements IReadingController {
-	private static final Logger logger = Logger.getLogger(ReadingDataSheetController.class.getName());
-	private IConcentrationReadingModel model = null;
-	private IMonitoringStationModel stationModel = null;
-	private IReadingDataSheetView view;
+public class ReadingController implements IReadingController {
+	private static final Logger logger = Logger.getLogger(ReadingController.class.getName());
+	private IReadingModel model = null;
+	private IStationModel stationModel = null;
+	private IReadingView view;
 	/**
 	 * see constructor
 	 */
@@ -53,9 +53,9 @@ public class ReadingDataSheetController implements IReadingController {
 	 * 
 	 * @see #handleUserChangedStationExtId
 	 */
-	public ReadingDataSheetController(final IStationController stationController, final IReadingDataSheetView view, final IMonitoringStationModel stationModel) {
+	public ReadingController(final IStationController stationController, final IReadingView view, final IStationModel stationModel) {
 		logger.log(Level.INFO, "reading controller ctor");
-		this.model = new ConcentrationReadingModel();
+		this.model = new ReadingModel();
 		this.view = view;
 		/*
 		 * Inform reading view about its corresponding controller:

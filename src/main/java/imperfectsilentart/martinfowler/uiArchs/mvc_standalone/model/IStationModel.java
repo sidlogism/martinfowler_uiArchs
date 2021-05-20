@@ -9,7 +9,7 @@ import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.
  * Business logic for accessing and processing all data related to monitoring stations.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.MonitoringStationDao
  */
-public interface IMonitoringStationModel {
+public interface IStationModel {
 	/**
 	 * Loads the monitoring station with the given external ID from the database.
 	 * 

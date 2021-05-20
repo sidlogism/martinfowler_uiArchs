@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.MonitoringStationView;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.StationView;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,7 +27,7 @@ public class AssessmentFormController extends Application implements IAssessment
 	private IStationController stationController = null;
 	
 	public AssessmentFormController() {
-		this.stationController = new MonitoringStationController();
+		this.stationController = new StationController();
 	}
 	
 	/**
@@ -44,9 +44,9 @@ public class AssessmentFormController extends Application implements IAssessment
 	@Override
 	public void start(final Stage stage) throws IOException
 	{
-		final FXMLLoader loader = new FXMLLoader( MonitoringStationView.class.getResource("icecream_assessment.fxml") );
+		final FXMLLoader loader = new FXMLLoader( StationView.class.getResource("icecream_assessment.fxml") );
 		// create station view and inform it about its corresponding controller
-		final MonitoringStationView stationView = new MonitoringStationView( );
+		final StationView stationView = new StationView( );
 		stationView.setStationController(this.stationController);
 		// Hand station view to application loader. NOTE: In this subproject "fx:controller" references view objects!
 		loader.setController(stationView);
@@ -55,7 +55,7 @@ public class AssessmentFormController extends Application implements IAssessment
 		stage.setScene(new Scene(root, 650, 200));
 		
 		// set stage attributes
-		stage.getScene().getStylesheets().add( MonitoringStationView.class.getResource("icecream_assessment.css").toExternalForm() );
+		stage.getScene().getStylesheets().add( StationView.class.getResource("icecream_assessment.css").toExternalForm() );
 		stage.setTitle("Assessment Record (\"Standalone MVC\" version)");
 		stage.setResizable(true);
 		stage.centerOnScreen();

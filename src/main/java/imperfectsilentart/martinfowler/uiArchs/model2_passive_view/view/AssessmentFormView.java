@@ -37,7 +37,7 @@ public class AssessmentFormView extends Application implements IAssessmentFormVi
 		
 		// set stage attributes
 		stage.getScene().getStylesheets().add(getClass().getResource("icecream_assessment.css").toExternalForm());
-		stage.setTitle("Assessment Record (\"Standalone MVC\" version)");
+		stage.setTitle("Assessment Record (variance of the Model2-pattern or MVP-pattern with a 'passive view')");
 		stage.setResizable(true);
 		stage.centerOnScreen();
 		// make stage visible

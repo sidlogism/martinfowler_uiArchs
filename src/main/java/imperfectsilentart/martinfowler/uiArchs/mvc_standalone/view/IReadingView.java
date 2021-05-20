@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.IReadingController;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
 
-public interface IReadingDataSheetView {
+public interface IReadingView {
 
 	/**
 	 * IMPORTANT: For keeping station view and reading view in sync, the corresponding controllers must know each other.

@@ -29,9 +29,9 @@ import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.
  * Business logic for accessing and processing all data related to concentration readings.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.ConcentrationReadingDao
  */
-public class ConcentrationReadingModel implements IConcentrationReadingModel {
+public class ReadingModel implements IReadingModel {
 	// TODO make observed object? add relevant UI-controls? controller + view observe model.
-	private static final Logger logger = Logger.getLogger(ConcentrationReadingModel.class.getName());
+	private static final Logger logger = Logger.getLogger(ReadingModel.class.getName());
 	/**
 	 * Updates actual concentration value of current reading record.
 	 * 
