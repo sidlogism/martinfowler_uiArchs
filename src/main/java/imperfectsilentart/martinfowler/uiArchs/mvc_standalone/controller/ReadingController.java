@@ -163,7 +163,7 @@ public class ReadingController implements IReadingController {
 		try {
 			model.updateActualConcentration(newValue, currentReadingId);
 		} catch (ModelPersistenceException | PersistenceException e) {
-			logger.log(Level.WARNING, "Failed to update the actual concentration value in the database. Given actual value was \""+newActualValue+"\".", e);
+			logger.log(Level.WARNING, "Failed to update the actual concentration value in the database. Given actual value was \""+newValue+"\".", e);
 		}
 	}
 }

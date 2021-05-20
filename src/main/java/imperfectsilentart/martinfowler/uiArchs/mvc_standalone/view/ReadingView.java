@@ -24,13 +24,10 @@ import java.util.logging.Logger;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.IReadingController;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
-import javafx.scene.input.InputMethodEvent;
 
 
 
@@ -40,6 +37,26 @@ import javafx.scene.input.InputMethodEvent;
  */
 public class ReadingView implements Initializable, IReadingView {
 	private static final Logger logger = Logger.getLogger(ReadingView.class.getName());
+	/**
+	 * Flag indicating whether the current UI change is induced by user input (external) or by view code itself (internal).
+	 * 
+	 * REALLY DIRTY workaround which is not thread safe.
+	 * Needed because overwriting the text property of text fields internally triggers on<Property>Change-event handler for text property.
+	 * TODO coulnd't yet figure out how to disable on<Property>Change-event handler for text property programmatically.
+	 * 
+	 * @see #overwriteUIActualConcentration
+	 */
+	private volatile boolean currentlyOverwritingActualConcentration = false;
+	/**
+	 * Flag indicating whether the current UI change is induced by user input (external) or by view code itself (internal).
+	 * 
+	 * REALLY DIRTY workaround which is not thread safe.
+	 * Needed because overwriting the text property of text fields internally triggers on<Property>Change-event handler for text property.
+	 * TODO coulnd't yet figure out how to disable on<Property>Change-event handler for text property programmatically.
+	 * 
+	 * @see #overwriteUIStationExternalId
+	 */
+	private volatile boolean currentlyOverwritingStationExtId = false;
 	private IReadingController controller = null;
 
 	// data depending on current monitoring station
@@ -113,8 +130,9 @@ public class ReadingView implements Initializable, IReadingView {
 	 */
 	@Override
 	public void overwriteUIStationExternalId(String stationExternalId) {
-		//FIXME check if this triggers onTextChange or onAction!!
+		this.currentlyOverwritingStationExtId = true;
 		this.tfStationExternalId.setText( stationExternalId );
+		this.currentlyOverwritingStationExtId = false;
 	}
 
 	/**
@@ -126,7 +144,7 @@ public class ReadingView implements Initializable, IReadingView {
 			return Integer.parseInt( tfTargetConcentration.getText() );
 		}catch(NumberFormatException e) {
 			// not logging exception because of verbosity
-			logger.log(Level.WARNING, "Target concenctration has invalid value \""+ tfTargetConcentration.getText() +"\". Returning default value.");
+			logger.log(Level.WARNING, "Target concentration has invalid value \""+ tfTargetConcentration.getText() +"\". Returning default value.");
 			return -1;
 		}
 	}
@@ -170,7 +188,7 @@ public class ReadingView implements Initializable, IReadingView {
 			return Integer.parseInt( tfActualConcentration.getText() );
 		}catch(NumberFormatException e) {
 			// not logging exception because of verbosity
-			logger.log(Level.WARNING, "Actual concenctration has invalid value \""+ tfActualConcentration.getText() +"\". Returning default value.");
+			logger.log(Level.WARNING, "Actual concentration has invalid value \""+ tfActualConcentration.getText() +"\". Returning default value.");
 			return -1;
 		}
 	}
@@ -179,15 +197,10 @@ public class ReadingView implements Initializable, IReadingView {
 	 * @param actualConcentration the actualConcentration to set
 	 */
 	@Override
-	public void overwriteUIActualConcentration(int actualConcentration) {
-		/*
-		 * Setting the text property triggers onTextChange-event.
-		 * Thus we must temporarily disable any text change handlers.
-		 */
-		final EventHandler<? super InputMethodEvent> handler = this.tfActualConcentration.getOnInputMethodTextChanged();
-		this.tfActualConcentration.setOnAction(null);
+	public void overwriteUIActualConcentration(final int actualConcentration) {
+		this.currentlyOverwritingActualConcentration = true;
 		this.tfActualConcentration.setText( Integer.valueOf(actualConcentration).toString() );
-		this.tfActualConcentration.setOnInputMethodTextChanged(handler);
+		this.currentlyOverwritingActualConcentration = false;
 	}
 	
 	/**
@@ -241,16 +254,6 @@ public class ReadingView implements Initializable, IReadingView {
 		this.tfActualConcentration.clear();
 		this.tfVariance.clear();
 	}
-
-	/**
-	 * ChangeListener callback if text field "Actual" changed.
-	// FIXME entity listener callback
-	@Override
-	public void changed(ObservableValue<? extends String> observable, String oldActualValue, String newActualValue) {
-		// finally update variance text field
-		updateVariance( newValue, Integer.parseInt( tfTargetConcentration.getText() ) );
-	}
-	 */
 	
 	/**
 	 * Handle change of text field for station external ID in UI.
@@ -259,6 +262,7 @@ public class ReadingView implements Initializable, IReadingView {
 	 */
 	@FXML
 	public void handleUserChangedStationExtId(final Event event) {
+		if(this.currentlyOverwritingStationExtId) return;
 		logger.log(Level.FINE, "User changed value of "+event.getSource());
 		this.controller.handleUserChangedStationExtId( this.tfStationExternalId.getText() );
 	}
@@ -270,6 +274,7 @@ public class ReadingView implements Initializable, IReadingView {
 	 */
 	@FXML
 	public void handleUserChangedActualConcentration(final Event event) {
+		if(this.currentlyOverwritingActualConcentration) return;
 		logger.log(Level.INFO, "User changed value of "+event.getSource());
 		this.controller.handleUserChangedActualConcentration( this.tfActualConcentration.getText() , this.currentReadingId );
 	}
