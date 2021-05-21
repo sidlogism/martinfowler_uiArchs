@@ -31,13 +31,6 @@ import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.
 public class StationModel implements IStationModel {
 	private static final Logger logger = Logger.getLogger(StationModel.class.getName());
 	
-	/**
-	 * Loads the monitoring station with the given external ID from persistence layer.
-	 * 
-	 * @param stationExternalId    external ID of relevant monitoring station
-	 * @return domain object of relevant monitoring station. null if the query result is empty.
-	 * @throws ModelPersistenceException
-	 */
 	@Override
 	public synchronized MonitoringStation getStation(final String stationExternalId) throws ModelPersistenceException {
 		final String query = "FROM MonitoringStation WHERE stationExternalId = :id";
@@ -61,10 +54,6 @@ public class StationModel implements IStationModel {
 		return result;
 	}
 	
-	/**
-	 * @return Container holding the String representation of every monitoring station record.
-	 * @throws ModelPersistenceException
-	 */
 	@Override
 	public synchronized List<MonitoringStation> findAll() throws ModelPersistenceException {
 		final String query = "FROM MonitoringStation ORDER BY id ASC";

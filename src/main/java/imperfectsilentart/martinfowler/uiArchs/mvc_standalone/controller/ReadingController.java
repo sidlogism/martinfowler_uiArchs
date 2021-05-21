@@ -72,12 +72,6 @@ public class ReadingController implements IReadingController {
 		this.stationModel = stationModel;
 	}
 
-	/**
-	 * Handle change of UI element for station external ID in UI..
-	 * 
-	 * @param newStationExternalId    new value for "Station ID" text field. Null is ignored. Use empty string instead.
-	 * @throws ModelPersistenceException
-	 */
 	@Override
 	public void handleUserChangedStationExtId(final String newStationExternalId) {
 		/*
@@ -145,13 +139,6 @@ public class ReadingController implements IReadingController {
 		this.view.setCurrentReadingId( newRecord.getId() );
 	}
 	
-	/**
-	 * Handle change of UI element for actual concentration.
-	 * The record entry "Actual" can be modified to change the entry "actual concentration" of the currently active ice cream concentration reading record.
-	 * 
-	 * @param newActualValue    new value for "actual concentration" entry of current reading record
-	 * @param currentReadingId    ID of currently displayed reading record
-	 */
 	@Override
 	public void handleUserChangedActualConcentration(final String newActualValue, final long currentReadingId) {
 		// don't propagate null or empty value

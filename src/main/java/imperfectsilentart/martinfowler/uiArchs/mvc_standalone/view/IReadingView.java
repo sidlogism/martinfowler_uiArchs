@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 Imperfect Silent Art
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 
 import java.time.LocalDateTime;
@@ -28,6 +43,7 @@ public interface IReadingView {
 
 	/**
 	 * @param stationExternalId the stationExternalId to set
+	 * @note    This implicitly overwrites current stationExternalId in UI.
 	 */
 	void overwriteUIStationExternalId(String stationExternalId);
 
@@ -38,6 +54,7 @@ public interface IReadingView {
 
 	/**
 	 * @param targetConcentration the targetConcentration to set
+	 * @note    This implicitly overwrites current targetConcentration in UI.
 	 */
 	void overwriteUITargetConcentration(int targetConcentration);
 
@@ -48,7 +65,8 @@ public interface IReadingView {
 
 	/**
 	 * @param readingTimestamp the readingTimestamp to set
-	 * @throws TimeProcessingException 
+	 * @throws TimeProcessingException
+	 * @note    This implicitly overwrites current readingTimestamp in UI. 
 	 */
 	void overwriteUIReadingTimestamp(LocalDateTime readingTimestamp);
 
@@ -59,18 +77,9 @@ public interface IReadingView {
 
 	/**
 	 * @param actualConcentration the actualConcentration to set
+	 * @note    This implicitly overwrites current actualConcentration in UI.
 	 */
 	void overwriteUIActualConcentration(int actualConcentration);
-
-	/**
-	 * Recomputes the concentration variance based on the given values.
-	 * @note    This implicitly overwrites current selection status in UI.
-	 * @note: like the selection state and text contents this is part of the presentation model: i. e. the portion of the application data representing the current state of the view.
-	 * 
-	 * @param actualConcentration    value of the actual concentration measured
-	 * @param targetConcentration    value of the target concentration to be reached
-	 */
-	//void overwriteUIVariance(int actualConcentration, int targetConcentration);
 
 	/**
 	 * Wipes all text fields which depend on external station ID.

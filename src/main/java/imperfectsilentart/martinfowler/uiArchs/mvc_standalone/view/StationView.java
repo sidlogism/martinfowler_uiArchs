@@ -79,22 +79,11 @@ public class StationView implements Initializable, ChangeListener<String>, IStat
 		this.controller.initializeController(this, readingViewController);
 	}
 	
-	/**
-	 * Inform station view about its corresponding controller.
-	 * 
-	 * @param controller the controller to set
-	 */
 	@Override
 	public void setStationController(final IStationController controller) {
 		this.controller = controller;
 	}
 	
-	/**
-	 * Initialize list of monitoring stations.
-	 * Currently the list contains only one string representing a monitoring station because there currently is no out-of-the-box list for multiple columns in JavaFX.
-	 * 
-	 * @param    stationIdentifyers    list of single strings representing a monitoring station each
-	 */
 	@Override
 	public void overwriteUIStationList(final List<String> stationIdentifyers) {
 		/*
@@ -106,12 +95,6 @@ public class StationView implements Initializable, ChangeListener<String>, IStat
 		this.stationList.setItems(stationListData);
 	}
 	
-	/**
-	 * Set new selection for station view.
-	 * @note    This implicitly overwrites current selection status in UI.
-	 * 
-	 * @param newExternalId    new selection for station view. Null is ignored. Use empty string instead.
-	 */
 	@Override
 	public void overwriteUISelection(final String newExternalId) {
 		if(null == newExternalId) {
@@ -124,9 +107,6 @@ public class StationView implements Initializable, ChangeListener<String>, IStat
 		this.stationList.getSelectionModel().select(newExternalId);
 	}
 
-	/**
-	 * Wipe any selection in station view.
-	 */
 	@Override
 	public void wipeSelection() {
 		this.stationList.getSelectionModel().clearSelection();

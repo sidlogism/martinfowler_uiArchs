@@ -102,33 +102,21 @@ public class ReadingView implements Initializable, IReadingView, IReadingModelLi
 		logger.log(Level.INFO, "reading view init");
 	}
 	
-	/**
-	 * @param controller the controller to set
-	 */
 	@Override
 	public void setReadingController(IReadingController controller) {
 		this.controller = controller;
 	}
 	
-	/**
-	 * @param currentReadingId the currentReadingId to set
-	 */
 	@Override
 	public void setCurrentReadingId(long currentReadingId) {
 		this.currentReadingId = currentReadingId;
 	}
 
-	/**
-	 * @return the stationExternalId
-	 */
 	@Override
 	public String getStationExternalId() {
 		return tfStationExternalId.getText();
 	}
 	
-	/**
-	 * @param stationExternalId the stationExternalId to set
-	 */
 	@Override
 	public void overwriteUIStationExternalId(String stationExternalId) {
 		this.currentlyOverwritingStationExtId = true;
@@ -136,9 +124,6 @@ public class ReadingView implements Initializable, IReadingView, IReadingModelLi
 		this.currentlyOverwritingStationExtId = false;
 	}
 
-	/**
-	 * @return the targetConcentration
-	 */
 	@Override
 	public int getTargetConcentration() {
 		try {
@@ -149,9 +134,7 @@ public class ReadingView implements Initializable, IReadingView, IReadingModelLi
 			return -1;
 		}
 	}
-	/**
-	 * @param targetConcentration the targetConcentration to set
-	 */
+
 	@Override
 	public void overwriteUITargetConcentration(int targetConcentration) {
 		this.tfTargetConcentration.setText( Integer.valueOf(targetConcentration).toString() );
@@ -163,10 +146,6 @@ public class ReadingView implements Initializable, IReadingView, IReadingModelLi
 		}
 	}
 	
-	/**
-	 * @return the readingTimestamp
-	 * @throws TimeProcessingException 
-	 */
 	@Override
 	public LocalDateTime getReadingTimestamp() {
 		try {
@@ -177,18 +156,12 @@ public class ReadingView implements Initializable, IReadingView, IReadingModelLi
 			return LocalDateTime.now();
 		}
 	}
-	/**
-	 * @param readingTimestamp the readingTimestamp to set
-	 * @throws TimeProcessingException 
-	 */
+
 	@Override
 	public void overwriteUIReadingTimestamp(LocalDateTime readingTimestamp){
 		this.tfReadingTimestamp.setText( readingTimestamp.format( TimeTools.getReadingTimestampFormat() ) );
 	}
 	
-	/**
-	 * @return the actualConcentration
-	 */
 	@Override
 	public int getActualConcentration() {
 		try {
@@ -200,9 +173,6 @@ public class ReadingView implements Initializable, IReadingView, IReadingModelLi
 		}
 	}
 	
-	/**
-	 * @param actualConcentration the actualConcentration to set
-	 */
 	@Override
 	public void overwriteUIActualConcentration(final int actualConcentration) {
 		logger.log(Level.FINE, "Overwriting text field with new actual concentration: "+actualConcentration);
@@ -219,13 +189,12 @@ public class ReadingView implements Initializable, IReadingView, IReadingModelLi
 	
 	/**
 	 * Recomputes the concentration variance based on the given values.
-	 * @note    This implicitly overwrites current selection status in UI.
+	 * @note    This implicitly overwrites current variance in UI.
 	 * @note: like the selection state and text contents this is part of the presentation model: i. e. the portion of the application data representing the current state of the view.
 	 * 
 	 * @param actualConcentration    value of the actual concentration measured
 	 * @param targetConcentration    value of the target concentration to be reached
 	 */
-	//@Override
 	private void overwriteUIVariance(final int actualConcentration, final int targetConcentration) {
 		final double variance = actualConcentration - targetConcentration;
 		this.tfVariance.setText( Double.toString(variance) );
@@ -249,19 +218,12 @@ public class ReadingView implements Initializable, IReadingView, IReadingModelLi
 		}
 	}
 
-	/**
-	 * Wipes all text fields which depend on external station ID.
-	 * The current concentration reading record indirectly depends on the current monitoring station record.
-	 */
 	@Override
 	public void wipeAllDependentTextFields() {
 		this.tfTargetConcentration.clear();
 		wipeReadingDependentTextFields();
 	}
 	
-	/**
-	 * Wipes all text field which depend on the current concentration reading record.
-	 */
 	@Override
 	public void wipeReadingDependentTextFields() {
 		this.tfReadingTimestamp.clear();

@@ -1,15 +1,15 @@
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IStationView;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingView;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IStationView;
 
 public interface IStationController {
 
 	/**
-	 * Initializes controllers (informs controllers about ther corresponding views) and initializes station view content.
+	 * Initializes controllers (informs controllers about their corresponding views) and initializes station view content.
 	 * 
-	 * @param stationViewController    the corresponding view of this controller
-	 * @param stationViewController    the corresponding view of reading controller. Since the reading view is nested in other views and cannot be accessed directly before construction, the reading controller is informed about its corresponding view by the STATION controller.
+	 * @param stationView    the corresponding view of this controller
+	 * @param readingView    the corresponding view of reading controller. Since the reading view is nested in other views and cannot be accessed directly before construction, the reading controller is informed about its corresponding view by the STATION controller.
 	 * 
 	 * @note    In this current sample implementation the station view object itself calls this method on the station controller in a bootstrapping fashion.
 	 */
@@ -17,9 +17,9 @@ public interface IStationController {
 
 	/**
 	 * Set new selection for monitoring station view.
-	 * @note    This implicitly overwrites current selection status in UI.
 	 * 
 	 * @param newExternalId    new selection for monitoring station view.
+	 * @note    This implicitly overwrites current selection status in UI.
 	 */
 	public void overwriteUISelection(String newExternalId);
 	

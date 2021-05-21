@@ -28,9 +28,8 @@ import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IStationMode
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.StationModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IStationView;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingView;
-import javafx.fxml.FXML;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IStationView;
 
 /**
  * Controller handling user actions in views related to monitoring stations.
@@ -54,14 +53,7 @@ public class StationController implements IStationController{
 		this.model = new StationModel();
 	}
 	
-	/**
-	 * Initializes controllers (informs controllers about their corresponding views) and initializes station view content.
-	 * 
-	 * @param stationView    the corresponding view of this controller
-	 * @param readingView    the corresponding view of reading controller. Since the reading view is nested in other views and cannot be accessed directly before construction, the reading controller is informed about its corresponding view by the STATION controller.
-	 * 
-	 * @note    In this current sample implementation the station view object itself calls this method on the station controller in a bootstrapping fashion.
-	 */
+
 	@Override
 	public void initializeController(final IStationView stationView, final IReadingView readingView) {
 		this.view = stationView;
@@ -84,30 +76,16 @@ public class StationController implements IStationController{
 		this.view.overwriteUIStationList(stationIdentifyers);
 	}
 	
-	/**
-	 * Set new selection for monitoring station view.
-	 * @note    This implicitly overwrites current selection status in UI.
-	 * 
-	 * @param newExternalId    new selection for monitoring station view.
-	 */
 	@Override
 	public void overwriteUISelection(final String newExternalId) {
 		this.view.overwriteUISelection(newExternalId);
 	}
 	
-	/**
-	 * Wipe any selection in station view.
-	 */
 	@Override
 	public void wipeSelection() {
 		this.view.wipeSelection();
 	}
 	
-	/**
-	 * Handle new selection in station view made by user.
-	 * 
-	 * @param newExternalId    new user selection in monitoring station view.
-	 */
 	@Override
 	public void handleUserChangedSelection(final String newExternalId) {
 		//IMPORTANT: For keeping station view and reading view in sync, also inform reading controller.
