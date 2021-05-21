@@ -16,32 +16,31 @@
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IActualConcentrationListener;
 
 /**
- * Simple data provider (observable type) for actual concentration value.
+ * Simple data provider (observable type) for reading model.
  */
-public interface IActualConcentrationProvider {
+public interface IReadingModelDataProvider {
 	
 	/**
 	 * Adds new listener to this data provider's observer list.
 	 * 
 	 * @param listener
 	 */
-	public void addActualConcentrationListener(final IActualConcentrationListener listener);
+	public void addReadingModelListener(final IReadingModelListener listener);
 	
 	/**
 	 * Removes given listener from this data provider's observer list.
 	 * 
 	 * @param listener
 	 */
-	public void removeActualConcentrationListener(final IActualConcentrationListener listener);
+	public void removeReadingModelListener(final IReadingModelListener listener);
 	
 	/**
 	 * Notify all listeners in this data provider's observer list about a data change.
 	 * 
 	 * @param listener
 	 */
-	public void notifyActualConcentrationListeners(final ConcentrationReading reading);
+	public void notifyReadingModelListeners(final ConcentrationReading reading);
 
 }

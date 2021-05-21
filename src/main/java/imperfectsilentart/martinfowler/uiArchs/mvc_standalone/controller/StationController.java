@@ -111,7 +111,6 @@ public class StationController implements IStationController{
 	@Override
 	public void handleUserChangedSelection(final String newExternalId) {
 		//IMPORTANT: For keeping station view and reading view in sync, also inform reading controller.
-		// FIXME prevent endless update cycle
 		this.readingController.handleUserChangedStationExtId( newExternalId );
 	}
 }

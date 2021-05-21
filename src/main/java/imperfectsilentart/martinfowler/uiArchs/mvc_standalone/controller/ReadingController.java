@@ -20,14 +20,13 @@ import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
 
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ReadingModel;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IActualConcentrationProvider;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IReadingModel;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IReadingModelDataProvider;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IStationModel;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ReadingModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IActualConcentrationListener;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingView;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.ReadingView;
 
@@ -60,10 +59,9 @@ public class ReadingController implements IReadingController {
 		logger.log(Level.INFO, "reading controller ctor");
 		this.model = new ReadingModel();
 		this.view = view;
-		if(this.model instanceof IActualConcentrationProvider
-				&& this.view instanceof ReadingView) {
-			// down-casting here in order to avoid mixing observer interfaces with MVC interfaces
-			( (ReadingModel)this.model ).addActualConcentrationListener( (ReadingView)this.view );
+		if(this.model instanceof IReadingModelDataProvider && this.view instanceof ReadingView) {
+			// down-casting here in order to avoid with MVC interfaces inheriting from observer interfaces
+			( (ReadingModel)this.model ).addReadingModelListener( (ReadingView)this.view );
 		}
 		/*
 		 * Inform reading view about its corresponding controller:
@@ -120,7 +118,6 @@ public class ReadingController implements IReadingController {
 			this.view.overwriteUITargetConcentration( station.getTargetConcentration() );
 		}
 		//IMPORTANT: For keeping station view and reading view in sync, also change station view.
-		// FIXME prevent endless update cycle
 		this.stationController.overwriteUISelection(newStationExternalId);
 		
 		/*

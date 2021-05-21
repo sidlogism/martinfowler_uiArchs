@@ -81,7 +81,7 @@ public class PersistenceTools {
 			 */
 			switch(activeDbs) {
 			case "oracleXE":
-				configOverrides.put("hibernate.dialect", "org.hibernate.dialect.Oracle18cDialect" );
+				configOverrides.put("hibernate.dialect", "org.hibernate.dialect.Oracle12cDialect" );
 				configOverrides.put("javax.persistence.jdbc.transactionIsolation", "TRANSACTION_SERIALIZABLE" );
 				break;
 			case "mysql":

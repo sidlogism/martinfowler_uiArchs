@@ -22,24 +22,22 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
-import javax.persistence.PostUpdate;
 import javax.persistence.TypedQuery;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools;
-import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IActualConcentrationListener;
 
 /**
  * Business logic for accessing and processing all data related to concentration readings.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.ConcentrationReadingDao
  */
-public class ReadingModel implements IReadingModel, IActualConcentrationProvider {
+public class ReadingModel implements IReadingModel, IReadingModelDataProvider {
 	private static final Logger logger = Logger.getLogger(ReadingModel.class.getName());
-	private List<IActualConcentrationListener> observers = null;
+	private List<IReadingModelListener> observers = null;
 	
 	public ReadingModel(){
-		this.observers = new ArrayList<IActualConcentrationListener>();
+		this.observers = new ArrayList<IReadingModelListener>();
 	}
 	
 	@Override
@@ -53,7 +51,6 @@ public class ReadingModel implements IReadingModel, IActualConcentrationProvider
 			em.getTransaction().begin();
 			updatedReading = em.find( ConcentrationReading.class, Long.valueOf(readingId) );
 			updatedReading.setActualConcentration(newConcentrationValue);
-			// FIXME Mysql: update timestamp. Oracle: overwritten by trigger concentration_reading__trigger__reading_timestamp
 			em.persist(updatedReading);
 			em.getTransaction().commit();
 		} catch (ModelPersistenceException | PersistenceException e) {
@@ -66,6 +63,11 @@ public class ReadingModel implements IReadingModel, IActualConcentrationProvider
 		}finally {
 			if( null != em && em.getEntityManagerFactory().isOpen() ) em.getEntityManagerFactory().close();
 		}
+		
+		/*
+		 * rudimentary observer pattern: notify model observers about model change
+		 */
+		notifyReadingModelListeners(updatedReading);
 	}
 	
 	@Override
@@ -103,22 +105,21 @@ public class ReadingModel implements IReadingModel, IActualConcentrationProvider
 	}
 
 	@Override
-	public void addActualConcentrationListener(IActualConcentrationListener listener) {
+	public void addReadingModelListener(IReadingModelListener listener) {
 		logger.log(Level.INFO, "Adding new listener: "+listener);
 		this.observers.add(listener);
 	}
 
 	@Override
-	public void removeActualConcentrationListener(IActualConcentrationListener listener) {
+	public void removeReadingModelListener(IReadingModelListener listener) {
 		this.observers.remove(listener);
 	}
 
-	@PostUpdate
 	@Override
-	public void notifyActualConcentrationListeners(final ConcentrationReading reading) {
-		logger.log(Level.INFO, "Reading entity was updated. Changed reading tuple: "+reading);
-		for(final IActualConcentrationListener listener: this.observers) {
-			listener.updateActualConcentration( reading.getActualConcentration() );
+	public synchronized void notifyReadingModelListeners(final ConcentrationReading reading) {
+		logger.log(Level.FINE, "Reading entity was updated. Changed reading tuple: "+reading);
+		for(final IReadingModelListener listener: this.observers) {
+			listener.actualConcentrationChanged( reading.getActualConcentration() );
 		}
 	}
 }

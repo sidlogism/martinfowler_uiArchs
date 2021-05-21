@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller.IReadingController;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IReadingModelListener;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
 import javafx.event.Event;
@@ -35,7 +36,7 @@ import javafx.scene.control.TextField;
  * View handling UI elements related to reading view.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.ReadingDataSheet
  */
-public class ReadingView implements Initializable, IReadingView, IActualConcentrationListener {
+public class ReadingView implements Initializable, IReadingView, IReadingModelListener {
 	private static final Logger logger = Logger.getLogger(ReadingView.class.getName());
 	/**
 	 * Flag indicating whether the current UI change is induced by user input (external) or by view code itself (internal).
@@ -204,7 +205,7 @@ public class ReadingView implements Initializable, IReadingView, IActualConcentr
 	 */
 	@Override
 	public void overwriteUIActualConcentration(final int actualConcentration) {
-		logger.log(Level.INFO, "Overwriting text field with new actual concentration: "+actualConcentration);
+		logger.log(Level.FINE, "Overwriting text field with new actual concentration: "+actualConcentration);
 		this.currentlyOverwritingActualConcentration = true;
 		this.tfActualConcentration.setText( Integer.valueOf(actualConcentration).toString() );
 		this.currentlyOverwritingActualConcentration = false;
@@ -269,8 +270,8 @@ public class ReadingView implements Initializable, IReadingView, IActualConcentr
 	}
 	
 	@Override
-	public void updateActualConcentration(final int newValue) {
-		logger.log(Level.INFO, "Observer notification: Model was updated to new actual concentration: "+newValue);
+	public void actualConcentrationChanged(final int newValue) {
+		logger.log(Level.FINE, "Observer notification: Model was updated to new actual concentration: "+newValue);
 		overwriteUIActualConcentration(newValue);
 	}
 	
@@ -294,7 +295,7 @@ public class ReadingView implements Initializable, IReadingView, IActualConcentr
 	@FXML
 	public void handleUserChangedActualConcentration(final Event event) {
 		if(this.currentlyOverwritingActualConcentration) return;
-		logger.log(Level.INFO, "User changed value of "+event.getSource());
+		logger.log(Level.FINE, "User changed value of "+event.getSource());
 		this.controller.handleUserChangedActualConcentration( this.tfActualConcentration.getText() , this.currentReadingId );
 	}
 }

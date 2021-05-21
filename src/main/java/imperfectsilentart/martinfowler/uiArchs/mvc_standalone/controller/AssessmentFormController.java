@@ -52,7 +52,7 @@ public class AssessmentFormController extends Application implements IAssessment
 		loader.setController(stationView);
 		
 		final Parent root = loader.load();
-		stage.setScene(new Scene(root, 650, 200));
+		stage.setScene(new Scene(root, 520, 200));
 		
 		// set stage attributes
 		stage.getScene().getStylesheets().add( StationView.class.getResource("icecream_assessment.css").toExternalForm() );
