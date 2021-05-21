@@ -15,9 +15,7 @@
  */
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 
-import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +25,6 @@ import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeTools;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
 
@@ -36,7 +33,7 @@ import javafx.scene.control.TextField;
  * View handling UI elements related to reading view.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.ReadingDataSheet
  */
-public class ReadingView implements Initializable, IReadingView, IReadingModelListener {
+public class ReadingView implements IReadingView, IReadingModelListener {
 	private static final Logger logger = Logger.getLogger(ReadingView.class.getName());
 	/**
 	 * Flag indicating whether the current UI change is induced by user input (external) or by view code itself (internal).
@@ -87,18 +84,9 @@ public class ReadingView implements Initializable, IReadingView, IReadingModelLi
 	 * Called to initialize a controller after its root element has been
 	 * completely processed.
 	 * @note    in this subproject "fx:controller" references view objects!
-	 *
-	 * @param location
-	 * The location used to resolve relative paths for the root object, or
-	 * {@code null} if the location is not known.
-	 *
-	 * @param resources
-	 * The resources used to localize the root object, or {@code null} if
-	 * the root object was not localized.
 	 */
-	// TODO superseded => @FXML + remove initializable ?
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	@FXML
+	public void initialize() {
 		logger.log(Level.INFO, "reading view init");
 	}
 	

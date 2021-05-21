@@ -16,9 +16,7 @@
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view;
 
 
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,14 +26,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 
 /**
  * View handling UI elements related to monitoring station view.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.MonitoringStationList
  */
-public class StationView implements Initializable, ChangeListener<String>, IStationView {
+public class StationView implements ChangeListener<String>, IStationView {
 	private static final Logger logger = Logger.getLogger(StationView.class.getName());
 	private IStationController controller = null;
 	
@@ -58,18 +55,9 @@ public class StationView implements Initializable, ChangeListener<String>, IStat
 	 * Called to initialize a controller after its root element has been
 	 * completely processed.
 	 * @note    in this subproject "fx:controller" references view objects!
-	 *
-	 * @param location
-	 * The location used to resolve relative paths for the root object, or
-	 * {@code null} if the location is not known.
-	 *
-	 * @param resources
-	 * The resources used to localize the root object, or {@code null} if
-	 * the root object was not localized.
 	 */
-	// TODO superseded => @FXML + remove initializable ?
-	@Override
-	public void initialize(URL url, ResourceBundle resources) {
+	@FXML
+	public void initialize() {
 		logger.log(Level.INFO, "station view init");
 
 		/*
