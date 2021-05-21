@@ -40,7 +40,6 @@ public class StationModel implements IStationModel {
 	 */
 	@Override
 	public synchronized MonitoringStation getStation(final String stationExternalId) throws ModelPersistenceException {
-		// TODO make observed object? add relevant UI-controls? controller + view observe model.
 		final String query = "FROM MonitoringStation WHERE stationExternalId = :id";
 
 		MonitoringStation result = null;

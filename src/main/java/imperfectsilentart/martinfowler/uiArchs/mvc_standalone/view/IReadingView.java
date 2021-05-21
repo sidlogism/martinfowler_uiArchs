@@ -70,7 +70,7 @@ public interface IReadingView {
 	 * @param actualConcentration    value of the actual concentration measured
 	 * @param targetConcentration    value of the target concentration to be reached
 	 */
-	void overwriteUIVariance(int actualConcentration, int targetConcentration);
+	//void overwriteUIVariance(int actualConcentration, int targetConcentration);
 
 	/**
 	 * Wipes all text fields which depend on external station ID.

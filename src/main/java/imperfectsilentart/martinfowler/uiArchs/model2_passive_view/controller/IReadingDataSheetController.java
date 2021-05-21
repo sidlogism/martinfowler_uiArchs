@@ -15,7 +15,7 @@ public interface IReadingDataSheetController {
 	 * This link is established here.
 	 * 
 	 * @param stationController    StationController to be set at initialization.
-	 * TODO too much cohesion: cannot use interface IMonitoringStationController because of listener registration.
+	 * TODO too much coupling between reading controller and station controller: cannot use interface IMonitoringStationController because of listener registration.
 	 */
 	public void setStationController(final MonitoringStationController stationController);
 

@@ -15,28 +15,33 @@
  */
 package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import javax.persistence.PostUpdate;
 import javax.persistence.TypedQuery;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.PersistenceTools;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IActualConcentrationListener;
 
 /**
  * Business logic for accessing and processing all data related to concentration readings.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.ConcentrationReadingDao
  */
-public class ReadingModel implements IReadingModel {
-	// TODO make observed object? add relevant UI-controls? controller + view observe model.
+public class ReadingModel implements IReadingModel, IActualConcentrationProvider {
 	private static final Logger logger = Logger.getLogger(ReadingModel.class.getName());
-	/**
-	 * Updates actual concentration value of current reading record.
-	 * 
-	 * @throws ModelPersistenceException 
-	 */
+	private List<IActualConcentrationListener> observers = null;
+	
+	public ReadingModel(){
+		this.observers = new ArrayList<IActualConcentrationListener>();
+	}
+	
 	@Override
 	public synchronized void updateActualConcentration(final int newConcentrationValue, final long readingId) throws ModelPersistenceException {
 		if(readingId < 0) return;
@@ -63,13 +68,6 @@ public class ReadingModel implements IReadingModel {
 		}
 	}
 	
-	/**
-	 * Loads the youngest concentration reading record belonging to the monitoring station with the given ID from persistence layer.
-	 * 
-	 * @param internalStationId    ID of relevant monitoring station
-	 * @return domain object of relevant reading record. null if the query result is empty.
-	 * @throws ModelPersistenceException
-	 */
 	@Override
 	public synchronized ConcentrationReading getLatestConcentrationReading(final long internalStationId) throws ModelPersistenceException {
 		/*
@@ -104,4 +102,23 @@ public class ReadingModel implements IReadingModel {
 		return result;
 	}
 
+	@Override
+	public void addActualConcentrationListener(IActualConcentrationListener listener) {
+		logger.log(Level.INFO, "Adding new listener: "+listener);
+		this.observers.add(listener);
+	}
+
+	@Override
+	public void removeActualConcentrationListener(IActualConcentrationListener listener) {
+		this.observers.remove(listener);
+	}
+
+	@PostUpdate
+	@Override
+	public void notifyActualConcentrationListeners(final ConcentrationReading reading) {
+		logger.log(Level.INFO, "Reading entity was updated. Changed reading tuple: "+reading);
+		for(final IActualConcentrationListener listener: this.observers) {
+			listener.updateActualConcentration( reading.getActualConcentration() );
+		}
+	}
 }

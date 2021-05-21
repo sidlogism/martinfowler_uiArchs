@@ -21,12 +21,15 @@ import java.util.logging.Logger;
 import javax.persistence.PersistenceException;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ReadingModel;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IActualConcentrationProvider;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IReadingModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IStationModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ConcentrationReading;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.ModelPersistenceException;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence.MonitoringStation;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IActualConcentrationListener;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.IReadingView;
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view.ReadingView;
 
 
 
@@ -57,6 +60,11 @@ public class ReadingController implements IReadingController {
 		logger.log(Level.INFO, "reading controller ctor");
 		this.model = new ReadingModel();
 		this.view = view;
+		if(this.model instanceof IActualConcentrationProvider
+				&& this.view instanceof ReadingView) {
+			// down-casting here in order to avoid mixing observer interfaces with MVC interfaces
+			( (ReadingModel)this.model ).addActualConcentrationListener( (ReadingView)this.view );
+		}
 		/*
 		 * Inform reading view about its corresponding controller:
 		 * Since the reading view is nested in other views and cannot be accessed directly before construction, the reading controller reference is handed to it here.
@@ -138,7 +146,6 @@ public class ReadingController implements IReadingController {
 		}
 		// update ID of currently displayed concentration reading record
 		this.view.setCurrentReadingId( newRecord.getId() );
-		this.view.overwriteUIVariance( newRecord.getActualConcentration(), station.getTargetConcentration() );
 	}
 	
 	/**

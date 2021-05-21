@@ -35,7 +35,7 @@ import javafx.scene.control.TextField;
  * View handling UI elements related to reading view.
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.ReadingDataSheet
  */
-public class ReadingView implements Initializable, IReadingView {
+public class ReadingView implements Initializable, IReadingView, IActualConcentrationListener {
 	private static final Logger logger = Logger.getLogger(ReadingView.class.getName());
 	/**
 	 * Flag indicating whether the current UI change is induced by user input (external) or by view code itself (internal).
@@ -141,10 +141,10 @@ public class ReadingView implements Initializable, IReadingView {
 	@Override
 	public int getTargetConcentration() {
 		try {
-			return Integer.parseInt( tfTargetConcentration.getText() );
+			return Integer.parseInt( this.tfTargetConcentration.getText() );
 		}catch(NumberFormatException e) {
 			// not logging exception because of verbosity
-			logger.log(Level.WARNING, "Target concentration has invalid value \""+ tfTargetConcentration.getText() +"\". Returning default value.");
+			logger.log(Level.WARNING, "Target concentration has invalid value \""+ this.tfTargetConcentration.getText() +"\". Returning default value.");
 			return -1;
 		}
 	}
@@ -154,6 +154,12 @@ public class ReadingView implements Initializable, IReadingView {
 	@Override
 	public void overwriteUITargetConcentration(int targetConcentration) {
 		this.tfTargetConcentration.setText( Integer.valueOf(targetConcentration).toString() );
+		try {
+			overwriteUIVariance( Integer.valueOf(this.tfActualConcentration.getText()).intValue(), targetConcentration );
+		}catch(NumberFormatException e) {
+			// not logging exception because of verbosity
+			logger.log(Level.WARNING, "Couldn't compute variance because actual concentration has invalid value \""+ this.tfActualConcentration.getText() +"\". Returning default value.");
+		}
 	}
 	
 	/**
@@ -163,10 +169,10 @@ public class ReadingView implements Initializable, IReadingView {
 	@Override
 	public LocalDateTime getReadingTimestamp() {
 		try {
-			return TimeTools.parseReadingTimestamp( tfReadingTimestamp.getText() );
+			return TimeTools.parseReadingTimestamp( this.tfReadingTimestamp.getText() );
 		}catch(TimeProcessingException e) {
 			// not logging exception because of verbosity
-			logger.log(Level.WARNING, "Reading timestamp has invalid value \""+ tfReadingTimestamp.getText() +"\". Returning default value.");
+			logger.log(Level.WARNING, "Reading timestamp has invalid value \""+ this.tfReadingTimestamp.getText() +"\". Returning default value.");
 			return LocalDateTime.now();
 		}
 	}
@@ -185,10 +191,10 @@ public class ReadingView implements Initializable, IReadingView {
 	@Override
 	public int getActualConcentration() {
 		try {
-			return Integer.parseInt( tfActualConcentration.getText() );
+			return Integer.parseInt( this.tfActualConcentration.getText() );
 		}catch(NumberFormatException e) {
 			// not logging exception because of verbosity
-			logger.log(Level.WARNING, "Actual concentration has invalid value \""+ tfActualConcentration.getText() +"\". Returning default value.");
+			logger.log(Level.WARNING, "Actual concentration has invalid value \""+ this.tfActualConcentration.getText() +"\". Returning default value.");
 			return -1;
 		}
 	}
@@ -198,9 +204,16 @@ public class ReadingView implements Initializable, IReadingView {
 	 */
 	@Override
 	public void overwriteUIActualConcentration(final int actualConcentration) {
+		logger.log(Level.INFO, "Overwriting text field with new actual concentration: "+actualConcentration);
 		this.currentlyOverwritingActualConcentration = true;
 		this.tfActualConcentration.setText( Integer.valueOf(actualConcentration).toString() );
 		this.currentlyOverwritingActualConcentration = false;
+		try {
+			overwriteUIVariance( actualConcentration, Integer.valueOf(this.tfTargetConcentration.getText()).intValue() );
+		}catch(NumberFormatException e) {
+			// not logging exception because of verbosity
+			logger.log(Level.WARNING, "Couldn't compute variance because target concentration has invalid value \""+ this.tfTargetConcentration.getText() +"\". Returning default value.");
+		}
 	}
 	
 	/**
@@ -211,8 +224,8 @@ public class ReadingView implements Initializable, IReadingView {
 	 * @param actualConcentration    value of the actual concentration measured
 	 * @param targetConcentration    value of the target concentration to be reached
 	 */
-	@Override
-	public void overwriteUIVariance(final int actualConcentration, final int targetConcentration) {
+	//@Override
+	private void overwriteUIVariance(final int actualConcentration, final int targetConcentration) {
 		final double variance = actualConcentration - targetConcentration;
 		this.tfVariance.setText( Double.toString(variance) );
 		
@@ -253,6 +266,12 @@ public class ReadingView implements Initializable, IReadingView {
 		this.tfReadingTimestamp.clear();
 		this.tfActualConcentration.clear();
 		this.tfVariance.clear();
+	}
+	
+	@Override
+	public void updateActualConcentration(final int newValue) {
+		logger.log(Level.INFO, "Observer notification: Model was updated to new actual concentration: "+newValue);
+		overwriteUIActualConcentration(newValue);
 	}
 	
 	/**

@@ -19,12 +19,14 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.ReadingModel;
 import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
 
 /**
@@ -32,6 +34,7 @@ import imperfectsilentart.martinfowler.uiArchs.util.TimeProcessingException;
  * 
  * @see imperfectsilentart.martinfowler.uiArchs.formsandcontrols.persistence.ConcentrationReading
  */
+@EntityListeners(ReadingModel.class)
 @Entity
 @Table(name = "concentration_reading")
 public class ConcentrationReading implements Comparable< ConcentrationReading >  {

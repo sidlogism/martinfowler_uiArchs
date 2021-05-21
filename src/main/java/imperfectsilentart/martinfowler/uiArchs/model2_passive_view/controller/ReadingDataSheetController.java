@@ -48,7 +48,7 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 	 * IMPORTANT: For keeping station view and reading view in sync, the corresponding controllers must know each other.
 	 * This link is established here.
 	 * 
-	 * TODO too much cohesion: cannot use interface IMonitoringStationController because of listener registration in {@link #setStationController}.
+	 * TODO too much coupling between reading controller and station controller: cannot use interface IMonitoringStationController because of listener registration in {@link #setStationController}.
 	 * Doesn't suffice strategy pattern?
 	 */
 	private MonitoringStationController stationController = null;
@@ -102,7 +102,7 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 	 * 
 	 * @param stationController    StationController to be set at initialization.
 	 * 
-	 * TODO too much cohesion: cannot use interface IMonitoringStationController because of listener registration.
+	 * TODO too much coupling between reading controller and station controller: cannot use interface IMonitoringStationController because of listener registration.
 	 */
 	@Override
 	public void setStationController(MonitoringStationController stationController) {

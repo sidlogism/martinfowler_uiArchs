@@ -17,6 +17,7 @@ module imperfectsilentart.martinfowler.uiArchs.mvc_standalone {
 
 	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view to javafx.fxml;
 	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller to javafx.graphics,javafx.fxml;
+	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model to org.hibernate.orm.core;
 	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence to org.hibernate.orm.core;
 	opens imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence to org.hibernate.orm.core;
 }
