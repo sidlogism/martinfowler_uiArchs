@@ -54,8 +54,6 @@ public class MonitoringStationController implements Initializable, ChangeListene
 	/**
 	 * IMPORTANT: For keeping station view and reading view in sync, the corresponding controllers must know each other.
 	 * This link is established here.
-	 * 
-	 * TODO suffices strategy pattern?
 	 */
 	@FXML
 	public IReadingDataSheetController readingViewController;

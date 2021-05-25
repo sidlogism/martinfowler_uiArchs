@@ -29,7 +29,6 @@ public class MvcStandaloneLauncher {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//TODO suffices strategy pattern?
 		final IAssessmentFormController controller = new AssessmentFormController();
 		controller.launchUi(args);
 	}

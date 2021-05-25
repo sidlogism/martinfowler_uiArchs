@@ -48,8 +48,7 @@ public class ReadingDataSheetController implements Initializable, ChangeListener
 	 * IMPORTANT: For keeping station view and reading view in sync, the corresponding controllers must know each other.
 	 * This link is established here.
 	 * 
-	 * TODO too much coupling between reading controller and station controller: cannot use interface IMonitoringStationController because of listener registration in {@link #setStationController}.
-	 * Doesn't suffice strategy pattern?
+	 * TODO too much coupling between reading controller and station controller (no strategy pattern): cannot use interface IMonitoringStationController because of listener registration in {@link #setStationController}.
 	 */
 	private MonitoringStationController stationController = null;
 
