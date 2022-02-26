@@ -13,7 +13,7 @@
         "mysql": {
             "driverName": "com.mysql.cj.jdbc.Driver",
             "connectionUrl": "jdbc:mysql://localhost:3306/martinfowler_uiArchs?useUnicode=true&characterEncoding=UTF8",
-            "user": "TODO",
+            "user": "uiuser",
             "password": "TODO",
 			"logAllDbOperations": false,
 			"logDbOperationTimings": false,
@@ -23,21 +23,21 @@
             "driverName": "oracle.jdbc.OracleDriver",
             "connectionUrl": "jdbc:oracle:thin:@localhost:1521:XE",
             "connectionFactoryClassName": "oracle.jdbc.pool.OracleDataSource",
-            "user": "TODO",
+            "user": "uiuser",
             "password": "TODO"
         },
         "oracleXE_PDB": {
             "driverName": "oracle.jdbc.OracleDriver",
             "connectionUrl": "jdbc:oracle:thin:@localhost:1521:XEDB1",
             "connectionFactoryClassName": "oracle.jdbc.pool.OracleDataSource",
-            "user": "TODO",
+            "user": "uiuser",
             "password": "TODO"
         },
         "oracleXE_TNS_ADMIN": {
             "driverName": "oracle.jdbc.OracleDriver",
             "connectionUrl": "jdbc:oracle:thin:@mytnsalias?TNS_ADMIN=/Users/test/wallet_dbname/",
             "connectionFactoryClassName": "oracle.jdbc.pool.OracleDataSource",
-            "user": "TODO",
+            "user": "uiuser",
             "password": "TODO"
         }
 
