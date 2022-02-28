@@ -7,7 +7,7 @@ These are sample implementations of the UIs described in https://www.martinfowle
 First initialize the DB backend by running the following DB scripts (from test/resources/db_scripts/YOURDBMS/, where YOURDBMS is your preferred DBMS):
  * as privileged DB-user (e. g. root): 1_init_db.sql
  * as privileged DB-user (e. g. root): 2_init_user.sql
- * as privileged DB-user or new application-user "uiuser": 3_insert_db_testdata.sqlwildwildfdsfs
+ * as privileged DB-user or new application-user "uiuser": 3_insert_db_testdata.sql
 
 On running "gradle run" in the project base directory it creates and opens the Java FX based UI specified in build.gradle under "application{ mainClass = ... }".
 

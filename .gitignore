@@ -4,5 +4,6 @@ gradlew.bat
 gradlew
 /bin/
 /build/
+/docker_experiment/
 *~
 *.swp
