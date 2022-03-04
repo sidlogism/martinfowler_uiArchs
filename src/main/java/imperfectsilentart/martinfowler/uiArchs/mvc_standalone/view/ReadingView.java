@@ -114,11 +114,16 @@ public class ReadingView implements IReadingView, IReadingModelListener {
 
 	@Override
 	public int getTargetConcentration() {
+		final String text = this.tfTargetConcentration.getText();
 		try {
-			return Integer.parseInt( this.tfTargetConcentration.getText() );
+			return Integer.parseInt( text );
 		}catch(NumberFormatException e) {
 			// not logging exception because of verbosity
-			logger.log(Level.WARNING, "Target concentration has invalid value \""+ this.tfTargetConcentration.getText() +"\". Returning default value.");
+			if( null == text || text.isEmpty() || text.isBlank() ) {
+				logger.log(Level.FINE, "Target concentration is empty. Reading view is propably not initialized yet or was wiped before. Refill of reading view is propably currently in progress.");
+			}else {
+				logger.log(Level.WARNING, "Target concentration has invalid value \""+ text +"\". Returning default value.");
+			}
 			return -1;
 		}
 	}
@@ -126,21 +131,32 @@ public class ReadingView implements IReadingView, IReadingModelListener {
 	@Override
 	public void overwriteUITargetConcentration(int targetConcentration) {
 		this.tfTargetConcentration.setText( Integer.valueOf(targetConcentration).toString() );
+		
+		final String actualConcentrationText = this.tfActualConcentration.getText();
 		try {
-			overwriteUIVariance( Integer.valueOf(this.tfActualConcentration.getText()).intValue(), targetConcentration );
+			overwriteUIVariance( Integer.valueOf(actualConcentrationText).intValue(), targetConcentration );
 		}catch(NumberFormatException e) {
 			// not logging exception because of verbosity
-			logger.log(Level.WARNING, "Couldn't compute variance because actual concentration has invalid value \""+ this.tfActualConcentration.getText() +"\". Returning default value.");
+			if( null == actualConcentrationText || actualConcentrationText.isEmpty() || actualConcentrationText.isBlank() ) {
+				logger.log(Level.FINE, "Couldn't compute variance because actual concentration is empty. Reading view is propably not initialized yet or was wiped before. Refill of reading view is propably currently in progress.");
+			}else {
+				logger.log(Level.WARNING, "Couldn't compute variance because actual concentration has invalid value \""+ actualConcentrationText +"\".");
+			}
 		}
 	}
 	
 	@Override
 	public LocalDateTime getReadingTimestamp() {
+		final String text = this.tfReadingTimestamp.getText();
 		try {
-			return TimeTools.parseReadingTimestamp( this.tfReadingTimestamp.getText() );
+			return TimeTools.parseReadingTimestamp( text );
 		}catch(TimeProcessingException e) {
 			// not logging exception because of verbosity
-			logger.log(Level.WARNING, "Reading timestamp has invalid value \""+ this.tfReadingTimestamp.getText() +"\". Returning default value.");
+			if( null == text || text.isEmpty() || text.isBlank() ) {
+				logger.log(Level.FINE, "Reading timestamp is empty. Reading view is propably not initialized yet or was wiped before. Refill of reading view is propably currently in progress.");
+			}else {
+				logger.log(Level.WARNING, "Reading timestamp has invalid value \""+ text +"\". Returning default value.");
+			}
 			return LocalDateTime.now();
 		}
 	}
@@ -152,11 +168,16 @@ public class ReadingView implements IReadingView, IReadingModelListener {
 	
 	@Override
 	public int getActualConcentration() {
+		final String text = this.tfActualConcentration.getText();
 		try {
-			return Integer.parseInt( this.tfActualConcentration.getText() );
+			return Integer.parseInt( text );
 		}catch(NumberFormatException e) {
 			// not logging exception because of verbosity
-			logger.log(Level.WARNING, "Actual concentration has invalid value \""+ this.tfActualConcentration.getText() +"\". Returning default value.");
+			if( null == text || text.isEmpty() || text.isBlank() ) {
+				logger.log(Level.FINE, "Actual concentration is empty. Reading view is propably not initialized yet or was wiped before. Refill of reading view is propably currently in progress.");
+			}else {
+				logger.log(Level.WARNING, "Actual concentration has invalid value \""+ text +"\". Returning default value.");
+			}
 			return -1;
 		}
 	}
@@ -167,11 +188,17 @@ public class ReadingView implements IReadingView, IReadingModelListener {
 		this.currentlyOverwritingActualConcentration = true;
 		this.tfActualConcentration.setText( Integer.valueOf(actualConcentration).toString() );
 		this.currentlyOverwritingActualConcentration = false;
+		
+		final String targetConcentrationText = this.tfTargetConcentration.getText();
 		try {
-			overwriteUIVariance( actualConcentration, Integer.valueOf(this.tfTargetConcentration.getText()).intValue() );
+			overwriteUIVariance( actualConcentration, Integer.valueOf(targetConcentrationText).intValue() );
 		}catch(NumberFormatException e) {
 			// not logging exception because of verbosity
-			logger.log(Level.WARNING, "Couldn't compute variance because target concentration has invalid value \""+ this.tfTargetConcentration.getText() +"\". Returning default value.");
+			if( null == targetConcentrationText || targetConcentrationText.isEmpty() || targetConcentrationText.isBlank() ) {
+				logger.log(Level.FINE, "Couldn't compute variance because target concentration is empty. Reading view is propably not initialized yet or was wiped before. Refill of reading view is propably currently in progress.");
+			}else {
+				logger.log(Level.WARNING, "Couldn't compute variance because target concentration has invalid value \""+ targetConcentrationText +"\".");
+			}
 		}
 	}
 	

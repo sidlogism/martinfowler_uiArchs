@@ -46,7 +46,7 @@ public class StationModel implements IStationModel {
 			em.getTransaction().commit();
 		} catch (ModelPersistenceException | PersistenceException e) {
 			// TODO resource leak on exception: [JavaFX Application Thread] ERROR org.hibernate.orm.connections.pooling - Connection leak detected: there are 1 unclosed connections upon shutting down pool jdbc:...
-			throw new ModelPersistenceException("Error while accessing or processing "+MonitoringStation.class.getName()+" with external ID: "+stationExternalId+". Query\n"+query, e);
+			throw new ModelPersistenceException("Error while accessing or processing "+MonitoringStation.class.getName()+" with external ID: "+stationExternalId+". Query:\n"+query, e);
 		}finally {
 			if( null != em && em.getEntityManagerFactory().isOpen() ) em.getEntityManagerFactory().close();
 		}

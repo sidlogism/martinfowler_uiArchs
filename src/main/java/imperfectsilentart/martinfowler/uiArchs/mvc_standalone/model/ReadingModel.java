@@ -97,7 +97,7 @@ public class ReadingModel implements IReadingModel, IReadingModelDataProvider {
 			result = query.getSingleResult();
 			em.getTransaction().commit();
 		} catch (ModelPersistenceException | PersistenceException e) {
-			throw new ModelPersistenceException("Error while accessing or processing "+ConcentrationReading.class.getName()+" with station foreign key (station ID): "+internalStationId+". Query\n"+queryText, e);
+			throw new ModelPersistenceException("Error while accessing or processing "+ConcentrationReading.class.getName()+" with station foreign key (station ID): "+internalStationId+". Query:\n"+queryText, e);
 		}finally {
 			if( null != em && em.getEntityManagerFactory().isOpen() ) em.getEntityManagerFactory().close();
 		}
@@ -117,6 +117,10 @@ public class ReadingModel implements IReadingModel, IReadingModelDataProvider {
 
 	@Override
 	public synchronized void notifyReadingModelListeners(final ConcentrationReading reading) {
+		/*
+		 * note: currently the only user-changeable field is the actual concentration.
+		 * FIXME: hand over the entire updated object.
+		 */
 		logger.log(Level.FINE, "Reading entity was updated. Changed reading tuple: "+reading);
 		for(final IReadingModelListener listener: this.observers) {
 			listener.actualConcentrationChanged( reading.getActualConcentration() );

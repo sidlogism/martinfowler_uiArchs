@@ -91,6 +91,7 @@ public class ReadingController implements IReadingController {
 			if( null == station ) {
 				throw new ModelPersistenceException("There is no station with given external station ID \""+newStationExternalId+"\".");
 			}
+			// FIXME this.view.markUIStationExternalIdValid();
 		} catch (ModelPersistenceException | PersistenceException e) {
 			logger.log(Level.WARNING, "Failed to lookup station with given external station ID \""+newStationExternalId+"\".", e);
 			/*
@@ -98,6 +99,10 @@ public class ReadingController implements IReadingController {
 			 */
 			this.view.wipeAllDependentTextFields();
 			this.stationController.wipeSelection();
+			/* FIXME
+			this.view.markAllDependentTextFieldNotEditable();
+			this.view.markUIStationExternalIdErroneous();
+			*/
 			return;
 		}
 		if( newStationExternalId != this.view.getStationExternalId() ) {
@@ -127,6 +132,7 @@ public class ReadingController implements IReadingController {
 			logger.log(Level.WARNING, "Failed to lookup concentration readings for given station. Station: "+station, e);
 			// wipe text fields to indicate error
 			this.view.wipeReadingDependentTextFields();
+			// FIXME: this.view.markReadingDependentTextFieldNotEditable();
 			return;
 		}
 		if( newRecord.getReadingTimestamp() != this.view.getReadingTimestamp() ) {
@@ -137,6 +143,7 @@ public class ReadingController implements IReadingController {
 		}
 		// update ID of currently displayed concentration reading record
 		this.view.setCurrentReadingId( newRecord.getId() );
+		//FIXME this.view.markAllDependentTextFieldEditable();
 	}
 	
 	@Override
@@ -147,14 +154,19 @@ public class ReadingController implements IReadingController {
 		int newValue = -1;
 		try {
 			newValue = Integer.parseInt(newActualValue);
+			
+			try {
+				model.updateActualConcentration(newValue, currentReadingId);
+				//FIXME this.view.markUIActualConcentrationValid();
+			} catch (ModelPersistenceException | PersistenceException e) {
+				logger.log(Level.WARNING, "Failed to update the actual concentration value in the database. Given actual value was \""+newValue+"\".", e);
+			}
 		}catch(NumberFormatException e) {
 			logger.log(Level.WARNING, "The given value \""+newActualValue+"\" is no integer number. Expecting integer value for the actual concentration value.", e);
+			/* FIXME
+			this.view.markUIActualConcentrationErroneous();
+			*/
 		}
 		
-		try {
-			model.updateActualConcentration(newValue, currentReadingId);
-		} catch (ModelPersistenceException | PersistenceException e) {
-			logger.log(Level.WARNING, "Failed to update the actual concentration value in the database. Given actual value was \""+newValue+"\".", e);
-		}
 	}
 }
