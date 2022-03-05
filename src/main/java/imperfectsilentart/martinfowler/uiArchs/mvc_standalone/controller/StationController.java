@@ -71,7 +71,7 @@ public class StationController implements IStationController{
 		} catch (ModelPersistenceException | PersistenceException e) {
 			stationIdentifyers = new ArrayList<String>();
 			stationIdentifyers.add("- data access error -");
-			logger.log(Level.SEVERE, "Failed to load data from DB.", e);
+			logger.log(Level.SEVERE, "Failed to load station-related data from DB.", e);
 		}
 		this.view.overwriteUIStationList(stationIdentifyers);
 	}

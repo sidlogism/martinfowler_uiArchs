@@ -60,7 +60,7 @@ public class ReadingController implements IReadingController {
 		this.model = new ReadingModel();
 		this.view = view;
 		if(this.model instanceof IReadingModelDataProvider && this.view instanceof ReadingView) {
-			// down-casting here in order to avoid with MVC interfaces inheriting from observer interfaces
+			// down-casting here in order to avoid MVC interfaces inheriting from observer interfaces
 			( (ReadingModel)this.model ).addReadingModelListener( (ReadingView)this.view );
 		}
 		/*
