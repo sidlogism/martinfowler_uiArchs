@@ -9,14 +9,18 @@ plugins {
 }
 
 def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem;
+def osName = currentOS.getName()
+println("Current OS name: ${osName}")
+
 def platform
 if (currentOS.isWindows()) {
 	 platform = 'win'
-} else if (currentOS.isLinux()) {
+} else if (currentOS.isLinux() || "OpenBSD" == osName || currentOS.isFreeBSD() || currentOS.isSolaris()) {
 	 platform = 'linux'
 } else if (currentOS.isMacOsX()) {
 	 platform = 'mac'
 }
+
 
 java {
 	modularity.inferModulePath = true

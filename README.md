@@ -13,3 +13,10 @@ On running "gradle run" in the project base directory it creates and opens the J
 
 
 imperfectsilentart.martinfowler.uiArchs.GenericConnectionPoolTest.java is a modified version of https://github.com/oracle/oracle-db-examples/blob/master/java/jdbc/ConnectionSamples/ADBQuickStart.java , which is licensed under the Universal Permissive License v 1.0.
+
+
+Supported platforms: windows & linux (tested on OpenSUSE)
+Running on OpenBSD is not supported. Doing so results in the following error:
+Exception in thread "main" java.lang.UnsupportedOperationException: OpenBSD is not supported
+        at javafx.graphics/com.sun.javafx.tk.Toolkit.getDefaultToolkit(Toolkit.java:197)
+        ...
