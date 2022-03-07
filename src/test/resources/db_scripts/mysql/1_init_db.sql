@@ -1,4 +1,5 @@
 CREATE DATABASE IF NOT EXISTS martinfowler_uiArchs CHARACTER SET UTF8MB4 COLLATE UTF8MB4_UNICODE_CI;
+SHOW databases;
 USE martinfowler_uiArchs;
 
 CREATE TABLE IF NOT EXISTS monitoring_station (
