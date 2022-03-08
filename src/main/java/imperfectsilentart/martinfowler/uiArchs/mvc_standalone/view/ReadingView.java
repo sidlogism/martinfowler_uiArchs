@@ -111,6 +111,18 @@ public class ReadingView implements IReadingView, IReadingModelListener {
 		this.tfStationExternalId.setText( stationExternalId );
 		this.currentlyOverwritingStationExtId = false;
 	}
+	
+	@Override
+	public void markUIStationExternalIdErroneous() {
+		this.tfStationExternalId.setStyle("-fx-text-inner-color: red");
+		
+	}
+
+	@Override
+	public void markUIStationExternalIdValid() {
+		this.tfStationExternalId.setStyle("-fx-text-inner-color: black");
+		
+	}
 
 	@Override
 	public int getTargetConcentration() {
@@ -187,6 +199,8 @@ public class ReadingView implements IReadingView, IReadingModelListener {
 		logger.log(Level.FINE, "Overwriting text field with new actual concentration: "+actualConcentration);
 		this.currentlyOverwritingActualConcentration = true;
 		this.tfActualConcentration.setText( Integer.valueOf(actualConcentration).toString() );
+		// mark new content of actual concentration as VALID
+		this.markUIActualConcentrationValid();
 		this.currentlyOverwritingActualConcentration = false;
 		
 		final String targetConcentrationText = this.tfTargetConcentration.getText();
@@ -200,6 +214,19 @@ public class ReadingView implements IReadingView, IReadingModelListener {
 				logger.log(Level.WARNING, "Couldn't compute variance because target concentration has invalid value \""+ targetConcentrationText +"\".");
 			}
 		}
+	}
+	
+
+	@Override
+	public void markUIActualConcentrationErroneous() {
+		this.tfActualConcentration.setStyle("-fx-text-inner-color: red");
+		
+	}
+
+	@Override
+	public void markUIActualConcentrationValid() {
+		this.tfActualConcentration.setStyle("-fx-text-inner-color: black");
+		
 	}
 	
 	/**
@@ -239,12 +266,39 @@ public class ReadingView implements IReadingView, IReadingModelListener {
 		wipeReadingDependentTextFields();
 	}
 	
+	
+	@Override
+	public void restoreEditabilityOnAllDependentTextFields() {
+		// Only affect those text fields, who are intended to be editable.
+		restoreEditabilityOnReadingDependentTextFields();
+	}
+	
+	@Override
+	public void removeEditabilityFromAllDependentTextFields() {
+		// Only affect those text fields, who are intended to be editable.
+		// The text field of the station external ID is always editable, since all other text fields depend on its value.
+		removeEditabilityFromReadingDependentTextFields();
+	}
+	
+	
 	@Override
 	public void wipeReadingDependentTextFields() {
 		this.tfReadingTimestamp.clear();
 		this.tfActualConcentration.clear();
 		this.tfVariance.clear();
 	}
+	
+	@Override
+	public void restoreEditabilityOnReadingDependentTextFields() {
+		// Only affect those text fields, who are intended to be editable.
+		this.tfActualConcentration.setEditable(true);
+	}	
+	
+	@Override
+	public void removeEditabilityFromReadingDependentTextFields() {
+		// Only affect those text fields, who are intended to be editable.
+		this.tfActualConcentration.setEditable(false);
+	}	
 	
 	@Override
 	public void actualConcentrationChanged(final int newValue) {
@@ -275,4 +329,5 @@ public class ReadingView implements IReadingView, IReadingModelListener {
 		logger.log(Level.FINE, "User changed value of "+event.getSource());
 		this.controller.handleUserChangedActualConcentration( this.tfActualConcentration.getText() , this.currentReadingId );
 	}
+
 }

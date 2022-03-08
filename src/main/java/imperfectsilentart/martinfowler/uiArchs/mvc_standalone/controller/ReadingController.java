@@ -91,18 +91,19 @@ public class ReadingController implements IReadingController {
 			if( null == station ) {
 				throw new ModelPersistenceException("There is no station with given external station ID \""+newStationExternalId+"\".");
 			}
-			// FIXME this.view.markUIStationExternalIdValid();
+			// mark new content of station external ID as VALID
+			this.view.markUIStationExternalIdValid();
+			this.view.restoreEditabilityOnAllDependentTextFields();
 		} catch (ModelPersistenceException | PersistenceException e) {
 			logger.log(Level.WARNING, "Failed to lookup station with given external station ID \""+newStationExternalId+"\".", e);
 			/*
-			 * If there is a problem with the new station, wipe alls dependennt text fields and selections to indicate error.
+			 * If there is a problem with the new station, wipe all dependent text fields and selections to indicate error.
 			 */
 			this.view.wipeAllDependentTextFields();
 			this.stationController.wipeSelection();
-			/* FIXME
-			this.view.markAllDependentTextFieldNotEditable();
+			this.view.removeEditabilityFromAllDependentTextFields();
+			// mark new content of station external ID as INVALID
 			this.view.markUIStationExternalIdErroneous();
-			*/
 			return;
 		}
 		if( newStationExternalId != this.view.getStationExternalId() ) {
@@ -120,7 +121,9 @@ public class ReadingController implements IReadingController {
 		this.stationController.overwriteUISelection(newStationExternalId);
 		
 		/*
-		 * load and display data depending on current reading record
+		 * Load and display data depending on current reading record.
+		 * If the current monitoring station has no corresponding concentration readings, the depending data fields remain empty.
+		 * Insertion of new concentration readings is currently not supported by the UI.
 		 */
 		ConcentrationReading newRecord = null;
 		try {
@@ -132,7 +135,7 @@ public class ReadingController implements IReadingController {
 			logger.log(Level.WARNING, "Failed to lookup concentration readings for given station. Station: "+station, e);
 			// wipe text fields to indicate error
 			this.view.wipeReadingDependentTextFields();
-			// FIXME: this.view.markReadingDependentTextFieldNotEditable();
+			this.view.removeEditabilityFromReadingDependentTextFields();
 			return;
 		}
 		if( newRecord.getReadingTimestamp() != this.view.getReadingTimestamp() ) {
@@ -143,7 +146,6 @@ public class ReadingController implements IReadingController {
 		}
 		// update ID of currently displayed concentration reading record
 		this.view.setCurrentReadingId( newRecord.getId() );
-		//FIXME this.view.markAllDependentTextFieldEditable();
 	}
 	
 	@Override
@@ -157,15 +159,16 @@ public class ReadingController implements IReadingController {
 			
 			try {
 				model.updateActualConcentration(newValue, currentReadingId);
-				//FIXME this.view.markUIActualConcentrationValid();
+				// mark new content of actual concentration as VALID
+				this.view.markUIActualConcentrationValid();
 			} catch (ModelPersistenceException | PersistenceException e) {
 				logger.log(Level.WARNING, "Failed to update the actual concentration value in the database. Given actual value was \""+newValue+"\".", e);
+				this.view.markUIActualConcentrationErroneous();
 			}
 		}catch(NumberFormatException e) {
 			logger.log(Level.WARNING, "The given value \""+newActualValue+"\" is no integer number. Expecting integer value for the actual concentration value.", e);
-			/* FIXME
+			// mark new content of actual concentration as INVALID
 			this.view.markUIActualConcentrationErroneous();
-			*/
 		}
 		
 	}
