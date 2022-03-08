@@ -13,6 +13,7 @@ SELECT user,host,super_priv,authentication_string FROM mysql.user;
 
 -- grant new "uiuser" rights for new db "martinfowler_uiArchs"
 GRANT SELECT ON martinfowler_uiArchs.* TO uiuser@localhost;
+GRANT INSERT ON martinfowler_uiArchs.* TO uiuser@localhost;
 GRANT UPDATE ON martinfowler_uiArchs.* TO uiuser@localhost;
 GRANT LOCK TABLES ON martinfowler_uiArchs.* TO uiuser@localhost;
 -- print changes
