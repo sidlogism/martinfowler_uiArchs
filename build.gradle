@@ -24,12 +24,13 @@ if (currentOS.isWindows()) {
 
 java {
 	modularity.inferModulePath = true
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(11)
+	}
 }
 
 
 
-sourceCompatibility=1.11
-targetCompatibility=1.11
 
 
 repositories {
