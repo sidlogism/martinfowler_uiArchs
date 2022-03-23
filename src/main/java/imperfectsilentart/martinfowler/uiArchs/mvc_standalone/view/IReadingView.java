@@ -46,6 +46,16 @@ public interface IReadingView {
 	 * @note    This implicitly overwrites current stationExternalId in UI.
 	 */
 	void overwriteUIStationExternalId(String stationExternalId);
+	
+	/**
+	 * Visually mark the content of actualConcentration field as ERRONEOUS in UI.
+	 */
+	void markUIStationExternalIdErroneous();
+	
+	/**
+	 * Visually mark the content of actualConcentration field as VALID in UI.
+	 */
+	void markUIStationExternalIdValid();
 
 	/**
 	 * @return the targetConcentration
@@ -80,15 +90,47 @@ public interface IReadingView {
 	 * @note    This implicitly overwrites current actualConcentration in UI.
 	 */
 	void overwriteUIActualConcentration(int actualConcentration);
+	
+	/**
+	 * Visually mark the content of actualConcentration field as ERRONEOUS in UI.
+	 */
+	void markUIActualConcentrationErroneous();
+	
+	/**
+	 * Visually mark the content of actualConcentration field as VALID in UI.
+	 */
+	void markUIActualConcentrationValid();
 
 	/**
 	 * Wipes all text fields which depend on external station ID.
-	 * The current concentration reading record indirectly depends on the current monitoring station record.
+	 * @note	The current concentration reading record indirectly depends on the current monitoring station record.
 	 */
 	void wipeAllDependentTextFields();
+	
+	/**
+	 * Change editability in UI: give back editability in UI to all text fields which depend on external station ID, which were originally editable.
+	 * @note	The current concentration reading record indirectly depends on the current monitoring station record.
+	 */
+	void restoreEditabilityOnAllDependentTextFields();
+	
+	/**
+	 * Change editability in UI: remove editability in UI from all text fields which depend on external station ID, which are originally editable.
+	 * @note	The current concentration reading record indirectly depends on the current monitoring station record.
+	 */
+	void removeEditabilityFromAllDependentTextFields();
 	
 	/**
 	 * Wipes all text field which depend on the current concentration reading record.
 	 */
 	void wipeReadingDependentTextFields();
+	
+	/**
+	 * Change editability in UI: give back editability in UI to all text field which depend on the current concentration reading record, which were originally editable.
+	 */
+	void restoreEditabilityOnReadingDependentTextFields();
+	
+	/**
+	 * Change editability in UI: remove editability in UI from all text field which depend on the current concentration reading record, which are originally editable.
+	 */
+	void removeEditabilityFromReadingDependentTextFields();
 }
