@@ -71,7 +71,7 @@ public class DbConnectionTest {
 	 * @param dbsName    configuration identifier of the tested DBS
 	 */
 	@ParameterizedTest
-	@ValueSource(strings = { "mysql", "oracleXE" })
+	@ValueSource(strings = { "mysql", "oracleXE", "oracleXE_PDB" })
 	public void testLoadingDbDriver(final String dbsName) {
 		JSONObject dbParameters = null;
 		try {
@@ -92,7 +92,7 @@ public class DbConnectionTest {
 	 * @param dbsName    configuration identifier of the tested DBS
 	 */
 	@ParameterizedTest
-	@ValueSource(strings = { "mysql", "oracleXE" })
+	@ValueSource(strings = { "mysql", "oracleXE", "oracleXE_PDB" })
 	public void testRawQueryExecution(final String dbsName) {
 		JSONObject dbParameters = null;
 		JSONArray testQueries = null;

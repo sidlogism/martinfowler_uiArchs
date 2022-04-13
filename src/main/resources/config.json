@@ -7,6 +7,9 @@
         ],
         "oracleXE": [
             "SELECT username FROM dba_users"
+        ],
+        "oracleXE_PDB": [
+            "SELECT username FROM dba_users"
         ]
     },
     "dbParameters": {
@@ -28,7 +31,7 @@
         },
         "oracleXE_PDB": {
             "driverName": "oracle.jdbc.OracleDriver",
-            "connectionUrl": "jdbc:oracle:thin:@localhost:1521:XEDB1",
+            "connectionUrl": "jdbc:oracle:thin:@localhost:1521/XEPDB1",
             "connectionFactoryClassName": "oracle.jdbc.pool.OracleDataSource",
             "user": "uiuser",
             "password": "TODO"
