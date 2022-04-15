@@ -8,16 +8,15 @@ plugins {
 	id 'application'
 }
 
-def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem;
-def osName = currentOS.getName()
+def osName = System.getProperty("os.name")
 println("Current OS name: ${osName}")
 
 def platform
-if (currentOS.isWindows()) {
+if ( osName.startsWith("Windows") ) {
 	 platform = 'win'
-} else if (currentOS.isLinux() || "OpenBSD" == osName || currentOS.isFreeBSD() || currentOS.isSolaris()) {
+} else if ( osName.startsWith("Linux") || "OpenBSD" == osName || osName.startsWith("openSUSE") || osName.startsWith("Ubuntu")) {
 	 platform = 'linux'
-} else if (currentOS.isMacOsX()) {
+} else if ( osName.startsWith("OS X") ) {
 	 platform = 'mac'
 }
 
