@@ -18,9 +18,9 @@
             "connectionUrl": "jdbc:mysql://localhost:3306/martinfowler_uiArchs?useUnicode=true&characterEncoding=UTF8",
             "user": "uiuser",
             "password": "TODO",
-			"logAllDbOperations": false,
-			"logDbOperationTimings": false,
-			"logJdbcActionTrace": false
+            "logAllDbOperations": false,
+            "logDbOperationTimings": false,
+            "logJdbcActionTrace": false
         },
         "oracleXE": {
             "driverName": "oracle.jdbc.OracleDriver",
@@ -31,7 +31,14 @@
         },
         "oracleXE_PDB": {
             "driverName": "oracle.jdbc.OracleDriver",
-            "connectionUrl": "jdbc:oracle:thin:@localhost:1521/XEPDB1",
+            "connectionUrl": "jdbc:oracle:thin:@tcp://localhost:1521/XEPDB1",
+            "connectionFactoryClassName": "oracle.jdbc.pool.OracleDataSource",
+            "user": "uiuser",
+            "password": "TODO"
+        },
+        "oracleXE_PDB_via_connect_descriptor": {
+            "driverName": "oracle.jdbc.OracleDriver",
+            "connectionUrl": "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=XEPDB1)))",
             "connectionFactoryClassName": "oracle.jdbc.pool.OracleDataSource",
             "user": "uiuser",
             "password": "TODO"

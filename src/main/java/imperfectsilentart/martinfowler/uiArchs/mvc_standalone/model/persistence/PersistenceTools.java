@@ -83,6 +83,7 @@ public class PersistenceTools {
 			case "oracleXE":
 				configOverrides.put("hibernate.dialect", "org.hibernate.dialect.Oracle12cDialect" );
 				configOverrides.put("javax.persistence.jdbc.transactionIsolation", "TRANSACTION_SERIALIZABLE" );
+				//TODO test setting a schema: configOverrides.put("javax.persistence.jdbc.schema", dbParameters.getString("schema") );
 				break;
 			case "mysql":
 				configOverrides.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect" );
