@@ -73,12 +73,12 @@ public class StationView implements ChangeListener<String>, IStationView {
 	}
 	
 	@Override
-	public void overwriteUIStationList(final List<String> stationIdentifyers) {
+	public void overwriteUIStationList(final List<String> stationIdentifiers) {
 		/*
 		 * Initialize list of monitoring stations.
 		 * Currently the list contains only one single string representing a monitoring station because there currently is no out-of-the-box list for multiple columns in JavaFX.
 		 */
-		final ObservableList<String> stationListData = FXCollections.observableArrayList( stationIdentifyers );
+		final ObservableList<String> stationListData = FXCollections.observableArrayList( stationIdentifiers );
 		logger.log(Level.FINE, "Initializing station list with these entries: "+stationListData);
 		this.stationList.setItems(stationListData);
 	}

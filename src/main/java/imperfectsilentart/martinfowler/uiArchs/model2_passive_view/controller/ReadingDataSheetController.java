@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.PersistenceException;
+import jakarta.persistence.PersistenceException;
 
 import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.ConcentrationReadingModel;
 import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.IConcentrationReadingModel;

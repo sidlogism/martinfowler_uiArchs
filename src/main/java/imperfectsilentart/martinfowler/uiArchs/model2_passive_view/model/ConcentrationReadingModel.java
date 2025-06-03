@@ -17,9 +17,9 @@ package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model;
 
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.TypedQuery;
 
 import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ConcentrationReading;
 import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence.ModelPersistenceException;

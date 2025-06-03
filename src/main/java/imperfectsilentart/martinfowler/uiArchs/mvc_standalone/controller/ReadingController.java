@@ -18,7 +18,7 @@ package imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.PersistenceException;
+import jakarta.persistence.PersistenceException;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IReadingModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IReadingModelDataProvider;
@@ -77,6 +77,10 @@ public class ReadingController implements IReadingController {
 		/*
 		 * Changing the station external ID implies a switch of the selected monitoring station.
 		 * Thus all contents of reading data sheet must be updated.
+		 */
+
+		/*
+		 * After initial loading of station list selection may be empty => newStationExternalId may be NULL
 		 */
 		if(null == newStationExternalId || null == this.stationModel) {
 			return;

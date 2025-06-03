@@ -20,9 +20,9 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,10 +70,10 @@ public class PersistenceTools {
 		}
 		if(null == ENTITY_MANAGER || !ENTITY_MANAGER.isOpen() ){
 			final Map<String, Object> configOverrides = new HashMap<String, Object>();
-			configOverrides.put("javax.persistence.jdbc.driver", dbParameters.getString("driverName"));
-			configOverrides.put("javax.persistence.jdbc.url", dbParameters.getString("connectionUrl") );
-			configOverrides.put("javax.persistence.jdbc.user", dbParameters.getString("user") );
-			configOverrides.put("javax.persistence.jdbc.password", dbParameters.getString("password") );
+			configOverrides.put("jakarta.persistence.jdbc.driver", dbParameters.getString("driverName"));
+			configOverrides.put("jakarta.persistence.jdbc.url", dbParameters.getString("connectionUrl") );
+			configOverrides.put("jakarta.persistence.jdbc.user", dbParameters.getString("user") );
+			configOverrides.put("jakarta.persistence.jdbc.password", dbParameters.getString("password") );
 			configOverrides.put("hibernate.format_sql", "true" );
 			configOverrides.put("hibernate.use_sql_comments", "true" );
 			/*
@@ -82,13 +82,13 @@ public class PersistenceTools {
 			switch(activeDbs) {
 			case "oracleXE":
 				configOverrides.put("hibernate.dialect", "org.hibernate.dialect.Oracle12cDialect" );
-				configOverrides.put("javax.persistence.jdbc.transactionIsolation", "TRANSACTION_SERIALIZABLE" );
-				//TODO test setting a schema: configOverrides.put("javax.persistence.jdbc.schema", dbParameters.getString("schema") );
+				configOverrides.put("jakarta.persistence.jdbc.transactionIsolation", "TRANSACTION_SERIALIZABLE" );
+				//TODO test setting a schema: configOverrides.put("jakarta.persistence.jdbc.schema", dbParameters.getString("schema") );
 				break;
 			case "mysql":
 				configOverrides.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect" );
 				// REPEATABLE READ is default transaction isolation level in MySQL. Just assuring in case of using other DBS.
-				configOverrides.put("javax.persistence.jdbc.transactionIsolation", "TRANSACTION_REPEATABLE_READ" );
+				configOverrides.put("jakarta.persistence.jdbc.transactionIsolation", "TRANSACTION_REPEATABLE_READ" );
 				if( dbParameters.getBoolean("logAllDbOperations") ) configOverrides.put("hibernate.show_sql", "true" );
 				if( dbParameters.getBoolean("logDbOperationTimings") ) configOverrides.put("hibernate.generate_statistics", "true" );
 				break;

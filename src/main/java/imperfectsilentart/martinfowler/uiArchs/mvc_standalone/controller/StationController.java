@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.persistence.PersistenceException;
+import jakarta.persistence.PersistenceException;
 
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.IStationModel;
 import imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.StationModel;
@@ -64,16 +64,16 @@ public class StationController implements IStationController{
 		 * Initialize list of monitoring stations.
 		 * Currently the list contains only one single string representing a monitoring station because there currently is no out-of-the-box list for multiple columns in JavaFX.
 		 */
-		List<String> stationIdentifyers = null;
+		List<String> stationIdentifiers = null;
 		try {
 			final List<MonitoringStation> stations = model.findAll();
-			stationIdentifyers = stations.stream().map(MonitoringStation::getStationExternalId).collect( Collectors.toList() );
+			stationIdentifiers = stations.stream().map(MonitoringStation::getStationExternalId).collect( Collectors.toList() );
 		} catch (ModelPersistenceException | PersistenceException e) {
-			stationIdentifyers = new ArrayList<String>();
-			stationIdentifyers.add("- data access error -");
+			stationIdentifiers = new ArrayList<String>();
+			stationIdentifiers.add("- data access error -");
 			logger.log(Level.SEVERE, "Failed to load station-related data from DB.", e);
 		}
-		this.view.overwriteUIStationList(stationIdentifyers);
+		this.view.overwriteUIStationList(stationIdentifiers);
 	}
 	
 	@Override

@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.persistence.PersistenceException;
+import jakarta.persistence.PersistenceException;
 
 import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.IMonitoringStationModel;
 import imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.MonitoringStationModel;

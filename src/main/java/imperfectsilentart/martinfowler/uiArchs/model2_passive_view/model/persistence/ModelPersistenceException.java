@@ -17,7 +17,7 @@ package imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persis
 
 /**
  * Custom exception for database access problems.
- * @note    Class name was chosen to avoid clashes with javax.persistence.PersistenceException.
+ * @note    Class name was chosen to avoid clashes with jakarta.persistence.PersistenceException.
  */
 public class ModelPersistenceException extends Exception {
 	private static final long serialVersionUID = -2945303167253987142L;

@@ -31,10 +31,10 @@ public interface IStationView {
 	 * Initialize list of monitoring stations.
 	 * Currently the list contains only one string representing a monitoring station because there currently is no out-of-the-box list for multiple columns in JavaFX.
 	 * 
-	 * @param    stationIdentifyers    list of single strings representing a monitoring station each
+	 * @param    stationIdentifiers    list of single strings representing a monitoring station each
 	 * @note    This implicitly overwrites list of monitoring stations in UI.
 	 */
-	public void overwriteUIStationList(final List<String> stationIdentifyers);
+	public void overwriteUIStationList(final List<String> stationIdentifiers);
 
 	/**
 	 * Set new selection for station view.

@@ -13,18 +13,18 @@ println("Current OS name: ${osName}")
 
 def platform
 if ( osName.startsWith("Windows") ) {
-	 platform = 'win'
+	platform = 'win'
 } else if ( osName.startsWith("Linux") || "OpenBSD" == osName || osName.startsWith("openSUSE") || osName.startsWith("Ubuntu")) {
-	 platform = 'linux'
+	platform = 'linux'
 } else if ( osName.startsWith("OS X") ) {
-	 platform = 'mac'
+	platform = 'mac'
 }
 
 
 java {
 	modularity.inferModulePath = true
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(11)
+		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
 
@@ -37,40 +37,41 @@ repositories {
 }
 
 dependencies {
-	implementation "org.openjfx:javafx-base:17-ea+3:${platform}"
-	implementation "org.openjfx:javafx-controls:17-ea+3:${platform}"
-	implementation "org.openjfx:javafx-graphics:17-ea+3:${platform}"
-	implementation "org.openjfx:javafx-fxml:17-ea+3:${platform}"
-	implementation group: 'org.json', name: 'json', version: '20210307'
+	implementation "org.openjfx:javafx-base:21.0.6:${platform}"
+	implementation "org.openjfx:javafx-controls:21.0.6:${platform}"
+	implementation "org.openjfx:javafx-graphics:21.0.6:${platform}"
+	implementation "org.openjfx:javafx-fxml:21.0.6:${platform}"
+	implementation group: 'org.json', name: 'json', version: '20250517'
 	//log4j with slf4j binding required by hikariCP
-	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.1'
-	implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.14.1'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.24.3'
+	implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.24.3'
 	// db access
-	implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
-	implementation group: 'com.oracle.database.jdbc', name: 'ojdbc8-production', version: '19.8.0.0'
-	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
+	implementation group: 'com.zaxxer', name: 'HikariCP', version: '6.3.0'
+	implementation group: 'com.oracle.database.jdbc', name: 'ojdbc11', version: '23.8.0.25.04'
+	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '9.3.0'
 	// using JPA without application server
-	implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
-	implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.0.0.Alpha7'
-	implementation group: 'com.fasterxml', name: 'classmate', version: '1.5.1'
-	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+	implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '3.2.0'
+	implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '7.0.0.Final'
+	implementation group: 'com.fasterxml', name: 'classmate', version: '1.7.0'
+	implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: '4.0.2'
 	// unit test framework
-	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.8.0-M1'
-	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.8.0-M1'
+	testImplementation group: 'com.oracle.database.jdbc', name: 'ucp', version: '23.8.0.25.04'
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.13.0'
+	testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.13.0'
+	testRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-launcher'
 }
 
 
-
+processTestResources
 sourceSets {
 	test {
 		resources {
-			srcDir 'src/test/resources'
-			// TODO unnecessary??
 			include 'src/main/resources/config.json'
 			include 'src/main/resources/META-INF/persistence.xml'
 		}
 	}
 }
+
 
 test {
 	// Activate JUnit native support. Otherwise some JUnit 5(Jupiter) annotations may not be recognized.
@@ -86,10 +87,11 @@ test {
  * TODO workaround for ensuring  'src/main/resources/META-INF/persistence.xml'
  * is available at runtime under 'build/classes/main/META-INF/persistence.xml'
  */
-sourceSets.main.output.resourcesDir = sourceSets.main.java.outputDir
+sourceSets.main.output.resourcesDir = sourceSets.main.output.resourcesDir
 jar {
 	duplicatesStrategy = 'exclude'
 }
+
 // Ensure 'src/main/resources/META-INF/persistence.xml' is visible at compile time.
 compileJava.dependsOn(processResources)
 

@@ -8,12 +8,12 @@ module imperfectsilentart.martinfowler.uiArchs.mvc_standalone {
 	requires com.zaxxer.hikari;
 	requires org.apache.logging.log4j;
 	requires java.sql;
-	requires java.persistence;
+	requires jakarta.persistence;
 	// for hibernate
 	requires org.hibernate.orm.core;
-	requires net.bytebuddy;
+	//requires net.bytebuddy;
 	requires com.fasterxml.classmate;
-	requires java.xml.bind;
+	requires jakarta.xml.bind;
 
 	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view to javafx.fxml;
 	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller to javafx.graphics,javafx.fxml;
