@@ -7,3 +7,4 @@ gradlew
 /docker_experiment/
 *~
 *.swp
+.idea

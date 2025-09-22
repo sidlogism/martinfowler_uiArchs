@@ -98,11 +98,11 @@ compileJava.dependsOn(processResources)
 
 application {
 	/*
-	mainModule = 'imperfectsilentart.martinfowler.uiArchs.formsandcontrols'
-	mainClass = "imperfectsilentart.martinfowler.uiArchs.formsandcontrols.IceCreamAssessmentForm"
+	mainModule = 'sidlogism.martinfowler.uiArchs.formsandcontrols'
+	mainClass = "sidlogism.martinfowler.uiArchs.formsandcontrols.IceCreamAssessmentForm"
 	*/
-	mainModule = 'imperfectsilentart.martinfowler.uiArchs.mvc_standalone'
-	mainClass = 'imperfectsilentart.martinfowler.uiArchs.mvc_standalone.MvcStandaloneLauncher'
+	mainModule = 'sidlogism.martinfowler.uiArchs.mvc_standalone'
+	mainClass = 'sidlogism.martinfowler.uiArchs.mvc_standalone.MvcStandaloneLauncher'
 }
 
 

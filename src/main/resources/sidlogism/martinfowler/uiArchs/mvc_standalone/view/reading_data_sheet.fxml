@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<!--
+The pane contains all data fields (read only) and record entries of one ice cream reading record and some fields from the corresponding monitoring station.
+Each field or entry has a label with corresponding text field.
+
+The record entry "Station ID" can be modified to initiate an internal search for the corresponding ice cream reading record.
+The record entry "Actual" can be modified to change the entry "actual value" of the currently active ice cream reading record.
+All other entries and data fields are calculated from external sources and thus the corresponding text fields are read only.
+ -->
+<GridPane alignment="CENTER" hgap="7.0" vgap="7.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2"
+		fx:controller="sidlogism.martinfowler.uiArchs.mvc_standalone.view.ReadingView">
+	<children>
+		<Label text="Station ID" alignment="TOP_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="0"  />
+		<TextField fx:id="tfStationExternalId" GridPane.columnIndex="1" GridPane.rowIndex="0"
+			onTextChange="#handleUserChangedStationExtId"/>
+		
+		<Label text="Target" alignment="TOP_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+		<TextField fx:id="tfTargetConcentration" editable="false" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+		
+		<!-- data depending on current reading record -->
+		<Label text="Date" alignment="TOP_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+		<TextField fx:id="tfReadingTimestamp" editable="false" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+		<Label text="Actual" alignment="TOP_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+		<TextField fx:id="tfActualConcentration" GridPane.columnIndex="1" GridPane.rowIndex="3"
+			onTextChange="#handleUserChangedActualConcentration"/>
+		
+		<Label text="Variance" alignment="TOP_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+		<TextField fx:id="tfVariance" editable="false" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+	</children>
+</GridPane>

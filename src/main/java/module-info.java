@@ -1,5 +1,5 @@
 // TODO Check if separating subprojects formsandcontrols and mvc_standalone in two modules helps clarity and prevents using classes from wrong subproject.
-module imperfectsilentart.martinfowler.uiArchs.mvc_standalone {
+module sidlogism.martinfowler.uiArchs.mvc_standalone {
 	requires javafx.base;
 	requires javafx.controls;
 	requires javafx.fxml;
@@ -15,9 +15,9 @@ module imperfectsilentart.martinfowler.uiArchs.mvc_standalone {
 	requires com.fasterxml.classmate;
 	requires jakarta.xml.bind;
 
-	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.view to javafx.fxml;
-	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.controller to javafx.graphics,javafx.fxml;
-	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model to org.hibernate.orm.core;
-	opens imperfectsilentart.martinfowler.uiArchs.mvc_standalone.model.persistence to org.hibernate.orm.core;
-	opens imperfectsilentart.martinfowler.uiArchs.model2_passive_view.model.persistence to org.hibernate.orm.core;
+	opens sidlogism.martinfowler.uiArchs.mvc_standalone.view to javafx.fxml;
+	opens sidlogism.martinfowler.uiArchs.mvc_standalone.controller to javafx.graphics,javafx.fxml;
+	opens sidlogism.martinfowler.uiArchs.mvc_standalone.model to org.hibernate.orm.core;
+	opens sidlogism.martinfowler.uiArchs.mvc_standalone.model.persistence to org.hibernate.orm.core;
+	opens sidlogism.martinfowler.uiArchs.model2_passive_view.model.persistence to org.hibernate.orm.core;
 }

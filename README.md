@@ -9,10 +9,12 @@ First initialize the DB backend by running the following DB scripts (from test/r
  * as privileged DB-user (e. g. root): 2_init_user.sql
  * as privileged DB-user or new application-user "uiuser": 3_insert_db_testdata.sql
 
+Then enter your DB credentials in src/main/resources/config.json .
+
 On running "gradle run" in the project base directory it creates and opens the Java FX based UI specified in build.gradle under "application{ mainClass = ... }".
 
 
-imperfectsilentart.martinfowler.uiArchs.GenericConnectionPoolTest.java is a modified version of https://github.com/oracle/oracle-db-examples/blob/master/java/jdbc/ConnectionSamples/ADBQuickStart.java , which is licensed under the Universal Permissive License v 1.0.
+sidlogism.martinfowler.uiArchs.GenericConnectionPoolTest.java is a modified version of https://github.com/oracle/oracle-db-examples/blob/master/java/jdbc/ConnectionSamples/ADBQuickStart.java , which is licensed under the Universal Permissive License v 1.0.
 
 
 Supported platforms: windows & linux (tested on OpenSUSE).
